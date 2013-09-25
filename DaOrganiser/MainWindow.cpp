@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MainWindow.h"
 #include <msclr\marshal_cppstd.h>
 
 using namespace DaOrganiser;
