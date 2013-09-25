@@ -1,85 +1,87 @@
 #include "storage.h"
 
-const char STORAGE_NAME[] = "storage.txt";
+char storage::STORAGE_NAME[99] = "storage.txt";
 
-class task{
-};
+storage::storage() {
+}
 
-class storage{
-	private:
-		ofstream outputStream;
-		ifstream inputStream;
-	public:
-		bool isSafeToOpenStream(){
-			return !(outputStream.is_open()||inputStream.is_open());
-		}
-		void initialOutputStream(){
-			if(isSafeToOpenStream()){
-				outputStream.open(STORAGE_NAME);
-			}
-			else{
-				closeOutputStream();
-				closeInputStream();
-			}
-		}
+storage::~storage() {
+}
 
-		void writeAllToFile(vector<task> allTask){
-			initialOutputStream();
-			travelAllVector(allTask, writeOneToFile);
-			closeOutputStream();
-		}
+bool storage::isSafeToOpenStream() {
+	return !(outputStream.is_open()||inputStream.is_open());
+}
 
-		void travelAllVector(vector<task> allTask, void (storage::*work)(task)){
-			for_each(allTask.begin(), allTask.end(), work);
-		}
+void storage::initialOutputStream() {
+	if(isSafeToOpenStream()){
+		outputStream.open(STORAGE_NAME);
+	}
+	else{
+		closeOutputStream();
+		closeInputStream();
+	}
+}
 
-		void writeOneToFile(task t){
-			outputStream << getContentOfTask(t);
-		}
+void storage::writeAllToFile(vector<task> allTask) {
+	initialOutputStream();
+	travelAllVector(allTask, writeOneToFile);
+	closeOutputStream();
+}
 
-		char* getContentOfTask(task t){
-			//TO-DO
-			/*
-			t.getHour();
-			t.getMin();
-			*/
-		}
+void storage::travelAllVector(vector<task> allTask, void (storage::*work)(task)){
+	for_each(allTask.begin(), allTask.end(), work);
+}
 
-		void closeOutputStream(){
-			if(outputStream.is_open()){
-				outputStream.close();
-			}
-		}
+void storage::writeOneToFile(task t) {
+	outputStream << getContentOfTask(t);
+}
 
-		void initialInputStream(){
-			if(isSafeToOpenStream()){
-				inputStream.open(STORAGE_NAME);
-			}
-			else{
-				closeOutputStream();
-				closeInputStream();
-			}
-		}
-		vector<task> readAllFromFile(){
-			while(!inputStream.eof()){
-				readOneFromFile();
-			}
-		}
-		task readOneFromFile(){
-			char* temp = new char[1024];
-			inputStream.getline(temp, 1024);
-			return putContentIntoTask(temp);
-		}
-		task putContentIntoTask(char* temp){
-			task* t = new task();
-			//TO-DO
-			/*
-				
-			*/
-		}
-		void closeInputStream(){
-			if(inputStream.is_open()){
-				inputStream.close();
-			}
-		}
-};
+char* storage:: getContentOfTask(task t) {
+	//TO-DO
+	/*
+	t.getHour();
+	t.getMin();
+	*/
+}
+
+void storage::closeOutputStream(){
+	if(outputStream.is_open()){
+		outputStream.close();
+	}
+}
+
+void storage::initialInputStream(){
+	if(isSafeToOpenStream()){
+		inputStream.open(STORAGE_NAME);
+	}
+	else{
+		closeOutputStream();
+		closeInputStream();
+	}
+}
+
+vector<task> storage::readAllFromFile(){
+	while(!inputStream.eof()){
+		readOneFromFile();
+	}
+}
+
+task storage::readOneFromFile(){
+	char* temp = new char[1024];
+	inputStream.getline(temp, 1024);
+	return putContentIntoTask(temp);
+}
+
+task storage::putContentIntoTask(char* temp){
+	task* t = new task();
+	//TO-DO
+	/*
+
+	*/
+}
+
+void storage::closeInputStream(){
+	if(inputStream.is_open()){
+		inputStream.close();
+	}
+}
