@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -7,8 +9,8 @@ using namespace std;
 class storage{
 	private:
 		ofstream outputStream;
-    const char STORAGE_NAME[] = "storage.txt";
-    
+      const char STORAGE_NAME[] = "storage.txt";
+  
 	public:
 		void initialOutputStream();
 		void writeAllToFile(vector<task> allTask);
