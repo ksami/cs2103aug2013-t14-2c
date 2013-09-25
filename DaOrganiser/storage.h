@@ -7,6 +7,8 @@ using namespace std;
 class storage{
 	private:
 		ofstream outputStream;
+    const char STORAGE_NAME[] = "storage.txt";
+    
 	public:
 		void initialOutputStream();
 		void writeAllToFile(vector<task> allTask);
