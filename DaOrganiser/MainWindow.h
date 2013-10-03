@@ -63,7 +63,6 @@ namespace DaOrganiser {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainWindow::typeid));
 			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
@@ -149,11 +148,9 @@ namespace DaOrganiser {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(764, 585);
 			this->Controls->Add(this->tableLayoutPanel1);
-			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
 			this->Name = L"MainWindow";
 			this->Text = L"MainWindow";
-			this->Load += gcnew System::EventHandler(this, &MainWindow::MainWindow_Load);
 			this->tableLayoutPanel1->ResumeLayout(false);
 			this->tableLayoutPanel1->PerformLayout();
 			this->ResumeLayout(false);
@@ -170,8 +167,6 @@ namespace DaOrganiser {
 
 		// Events
 	private: System::Void textBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
-	private: System::Void MainWindow_Load(System::Object^  sender, System::EventArgs^  e) {
-			 }
 };
 }
 
