@@ -9,9 +9,14 @@ class storage{
 		ofstream outputStream;
 	public:
 		void initialOutputStream();
-		void writeAllToFile(vector<task> allTask);
-		void travelAllVector(vector<task> allTask, void (storage::*work)(task));
-		void writeOneToFile(task t);
-		char* contentOfTask(task t);
+		void writeAllToFile(vector<task>);
+		void travelAllVector(vector<task>, void (storage::*work)());
+		void writeOneToFile(task);
+		char* contentOfTask(task);
 		void closeOutPutStream();
+		void initialInputStream();
+		vector<task> readAllFromFile();
+		task readOneFromFile();
+		task putContentIntoTask(char*);
+		void closeInputStream();
 };
