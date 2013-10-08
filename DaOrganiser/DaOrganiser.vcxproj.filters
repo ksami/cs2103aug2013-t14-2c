@@ -33,19 +33,7 @@
     <ClCompile Include="stub.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="storage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="task.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="process.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="date.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="clock.cpp">
+    <ClCompile Include="ListViewItemComparer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,19 +47,7 @@
     <ClInclude Include="MainWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="storage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="task.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="date.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="process.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="clock.h">
+    <ClInclude Include="ListViewItemComparer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

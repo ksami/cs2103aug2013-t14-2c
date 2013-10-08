@@ -1,9 +1,6 @@
 #include "stdafx.h"
-#include "MainWindow.h"
 #include <msclr\marshal_cppstd.h>
-
-using namespace DaOrganiser;
-using namespace msclr::interop;
+#include "MainWindow.h"
 
 /*void MainWindow::addTaskToList(Task task)
 {
@@ -14,17 +11,17 @@ using namespace msclr::interop;
 	item->SubItems->Add(task.detail.ToString());
 }*/
 
-std::string MainWindow::getUserInput(void)
+std::string DaOrganiser::MainWindow::getUserInput(void)
 {
-	return marshal_as<std::string> (textBox1->Text);
+	return msclr::interop::marshal_as<std::string> (textBox1->Text);
 }
 
-void MainWindow::clearInputField(void)
+void DaOrganiser::MainWindow::clearInputField(void)
 {
 	textBox1->Text="";
 }
 
-void MainWindow::appendToOutput(std::string userFeedback)
+void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
 {
 	//check if richTextBox1 overflow
 	//if so, delete first 1000 characters
@@ -33,13 +30,13 @@ void MainWindow::appendToOutput(std::string userFeedback)
 		richTextBox1->Text = richTextBox1->Text->Remove(0, 1000);
 	}
 
-	richTextBox1->Text+=marshal_as<String^> (userFeedback);
+	richTextBox1->Text+=msclr::interop::marshal_as<String^> (userFeedback);
 	richTextBox1->Select(richTextBox1->Text->Length - 1, 0);
 	richTextBox1->ScrollToCaret();
 	richTextBox1->Text+="\n";
 }
 
-void MainWindow::addToList(String^ details)
+void DaOrganiser::MainWindow::addToList(String^ details)
 {
 	System::DateTime timeAdded = System::DateTime::Now;
 	ListViewItem^ item = gcnew ListViewItem(timeAdded.ToString());
@@ -49,7 +46,11 @@ void MainWindow::addToList(String^ details)
 	delete item;
 }
 
-System::Void MainWindow::textBox1_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
+/////////////////////////
+//    Event Handlers   //
+/////////////////////////
+
+System::Void DaOrganiser::MainWindow::textBox1_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
 {
 	if(e->KeyCode == System::Windows::Forms::Keys::Enter)
 	{
@@ -67,4 +68,12 @@ System::Void MainWindow::textBox1_KeyDown(System::Object^ sender, System::Window
 			richTextBox1->Text = richTextBox1->Text->Remove(0, 1000);
 		}
 	}
+}
+
+//column click sorting for entire inventory
+System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e)
+{
+	static int _sortColumnInv = 1;
+	listView1->ListViewItemSorter = gcnew ListViewItemComparer( e->Column, -1*_sortColumnInv);
+	_sortColumnInv*=-1;
 }

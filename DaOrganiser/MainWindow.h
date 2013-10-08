@@ -1,7 +1,7 @@
 #pragma once
 
 #include "stdafx.h"
-#include <string>
+#include "ListViewItemComparer.h"
 
 namespace DaOrganiser {
 
@@ -11,7 +11,6 @@ namespace DaOrganiser {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-	using namespace std;
 
 	/// <summary>
 	/// Summary for MainWindow
@@ -126,6 +125,7 @@ namespace DaOrganiser {
 			this->listView1->TabIndex = 2;
 			this->listView1->UseCompatibleStateImageBehavior = false;
 			this->listView1->View = System::Windows::Forms::View::Details;
+			this->listView1->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &MainWindow::listView1_ColumnClick);
 			// 
 			// dateAdded
 			// 
@@ -167,6 +167,7 @@ namespace DaOrganiser {
 
 		// Events
 	private: System::Void textBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
+	private: System::Void listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e);
 };
 }
 
