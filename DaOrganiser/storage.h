@@ -1,22 +1,21 @@
-#ifndef STORAGE_H
+#pragma once
 
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include <vector>
-#include "task.h"
+#include "newtask.h"
 
 using namespace std;
 
-template <class T>
 class storage{
 	private:
 		ofstream outputStream;
 		ifstream inputStream;
-		char* STORAGE_NAME;
+		char* _storageName;
 
 	public:
-		storage(char);
+		storage(char*);
 		~storage();
 		bool isSafeToOpenStream();
 		void initialOutputStream();
@@ -28,9 +27,9 @@ class storage{
 		void initialInputStream();
 		vector<task> readAllFromFile();
 		task readOneFromFile();
-		task putContentIntoTask(char*);
+		task putContentIntoTask(char**);
 		void closeInputStream();
+		char** tokenize(char*);
+		char* getContentOfTask(task);
 		
 };
-
-#endif // !STORAGE_H
