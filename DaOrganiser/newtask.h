@@ -1,8 +1,7 @@
-#ifndef TASK_H
-#define TASK_H
+#pragma once
 
-#include<string>
-#include<iostream>
+#include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -22,14 +21,14 @@ const int one = 1;
 const int zero = 0;
 
 struct date
-	{
-		int day, month, year;
-	};
+{
+	int day, month, year;
+};
 
-	struct time
-	{
-		int hr, min;
-	};
+struct time
+{
+	int hr, min;
+};
 
 
 class task
@@ -53,5 +52,3 @@ public:
 	void assignDetails(string);
 	void displayDetail();
 };
-
-#endif

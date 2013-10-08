@@ -1,8 +1,9 @@
-#include"process.h"
-#include<string>
-#include<iostream>
-#include<vector>
-#include<stdio.h>
+#include "stdafx.h"
+#include "newprocess.h"
+#include <string>
+#include <iostream>
+#include <vector>
+#include <stdio.h>
 
 using namespace std;
 

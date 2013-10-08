@@ -1,6 +1,7 @@
-#include"task.h"
-#include<iostream>
-#include<string>
+#include "stdafx.h"
+#include "newtask.h"
+#include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -51,7 +52,7 @@ void task::changeStatus(char complete)
 	if (complete == yes)
 		status = done;
 	else
-		status == notDone;
+		status = notDone;
 }
 
 bool task::assignDateValue(date value, char dateOption)

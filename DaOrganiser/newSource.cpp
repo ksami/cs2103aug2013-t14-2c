@@ -1,10 +1,10 @@
-#include<iostream>
-#include<conio.h>
-#include<string>
-#include<string.h>
-#include<vector>
-#include "task.h"
-#include "process.h"
+#include "stdafx.h"
+#include <iostream>
+#include <conio.h>
+#include <string>
+#include <vector>
+#include "newtask.h"
+#include "newprocess.h"
 
 using namespace std;
 

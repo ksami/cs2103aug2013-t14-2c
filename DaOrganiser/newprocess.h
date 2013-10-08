@@ -1,9 +1,8 @@
-#ifndef PROCESS_H
-#define PROCESS_H
+#pragma once
 
-#include<iostream>
-#include<vector>
-#include"task.h"
+#include <iostream>
+#include <vector>
+#include "newtask.h"
 
 using namespace std;
 
@@ -18,5 +17,3 @@ public:
 	bool updateTask();
 	bool deleteTask();
 };
-
-#endif
