@@ -86,20 +86,30 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="clock.cpp" />
     <ClCompile Include="DaOrganiser.cpp" />
+    <ClCompile Include="date.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="process.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="storage.cpp" />
     <ClCompile Include="stub.cpp" />
+    <ClCompile Include="task.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="clock.h" />
+    <ClInclude Include="date.h" />
     <ClInclude Include="MainWindow.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="process.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="storage.h" />
+    <ClInclude Include="task.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
