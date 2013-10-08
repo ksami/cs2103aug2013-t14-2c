@@ -1,103 +1,114 @@
+#include "stdafx.h"
 #include "storage.h"
 
-template <class T>
-class storage{
+storage::storage(char* storageName) {
+	_storageName = storageName;
+}
 
-	storage(char storageName) {
-		STORAGE_NAME = new char();
-		STORAGE_NAME = storageName;
+storage::~storage() {
+}
+
+bool storage::isSafeToOpenStream() {
+	return !(outputStream.is_open()||inputStream.is_open());
+}
+
+void storage::initialOutputStream() {
+	if(isSafeToOpenStream()){
+		outputStream.open(_storageName);
 	}
-
-	~storage() {
-		delete STORAGE_NAME;
-	}
-
-	bool isSafeToOpenStream() {
-		return !(outputStream.is_open()||inputStream.is_open());
-	}
-
-	void initialOutputStream() {
-		if(isSafeToOpenStream()){
-			outputStream.open();
-		}
-		else{
-			closeOutputStream();
-			closeInputStream();
-		}
-	}
-
-	void writeAllToFile(vector<task> allTask) {
-		initialOutputStream();
-		travelAllVector(allTask, writeOneToFile);
+	else{
 		closeOutputStream();
+		closeInputStream();
 	}
+}
 
-	void travelAllVector(vector<task> allTask, void (storage::*work)(task)){
-		for_each(allTask.begin(), allTask.end(), work);
+void storage::writeAllToFile(vector<task> allTask) {
+	initialOutputStream();
+	//TODO
+	//writeOneToFile missing argument list
+	travelAllVector(allTask, writeOneToFile);
+	closeOutputStream();
+}
+
+void storage::travelAllVector(vector<task> allTask, void (storage::*work)(task)){
+	for_each(allTask.begin(), allTask.end(), work);
+}
+
+void storage::writeOneToFile(task t) {
+	outputStream << getContentOfTask(t);
+}
+
+char* storage::getContentOfTask(task t) {
+	//TODO
+	//stub
+	return "hello i am a stub";
+	//return getStartDate() + "," + getStartTime() + "," + getEndDate() + "," + getEndTime();
+}
+
+void storage::closeOutputStream(){
+	if(outputStream.is_open()){
+		outputStream.close();
 	}
+}
 
-	void writeOneToFile(task t) {
-		outputStream << getContentOfTask(t);
+void storage::initialInputStream(){
+	if(isSafeToOpenStream()){
+		inputStream.open(_storageName);
 	}
-
-	char* getContentOfTask(task t) {
-		return getStartDate() + "," + getStartTime() + "," + getEndDate() + "," + getEndTime();
+	else{
+		closeOutputStream();
+		closeInputStream();
 	}
+}
 
-	void closeOutputStream(){
-		if(outputStream.is_open()){
-			outputStream.close();
-		}
+vector<task> storage::readAllFromFile(){
+	vector<task> vt;
+	while(!inputStream.eof()){
+		vt.insert(vt.end(), readOneFromFile());
 	}
+	return vt;
+}
 
-	void initialInputStream(){
-		if(isSafeToOpenStream()){
-			inputStream.open(STORAGE_NAME);
-		}
-		else{
-			closeOutputStream();
-			closeInputStream();
-		}
+task storage::readOneFromFile(){
+	char* temp = new char[1024];
+	inputStream.getline(temp, 1024);
+	return putContentIntoTask(tokenize(temp));
+	delete temp;
+}
+
+char** storage::tokenize(char *temp){
+	char** info = new char*[4];
+	int i = 0;
+	info[0] = strtok(temp, ",");
+	while (info[i] != NULL) {
+		i++;
+		info[i] = strtok(temp, ",");
 	}
+	return info;
+}
 
-	vector<task> readAllFromFile(){
-		while(!inputStream.eof()){
-			vector<task> vt = new vector<task>();
-			vt.insert(vt.end, readOneFromFile();)
-		}
-		return vt;
+task storage::putContentIntoTask(char** info){
+	task t;
+	if(info[2] != NULL){
+		//TODO
+		//stub
+		//task* t = new task(info[0], info[1], info[2], info[3]);
+		//t.assignDateValue(date, char);
+		//t.assignTimeValue(time, char);
+		//t.assignKind(char);
+		//t.assignDetails(string);
 	}
-
-	task readOneFromFile(){
-		char* temp = new char[1024];
-		inputStream.getline(temp, 1024);
-		return putContentIntoTask(tokenize(temp));
+	else if(info[0] != NULL){
+		//TODO
+		//stub
+		//task* t = new task(info[0], info[1]);
 	}
+	//stub
+	return t;
+}
 
-	char** tokenize(char *temp){
-		char** info = new char*[4];
-		int i = 0;
-		info[0] = strtok(temp, ",");
-		while (info[i] != NULL) {
-			i++;
-			info[i] = strtok(temp, ",");
-		}
-		return info;
-	}
-
-	task putContentIntoTask(char** info){
-		if(info[2] != null){
-			task* t = new task(info[0], info[1], info[2], info[3]);
-		}
-		else if(info[0] != null){
-			task* t = new task(info[0], info[1]);
-		}
-		reutnr t;
-	}
-
-	void closeInputStream(){
-		if(inputStream.is_open()){
-			inputStream.close();
-		}
+void storage::closeInputStream(){
+	if(inputStream.is_open()){
+		inputStream.close();
 	}
 }
