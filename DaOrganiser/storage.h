@@ -23,7 +23,6 @@ class storage{
 		void writeAllToFile(vector<task>);
 		void travelAllVector(vector<task>, void (storage::*work)(task));
 		void writeOneToFile(task);
-		char* getContentOfTask(task);
 
 		void closeOutputStream();
 		void initialInputStream();
