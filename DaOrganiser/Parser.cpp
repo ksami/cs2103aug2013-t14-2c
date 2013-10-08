@@ -9,6 +9,10 @@ Parser::Parser(void)
 
 string Parser::parseString(string userTask)
 {
+	vector<int> spaceInString;
+	vector<string> splitString;
+	string singleWord;
+
 	if(userTask == "quit" || userTask == "Quit")
 	{
 		//TODO
@@ -28,7 +32,9 @@ string Parser::parseString(string userTask)
 
 	for(int i=0;i<spaceInString.size()-1;i++)
 	{
-		singleWord = userTask.substr(spaceInString[i], spaceInString[i+1]-1);
+		//BUG
+		//substr 1st parameter is position to start, 2nd is length
+		singleWord = userTask.substr(spaceInString[i]+1, spaceInString[i+1]-(spaceInString[i]+1));
 		splitString.push_back(singleWord);
 	}
 
@@ -55,5 +61,7 @@ string Parser::parseString(string userTask)
 			break;
 		}
 	}
+	//TODO
+	//stub
 	return "kkeut!!";
 }

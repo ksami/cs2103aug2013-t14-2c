@@ -13,9 +13,6 @@ public:
 	Parser(void);
 private:
 	process p;
-	vector<int> spaceInString;
-	vector<string> splitString;
-	string singleWord;
 public:
 	string parseString(string);
 };
