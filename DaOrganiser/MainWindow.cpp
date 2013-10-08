@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <msclr\marshal_cppstd.h>
 #include "MainWindow.h"
+#include "Parser.h"
 
 /*void MainWindow::addTaskToList(Task task)
 {
@@ -52,10 +53,15 @@ void DaOrganiser::MainWindow::addToList(String^ details)
 
 System::Void DaOrganiser::MainWindow::textBox1_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
 {
+	static Parser parseCmd;
+
 	if(e->KeyCode == System::Windows::Forms::Keys::Enter)
 	{
 		richTextBox1->Text += "\n";
 		richTextBox1->Text += textBox1->Text;
+		richTextBox1->Text += "\n";
+		richTextBox1->Text += msclr::interop::marshal_as <String^> (parseCmd.parseString(getUserInput()));
+
 		addToList(textBox1->Text);
 		textBox1->Text = "";
 
