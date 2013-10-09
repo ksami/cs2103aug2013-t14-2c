@@ -7,7 +7,65 @@ using namespace std;
 
 task::task()
 {
+	startDate.day=0;
+	startDate.month=0;
+	startDate.year=0;
+	endDate.day=0;
+	endDate.month=0;
+	endDate.year=0;
+	startTime.hr=0;
+	startTime.min=0;
+	endTime.hr=0;
+	endTime.min=0;
+	details="";
 	status = notDone;
+}
+
+string task::getStartDateAsString()
+{
+	string startDateAsString;
+	startDateAsString += std::to_string(startDate.year);
+	startDateAsString += "/";
+	startDateAsString += std::to_string(startDate.month);
+	startDateAsString += "/";
+	startDateAsString += std::to_string(startDate.day);
+	return startDateAsString;
+}
+string task::getEndDateAsString()
+{
+	string endDateAsString;
+	endDateAsString += std::to_string(endDate.year);
+	endDateAsString += "/";
+	endDateAsString += std::to_string(endDate.month);
+	endDateAsString += "/";
+	endDateAsString += std::to_string(endDate.day);
+	return endDateAsString;
+}
+string task::getStartTimeAsString()
+{
+	string startTimeAsString;
+	startTimeAsString += std::to_string(startTime.hr);
+	startTimeAsString += ":";
+	startTimeAsString += std::to_string(startTime.min);
+	return startTimeAsString;
+}
+string task::getEndTimeAsString()
+{	
+	string endTimeAsString;
+	endTimeAsString += std::to_string(endTime.hr);
+	endTimeAsString += ":";
+	endTimeAsString += std::to_string(endTime.min);
+	return endTimeAsString;
+}
+string task::getDetailsAsString()
+{
+	return details;
+}
+string task::getStatusAsString()
+{
+	string statusAsString;
+	statusAsString += status;
+	return statusAsString;
 }
 
 int task::checkDate(date first, date second)

@@ -22,7 +22,7 @@ void storage::initialOutputStream() {
 	}
 }
 
-void storage::writeAllToFile(vector<task> allTask) {
+/*void storage::writeAllToFile(vector<task> allTask) {
 	initialOutputStream();
 	//TODO
 	//writeOneToFile missing argument list
@@ -37,7 +37,7 @@ void storage::travelAllVector(vector<task> allTask, void (storage::*work)(task))
 void storage::writeOneToFile(task t) {
 	outputStream << getContentOfTask(t);
 }
-
+*/
 char* storage::getContentOfTask(task t) {
 	//TODO
 	//stub

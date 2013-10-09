@@ -14,6 +14,7 @@ public:
 private:
 	process p;
 public:
+	vector<task> getTasks();
 	string parseString(string);
 };
 

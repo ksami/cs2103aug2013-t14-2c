@@ -12,7 +12,9 @@ private:
 	vector<task> toBeDone; 
 
 public:
-	bool createTask(string);
+	vector<task> getTasks();
+
+	bool createTask(vector<string> splitString);
 	void readTask();
 	bool updateTask();
 	bool deleteTask();

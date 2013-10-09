@@ -41,6 +41,14 @@ private:
 	char status, kind;
 public:
 	task();
+
+	string getStartDateAsString();
+	string getEndDateAsString();
+	string getStartTimeAsString();
+	string getEndTimeAsString();
+	string getDetailsAsString();
+	string getStatusAsString();
+
 	int checkDate(date, date);
 	int checkTime(time, time);
 	char checkStatus();
