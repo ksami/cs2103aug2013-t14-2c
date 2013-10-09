@@ -4,36 +4,25 @@
 #include <iostream>
 #include <vector>
 #include <stdio.h>
+#include "MainWindow.h"
 
 using namespace std;
 
-bool process::createTask(string userTask)
+vector<task> process::getTasks()
+{
+	return toBeDone;
+}
+
+//take the string split into a vector of parameters and creates a task
+//TODO return value for?
+bool process::createTask(vector<string> splitString)
 {
 	task newTask;
 	date d;
 	time t;
-	vector<int>spaceInString;
-	vector<string> splitString;
 	int i, j;
-	string singleWord, text = NULL;
+	string text;
 	bool returnvalue = true;
-
-
-	spaceInString.push_back(0);
-
-	for(i=0;i<userTask.length();i++)
-	{
-		if(userTask[i]==' ')
-			spaceInString.push_back(i);
-	}
-
-	spaceInString.push_back(userTask.length());
-
-	for(i=0;i<spaceInString.size();i++)
-	{
-		singleWord = userTask.substr(spaceInString[i], spaceInString[i+1]-1);
-		splitString.push_back(singleWord);
-	}
 
 	for(i=0;i<splitString.size();i++)
 	{
@@ -71,7 +60,7 @@ bool process::createTask(string userTask)
 		}
 		else if(splitString[i]=="-endtime")
 		{
-				int value = atoi(splitString[i+1].c_str());
+			int value = atoi(splitString[i+1].c_str());
 			t.min = value%100;
 			value/=100;
 			t.hr = value%100;
@@ -99,6 +88,7 @@ bool process::createTask(string userTask)
 				returnvalue = false;
 		}
 	}
+	toBeDone.push_back(newTask);
 
 	return returnvalue;
 }

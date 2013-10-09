@@ -7,6 +7,11 @@ Parser::Parser(void)
 {
 }
 
+vector<task> Parser::getTasks()
+{
+	return p.getTasks();
+}
+
 string Parser::parseString(string userTask)
 {
 	vector<int> spaceInString;
@@ -30,9 +35,11 @@ string Parser::parseString(string userTask)
 
 	spaceInString.push_back(userTask.length());
 
-	for(int i=0;i<spaceInString.size()-1;i++)
+	singleWord = userTask.substr(spaceInString[0], spaceInString[1]-(spaceInString[0]));
+	splitString.push_back(singleWord);
+
+	for(int i=1;i<spaceInString.size()-1;i++)
 	{
-		//BUG
 		//substr 1st parameter is position to start, 2nd is length
 		singleWord = userTask.substr(spaceInString[i]+1, spaceInString[i+1]-(spaceInString[i]+1));
 		splitString.push_back(singleWord);
@@ -42,7 +49,7 @@ string Parser::parseString(string userTask)
 	{
 		if(splitString[i]=="-add")
 		{
-			p.createTask(userTask);
+			p.createTask(splitString);
 			break;
 		}
 		else if(splitString[i]=="-update")
@@ -63,5 +70,5 @@ string Parser::parseString(string userTask)
 	}
 	//TODO
 	//stub
-	return "kkeut!!";
+	return "operation end";
 }
