@@ -59,7 +59,7 @@ string Parser::parseString(string userTask)
 		}
 		else if(splitString[i]=="-delete")
 		{
-			p.deleteTask();
+			p.deleteTask(std::stoi(splitString[i+1]));
 			break;
 		}
 		else if (splitString[i]=="-read")
