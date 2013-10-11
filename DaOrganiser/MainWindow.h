@@ -129,6 +129,7 @@ namespace DaOrganiser {
 			this->textBox1->Size = System::Drawing::Size(908, 26);
 			this->textBox1->TabIndex = 0;
 			this->textBox1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::textBox1_KeyDown);
+			this->textBox1->PreviewKeyDown += gcnew System::Windows::Forms::PreviewKeyDownEventHandler(this, &MainWindow::textBox1_PreviewKeyDown);
 			// 
 			// listView1
 			// 
@@ -216,6 +217,7 @@ namespace DaOrganiser {
 	private: System::Void textBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
 	private: System::Void listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e);
 	private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void textBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e);
 };
 }
 
