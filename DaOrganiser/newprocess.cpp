@@ -219,11 +219,10 @@ bool process::updateTask()
 	return true;
 }
 
-bool process::deleteTask()
+bool process::deleteTask(int number)
 {
-	int number;
-	cout<<"Enter task number to be deleted: ";
-	cin>>number;
+	//cout<<"Enter task number to be deleted: ";
+	//cin>>number;
 
 	if(number<=0 || (number>toBeDone.size()))
 		return false;

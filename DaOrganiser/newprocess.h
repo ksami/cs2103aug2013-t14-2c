@@ -17,5 +17,5 @@ public:
 	bool createTask(vector<string> splitString);
 	void readTask();
 	bool updateTask();
-	bool deleteTask();
+	bool deleteTask(int number);
 };

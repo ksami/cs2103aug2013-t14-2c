@@ -42,7 +42,8 @@ namespace DaOrganiser {
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
 	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::Windows::Forms::ListView^  listView1;
-	private: System::Windows::Forms::ColumnHeader^  dateAdded;
+	private: System::Windows::Forms::ColumnHeader^  taskId;
+
 
 	private: System::Windows::Forms::ColumnHeader^  details;
 	private: System::Windows::Forms::ColumnHeader^  status;
@@ -74,7 +75,7 @@ namespace DaOrganiser {
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
-			this->dateAdded = (gcnew System::Windows::Forms::ColumnHeader());
+			this->taskId = (gcnew System::Windows::Forms::ColumnHeader());
 			this->startDate = (gcnew System::Windows::Forms::ColumnHeader());
 			this->endDate = (gcnew System::Windows::Forms::ColumnHeader());
 			this->startTime = (gcnew System::Windows::Forms::ColumnHeader());
@@ -118,6 +119,10 @@ namespace DaOrganiser {
 			// 
 			// textBox1
 			// 
+			this->textBox1->AutoCompleteCustomSource->AddRange(gcnew cli::array< System::String^  >(3) {L"-add", L"-delete", L"-update"});
+			this->textBox1->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::SuggestAppend;
+			this->textBox1->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
+			this->textBox1->CharacterCasing = System::Windows::Forms::CharacterCasing::Upper;
 			this->textBox1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->textBox1->Location = System::Drawing::Point(4, 578);
 			this->textBox1->Name = L"textBox1";
@@ -127,7 +132,7 @@ namespace DaOrganiser {
 			// 
 			// listView1
 			// 
-			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->dateAdded, this->startDate, 
+			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->taskId, this->startDate, 
 				this->endDate, this->startTime, this->endTime, this->details, this->status});
 			this->listView1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->listView1->FullRowSelect = true;
@@ -136,14 +141,15 @@ namespace DaOrganiser {
 			this->listView1->Name = L"listView1";
 			this->listView1->Size = System::Drawing::Size(908, 434);
 			this->listView1->TabIndex = 2;
+			this->listView1->TabStop = false;
 			this->listView1->UseCompatibleStateImageBehavior = false;
 			this->listView1->View = System::Windows::Forms::View::Details;
 			this->listView1->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &MainWindow::listView1_ColumnClick);
 			// 
-			// dateAdded
+			// taskId
 			// 
-			this->dateAdded->Text = L"Date Added";
-			this->dateAdded->Width = 98;
+			this->taskId->Text = L"Task ID";
+			this->taskId->Width = 73;
 			// 
 			// startDate
 			// 
