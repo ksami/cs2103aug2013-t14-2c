@@ -40,7 +40,7 @@ namespace DaOrganiser {
 		}
 	private: System::Windows::Forms::RichTextBox^  richTextBox1;
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
-	private: System::Windows::Forms::TextBox^  textBox1;
+
 	private: System::Windows::Forms::ListView^  listView1;
 	private: System::Windows::Forms::ColumnHeader^  taskId;
 
@@ -52,7 +52,9 @@ namespace DaOrganiser {
 	private: System::Windows::Forms::ColumnHeader^  startTime;
 	private: System::Windows::Forms::ColumnHeader^  endTime;
 	private: System::Windows::Forms::Timer^  timer1;
+	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::Windows::Forms::ComboBox^  comboBox1;
+
 
 	private: System::ComponentModel::IContainer^  components;
 
@@ -130,9 +132,9 @@ namespace DaOrganiser {
 			this->textBox1->Location = System::Drawing::Point(4, 611);
 			this->textBox1->Name = L"textBox1";
 			this->textBox1->Size = System::Drawing::Size(772, 26);
-			this->textBox1->TabIndex = 0;
+			this->textBox1->TabIndex = 1;
+			this->textBox1->TabStop = false;
 			this->textBox1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::textBox1_KeyDown);
-			this->textBox1->PreviewKeyDown += gcnew System::Windows::Forms::PreviewKeyDownEventHandler(this, &MainWindow::textBox1_PreviewKeyDown);
 			// 
 			// listView1
 			// 
@@ -193,11 +195,15 @@ namespace DaOrganiser {
 			// 
 			// comboBox1
 			// 
+			this->comboBox1->AllowDrop = true;
+			this->comboBox1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->comboBox1->FormattingEnabled = true;
 			this->comboBox1->Location = System::Drawing::Point(4, 611);
 			this->comboBox1->Name = L"comboBox1";
 			this->comboBox1->Size = System::Drawing::Size(774, 28);
-			this->comboBox1->TabIndex = 2;
+			this->comboBox1->Sorted = true;
+			this->comboBox1->TabIndex = 0;
+			this->comboBox1->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainWindow::comboBox1_KeyPress);
 			// 
 			// MainWindow
 			// 
@@ -216,6 +222,7 @@ namespace DaOrganiser {
 		}
 #pragma endregion
 
+	private: String^ userInputWord;
 		// Public Methods
 	//public: void addToList(String^ details);
 	public: std::string getUserInput(void);
@@ -229,7 +236,7 @@ namespace DaOrganiser {
 	private: System::Void textBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
 	private: System::Void listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e);
 	private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void textBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e);
+	private: System::Void comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 };
 }
 
