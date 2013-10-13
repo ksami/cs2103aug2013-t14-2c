@@ -203,6 +203,7 @@ namespace DaOrganiser {
 			this->comboBox1->Size = System::Drawing::Size(774, 28);
 			this->comboBox1->Sorted = true;
 			this->comboBox1->TabIndex = 0;
+			this->comboBox1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::comboBox1_KeyDown);
 			this->comboBox1->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainWindow::comboBox1_KeyPress);
 			// 
 			// MainWindow
@@ -223,6 +224,7 @@ namespace DaOrganiser {
 #pragma endregion
 
 	private: String^ userInputWord;
+	private: String^ temp;
 		// Public Methods
 	//public: void addToList(String^ details);
 	public: std::string getUserInput(void);
@@ -237,6 +239,7 @@ namespace DaOrganiser {
 	private: System::Void listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e);
 	private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+	private: System::Void comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
 };
 }
 

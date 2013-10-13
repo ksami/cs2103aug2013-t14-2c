@@ -116,7 +116,6 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 {
 	if(e->KeyChar == '-')
 	{
-		//userInputWord = "";
 		temp = comboBox1->Text;
 		comboBox1->DroppedDown = true;
 		std::string val = "";
@@ -125,7 +124,7 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 	}
 	else if(e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122)
 	{
-		//hide intellisense if non-alphanumeric key
+		//hide autocomplete box if non-alphanumeric key
 		userInputWord = "";
 		comboBox1->DroppedDown = false;
 	}
@@ -135,27 +134,17 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 		val += tolower((char) e->KeyChar);
 		userInputWord += stdStringToSysString(val);
 		
-		//comboBox1->Items->Clear();
+		array <String^>^ availableCmds = {"-hello", "-add", "-delete", "-haha", "-update"};
 
-		//if(userInputWord != "-")
-		//{
-			array <String^>^ availableCmds = {"-hello", "-add", "-delete", "-haha", "-update"};
+		for(int i=0; i<5; i++)
+		{
+			comboBox1->Items->Remove(availableCmds[i]);
 
-			for(int i=0; i<5; i++)
+			if(availableCmds[i]->StartsWith(userInputWord))
 			{
-				comboBox1->Items->Remove(availableCmds[i]);
-
-				if(availableCmds[i]->StartsWith(userInputWord))
-				{
-					//comboBox1->Text = "";
-					//debug
-					richTextBox1->Text += availableCmds[i];
-					comboBox1->Items->Add(availableCmds[i]);
-					//comboBox1->Text = temp;
-					//comboBox1->Text += availableCmds[i];
-				}
+				comboBox1->Items->Add(availableCmds[i]);
 			}
-		//}
+		}
 	}
 }
 
@@ -163,28 +152,36 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 {
 	if(e->KeyCode == System::Windows::Forms::Keys::Up)
 	{
-		comboBox1->SelectedIndex = (comboBox1->SelectedIndex - 1) % comboBox1->Items->Count;
+		if(comboBox1->SelectedIndex > 0)
+		{
+			comboBox1->SelectedIndex--;
+		}
 		comboBox1->Text = temp;
 		comboBox1->Text += comboBox1->SelectedItem;
 		comboBox1->Select(comboBox1->Text->Length, 0);
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::Down)
 	{
-		comboBox1->SelectedIndex = (comboBox1->SelectedIndex + 1) % comboBox1->Items->Count;
+		if(comboBox1->SelectedIndex < comboBox1->Items->Count - 1)
+		{
+			comboBox1->SelectedIndex++;
+		}
 		comboBox1->Text = temp;
 		comboBox1->Text += comboBox1->SelectedItem;
 		comboBox1->Select(comboBox1->Text->Length, 0);
 	}
-	else if(e->KeyCode == System::Windows::Forms::Keys::Space)
+	else if((e->KeyCode == System::Windows::Forms::Keys::Space) && (comboBox1->DroppedDown == true))
 	{
 		comboBox1->DroppedDown = false;
 		comboBox1->Select(comboBox1->Text->Length, 0);
 	}
 	else if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true))
 	{
+		//BUG
+		//doesnt fire
+		comboBox1->DroppedDown = false;
 		comboBox1->Text = temp;
 		comboBox1->Text += comboBox1->SelectedItem;
-		//comboBox1->DroppedDown = false;
-		//comboBox1->Items->Clear();
+		comboBox1->Select(comboBox1->Text->Length, 0);
 	}
 }
