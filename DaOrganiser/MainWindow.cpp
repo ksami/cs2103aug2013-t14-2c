@@ -114,7 +114,6 @@ System::Void DaOrganiser::MainWindow::timer1_Tick(System::Object^  sender, Syste
 // Following functions implement Autocomplete for commands
 System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e)
 {
-	String^ temp;
 	if(e->KeyChar == '-')
 	{
 		//userInputWord = "";
@@ -124,15 +123,11 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 		val += tolower((char) e->KeyChar);
 		userInputWord += stdStringToSysString(val);
 	}
-	else if((e->KeyChar == '\t') && (comboBox1->DroppedDown == true))
-	{
-		//comboBox1->DroppedDown = false;
-		//comboBox1->Items->Clear();
-	}
 	else if(e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122)
 	{
 		//hide intellisense if non-alphanumeric key
 		userInputWord = "";
+		comboBox1->DroppedDown = false;
 	}
 	else
 	{
@@ -161,5 +156,35 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 				}
 			}
 		//}
+	}
+}
+
+System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
+{
+	if(e->KeyCode == System::Windows::Forms::Keys::Up)
+	{
+		comboBox1->SelectedIndex = (comboBox1->SelectedIndex - 1) % comboBox1->Items->Count;
+		comboBox1->Text = temp;
+		comboBox1->Text += comboBox1->SelectedItem;
+		comboBox1->Select(comboBox1->Text->Length, 0);
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::Down)
+	{
+		comboBox1->SelectedIndex = (comboBox1->SelectedIndex + 1) % comboBox1->Items->Count;
+		comboBox1->Text = temp;
+		comboBox1->Text += comboBox1->SelectedItem;
+		comboBox1->Select(comboBox1->Text->Length, 0);
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::Space)
+	{
+		comboBox1->DroppedDown = false;
+		comboBox1->Select(comboBox1->Text->Length, 0);
+	}
+	else if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true))
+	{
+		comboBox1->Text = temp;
+		comboBox1->Text += comboBox1->SelectedItem;
+		//comboBox1->DroppedDown = false;
+		//comboBox1->Items->Clear();
 	}
 }
