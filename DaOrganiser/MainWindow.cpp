@@ -119,7 +119,7 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 	{
 		//userInputWord = "";
 		temp = comboBox1->Text;
-		//comboBox1->DroppedDown = true;
+		comboBox1->DroppedDown = true;
 		std::string val = "";
 		val += tolower((char) e->KeyChar);
 		userInputWord += stdStringToSysString(val);
@@ -139,6 +139,8 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 		std::string val = "";
 		val += tolower((char) e->KeyChar);
 		userInputWord += stdStringToSysString(val);
+		
+		//comboBox1->Items->Clear();
 
 		//if(userInputWord != "-")
 		//{
@@ -146,11 +148,14 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 
 			for(int i=0; i<5; i++)
 			{
+				comboBox1->Items->Remove(availableCmds[i]);
+
 				if(availableCmds[i]->StartsWith(userInputWord))
 				{
 					//comboBox1->Text = "";
 					//debug
 					richTextBox1->Text += availableCmds[i];
+					comboBox1->Items->Add(availableCmds[i]);
 					//comboBox1->Text = temp;
 					//comboBox1->Text += availableCmds[i];
 				}
