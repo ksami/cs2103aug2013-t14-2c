@@ -2,6 +2,7 @@
 #include <msclr\marshal_cppstd.h>
 #include "MainWindow.h"
 #include "Parser.h"
+#include <cctype>
 
 static Parser parseCmd;
 
@@ -69,14 +70,6 @@ void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
 //    Event Handlers   //
 /////////////////////////
 
-System::Void DaOrganiser::MainWindow::textBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e)
-{
-	if(e->KeyCode == System::Windows::Forms::Keys::Subtract)
-	{
-		// if there is a - in the textbox, start autocomplete for commands
-	}
-}
-
 System::Void DaOrganiser::MainWindow::textBox1_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
 {
 	if(e->KeyCode == System::Windows::Forms::Keys::Enter)
@@ -115,5 +108,53 @@ System::Void DaOrganiser::MainWindow::timer1_Tick(System::Object^  sender, Syste
 	for(int i=0; i<allTasks.size(); i++)
 	{
 		addTaskToList(allTasks[i]);
+	}
+}
+
+// Following functions implement Autocomplete for commands
+System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e)
+{
+	String^ temp;
+	if(e->KeyChar == '-')
+	{
+		//userInputWord = "";
+		temp = comboBox1->Text;
+		//comboBox1->DroppedDown = true;
+		std::string val = "";
+		val += tolower((char) e->KeyChar);
+		userInputWord += stdStringToSysString(val);
+	}
+	else if((e->KeyChar == '\t') && (comboBox1->DroppedDown == true))
+	{
+		//comboBox1->DroppedDown = false;
+		//comboBox1->Items->Clear();
+	}
+	else if(e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122)
+	{
+		//hide intellisense if non-alphanumeric key
+		userInputWord = "";
+	}
+	else
+	{
+		std::string val = "";
+		val += tolower((char) e->KeyChar);
+		userInputWord += stdStringToSysString(val);
+
+		//if(userInputWord != "-")
+		//{
+			array <String^>^ availableCmds = {"-hello", "-add", "-delete", "-haha", "-update"};
+
+			for(int i=0; i<5; i++)
+			{
+				if(availableCmds[i]->StartsWith(userInputWord))
+				{
+					//comboBox1->Text = "";
+					//debug
+					richTextBox1->Text += availableCmds[i];
+					//comboBox1->Text = temp;
+					//comboBox1->Text += availableCmds[i];
+				}
+			}
+		//}
 	}
 }
