@@ -71,7 +71,7 @@ void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
 
 System::Void DaOrganiser::MainWindow::textBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e)
 {
-	if(e->KeyCode == System::Windows::Forms::Keys::OemMinus)
+	if(e->KeyCode == System::Windows::Forms::Keys::Subtract)
 	{
 		// if there is a - in the textbox, start autocomplete for commands
 	}
