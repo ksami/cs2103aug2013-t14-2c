@@ -138,7 +138,7 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 	else if(e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122)
 	{
 		//reset searching for autocomplete if non-alphanumeric key
-		userInputWord = "";
+		//userInputWord = "";
 		//comboBox1->DroppedDown = false;
 	}
 	else
@@ -173,18 +173,28 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 
 	if(e->KeyCode == System::Windows::Forms::Keys::Back)
 	{
-		//if ( comboBox1->Text->Length > 0 )
-		//{
-		//	comboBox1->Select(comboBox1->Text->Length, 0);
-		//}
-		if (currentChar == "-")
-		{
-			comboBox1->DroppedDown = false;
-			userInputWord = "";
-		}
-		else if(userInputWord->Length > 0)
-		{
-			userInputWord = userInputWord->Substring(0, userInputWord->Length -1);
+		if (comboBox1->Text->Length > 0)
+		{	
+			if (currentChar == "-")
+			{
+				comboBox1->DroppedDown = false;
+				userInputWord = "";
+			}
+			else if(userInputWord->Length > 0)
+			{
+				userInputWord = userInputWord->Substring(0, userInputWord->Length -1);
+		
+				array <String^>^ availableCmds = {"-hello", "-add", "-delete", "-haha", "-update"};
+				for(int i=0; i<5; i++)
+				{
+					comboBox1->Items->Remove(availableCmds[i]);
+
+					if(availableCmds[i]->StartsWith(userInputWord))
+					{
+						comboBox1->Items->Add(availableCmds[i]);
+					}
+				}	
+			}
 		}
 	}
 	else if((e->KeyCode == System::Windows::Forms::Keys::Space) && (comboBox1->DroppedDown == true))
