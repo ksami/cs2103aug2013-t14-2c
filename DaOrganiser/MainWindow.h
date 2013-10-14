@@ -75,6 +75,7 @@ namespace DaOrganiser {
 		void InitializeComponent(void)
 		{
 			this->components = (gcnew System::ComponentModel::Container());
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainWindow::typeid));
 			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
@@ -214,6 +215,7 @@ namespace DaOrganiser {
 			this->ClientSize = System::Drawing::Size(780, 644);
 			this->Controls->Add(this->comboBox1);
 			this->Controls->Add(this->tableLayoutPanel1);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
 			this->Name = L"MainWindow";
 			this->Text = L"MainWindow";
@@ -234,6 +236,7 @@ namespace DaOrganiser {
 	public: void addTaskToList(task taskToAdd);
 	public: std::string sysStringToStdString(String ^ stringToConvert);
 	public: String^ stdStringToSysString(std::string stringToConvert);
+	public: void exitProgram(void);
 
 		// Events
 	private: System::Void textBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
