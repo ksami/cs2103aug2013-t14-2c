@@ -163,12 +163,12 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 
 System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
 {
-	int i = richTextBox1->SelectionStart;
+	int i = comboBox1->SelectionStart;
 	String^ currentChar = "";
 
 	if ( i > 0 )
 	{
-		currentChar = richTextBox1->Text->Substring(i-1,1);
+		currentChar = comboBox1->Text->Substring(i-1,1);
 	}
 
 	if(e->KeyCode == System::Windows::Forms::Keys::Back)
@@ -177,9 +177,14 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 		//{
 		//	comboBox1->Select(comboBox1->Text->Length, 0);
 		//}
-		if ( currentChar == "-" )
+		if (currentChar == "-")
 		{
 			comboBox1->DroppedDown = false;
+			userInputWord = "";
+		}
+		else if(userInputWord->Length > 0)
+		{
+			userInputWord = userInputWord->Substring(0, userInputWord->Length -1);
 		}
 	}
 	else if((e->KeyCode == System::Windows::Forms::Keys::Space) && (comboBox1->DroppedDown == true))
