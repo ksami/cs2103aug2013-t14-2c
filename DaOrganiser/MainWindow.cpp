@@ -124,9 +124,9 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 	}
 	else if(e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122)
 	{
-		//hide autocomplete box if non-alphanumeric key
+		//reset searching for autocomplete if non-alphanumeric key
 		userInputWord = "";
-		comboBox1->DroppedDown = false;
+		//comboBox1->DroppedDown = false;
 	}
 	else
 	{
@@ -175,10 +175,13 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 		comboBox1->DroppedDown = false;
 		comboBox1->Select(comboBox1->Text->Length, 0);
 	}
-	else if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true))
+}
+
+System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e)
+{
+	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true))
 	{
-		//BUG
-		//doesnt fire
+		//assert selectedItem != 0
 		comboBox1->DroppedDown = false;
 		comboBox1->Text = temp;
 		comboBox1->Text += comboBox1->SelectedItem;
