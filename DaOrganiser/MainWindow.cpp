@@ -118,9 +118,22 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 	{
 		temp = comboBox1->Text;
 		comboBox1->DroppedDown = true;
+		
 		std::string val = "";
 		val += tolower((char) e->KeyChar);
 		userInputWord += stdStringToSysString(val);
+
+		array <String^>^ availableCmds = {"-hello", "-add", "-delete", "-haha", "-update"};
+
+		for(int i=0; i<5; i++)
+		{
+			comboBox1->Items->Remove(availableCmds[i]);
+
+			if(availableCmds[i]->StartsWith(userInputWord))
+			{
+				comboBox1->Items->Add(availableCmds[i]);
+			}
+		}
 	}
 	else if(e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122)
 	{
@@ -150,41 +163,78 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 
 System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
 {
-	if(e->KeyCode == System::Windows::Forms::Keys::Up)
+	int i = richTextBox1->SelectionStart;
+	String^ currentChar = "";
+
+	if ( i > 0 )
 	{
-		if(comboBox1->SelectedIndex > 0)
-		{
-			comboBox1->SelectedIndex--;
-		}
-		comboBox1->Text = temp;
-		comboBox1->Text += comboBox1->SelectedItem;
-		comboBox1->Select(comboBox1->Text->Length, 0);
+		currentChar = richTextBox1->Text->Substring(i-1,1);
 	}
-	else if(e->KeyCode == System::Windows::Forms::Keys::Down)
+
+	if(e->KeyCode == System::Windows::Forms::Keys::Back)
 	{
-		if(comboBox1->SelectedIndex < comboBox1->Items->Count - 1)
+		//if ( comboBox1->Text->Length > 0 )
+		//{
+		//	comboBox1->Select(comboBox1->Text->Length, 0);
+		//}
+		if ( currentChar == "-" )
 		{
-			comboBox1->SelectedIndex++;
+			comboBox1->DroppedDown = false;
 		}
-		comboBox1->Text = temp;
-		comboBox1->Text += comboBox1->SelectedItem;
-		comboBox1->Select(comboBox1->Text->Length, 0);
 	}
 	else if((e->KeyCode == System::Windows::Forms::Keys::Space) && (comboBox1->DroppedDown == true))
 	{
 		comboBox1->DroppedDown = false;
 		comboBox1->Select(comboBox1->Text->Length, 0);
 	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::Up)
+	{
+		e->Handled = true;
+		if (comboBox1->DroppedDown == true)
+		{
+			if(comboBox1->SelectedIndex > 0)
+			{
+				comboBox1->SelectedIndex--;
+			}
+			comboBox1->Text = temp;
+			comboBox1->Text += comboBox1->SelectedItem;
+			comboBox1->Select(comboBox1->Text->Length, 0); 
+		}
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::Down)
+	{
+		e->Handled = true;
+		if (comboBox1->DroppedDown == true)
+		{
+			if(comboBox1->SelectedIndex < comboBox1->Items->Count -1)
+			{
+				comboBox1->SelectedIndex++;
+			}
+			comboBox1->Text = temp;
+			comboBox1->Text += comboBox1->SelectedItem;
+			comboBox1->Select(comboBox1->Text->Length, 0); 
+		}
+	}
 }
 
 System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e)
 {
-	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true))
+	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true) && (comboBox1->Items->Count > 0))
 	{
-		//assert selectedItem != 0
-		comboBox1->DroppedDown = false;
-		comboBox1->Text = temp;
-		comboBox1->Text += comboBox1->SelectedItem;
-		comboBox1->Select(comboBox1->Text->Length, 0);
+		if(comboBox1->SelectedIndex > 0)
+		{
+			comboBox1->DroppedDown = false;
+			comboBox1->Text = temp;
+			comboBox1->Text += comboBox1->SelectedItem;
+			comboBox1->Select(comboBox1->Text->Length, 0);
+		}
+		else
+		{
+			comboBox1->SelectedIndex = 0;
+			comboBox1->DroppedDown = false;
+			comboBox1->Text = temp;
+			comboBox1->Text += comboBox1->SelectedItem;
+			comboBox1->Select(comboBox1->Text->Length, 0);
+		}
 	}
 }
