@@ -52,7 +52,7 @@ namespace DaOrganiser {
 	private: System::Windows::Forms::ColumnHeader^  startTime;
 	private: System::Windows::Forms::ColumnHeader^  endTime;
 	private: System::Windows::Forms::Timer^  timer1;
-	private: System::Windows::Forms::TextBox^  textBox1;
+
 	private: System::Windows::Forms::ComboBox^  comboBox1;
 
 
@@ -78,7 +78,6 @@ namespace DaOrganiser {
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainWindow::typeid));
 			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
 			this->taskId = (gcnew System::Windows::Forms::ColumnHeader());
 			this->startDate = (gcnew System::Windows::Forms::ColumnHeader());
@@ -111,7 +110,6 @@ namespace DaOrganiser {
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 
 				50)));
 			this->tableLayoutPanel1->Controls->Add(this->richTextBox1, 0, 1);
-			this->tableLayoutPanel1->Controls->Add(this->textBox1, 0, 2);
 			this->tableLayoutPanel1->Controls->Add(this->listView1, 0, 0);
 			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 0);
@@ -122,20 +120,6 @@ namespace DaOrganiser {
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 34)));
 			this->tableLayoutPanel1->Size = System::Drawing::Size(780, 644);
 			this->tableLayoutPanel1->TabIndex = 1;
-			// 
-			// textBox1
-			// 
-			this->textBox1->AutoCompleteCustomSource->AddRange(gcnew cli::array< System::String^  >(3) {L"-add", L"-delete", L"-update"});
-			this->textBox1->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::SuggestAppend;
-			this->textBox1->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
-			this->textBox1->CharacterCasing = System::Windows::Forms::CharacterCasing::Upper;
-			this->textBox1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->textBox1->Location = System::Drawing::Point(4, 611);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(772, 26);
-			this->textBox1->TabIndex = 1;
-			this->textBox1->TabStop = false;
-			this->textBox1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::textBox1_KeyDown);
 			// 
 			// listView1
 			// 
@@ -220,7 +204,6 @@ namespace DaOrganiser {
 			this->Name = L"MainWindow";
 			this->Text = L"MainWindow";
 			this->tableLayoutPanel1->ResumeLayout(false);
-			this->tableLayoutPanel1->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
@@ -248,7 +231,6 @@ namespace DaOrganiser {
 	private: void setCaretToEnd(void);
 
 		// Events
-	private: System::Void textBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
 	private: System::Void listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e);
 	private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
