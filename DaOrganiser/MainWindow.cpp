@@ -44,12 +44,12 @@ void DaOrganiser::MainWindow::addTaskToList(task taskToAdd)
 
 std::string DaOrganiser::MainWindow::getUserInput(void)
 {
-	return sysStringToStdString(textBox1->Text);
+	return sysStringToStdString(comboBox1->Text);
 }
 
 void DaOrganiser::MainWindow::clearInputField(void)
 {
-	textBox1->Text="";
+	comboBox1->Text=NULL_STRING;
 }
 
 void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
@@ -133,28 +133,6 @@ void DaOrganiser::MainWindow::setCaretToEnd(void)
 /////////////////////////
 //    Event Handlers   //
 /////////////////////////
-
-System::Void DaOrganiser::MainWindow::textBox1_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e)
-{
-	if(e->KeyCode == System::Windows::Forms::Keys::Enter)
-	{
-		richTextBox1->Text += "\n";
-		richTextBox1->Text += textBox1->Text;
-		richTextBox1->Text += "\n";
-		richTextBox1->Text += stdStringToSysString(parseCmd.parseString(getUserInput()));
-
-		clearInputField();
-
-		richTextBox1->Select(richTextBox1->Text->Length - 1, 0);
-		richTextBox1->ScrollToCaret();
-
-		//check if richTextBox1 overflow
-		if(richTextBox1->Text->Length > 100000)
-		{
-			richTextBox1->Text = richTextBox1->Text->Remove(0, 1000);
-		}
-	}
-}
 
 //column click sorting for entire inventory
 System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e)
@@ -282,6 +260,24 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 		else
 		{
 			exitProgram();
+		}
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::Enter)
+	{
+		richTextBox1->Text += "\n";
+		richTextBox1->Text += comboBox1->Text;
+		richTextBox1->Text += "\n";
+		richTextBox1->Text += stdStringToSysString(parseCmd.parseString(getUserInput()));
+
+		clearInputField();
+
+		richTextBox1->Select(richTextBox1->Text->Length - 1, 0);
+		richTextBox1->ScrollToCaret();
+
+		//check if richTextBox1 overflow
+		if(richTextBox1->Text->Length > 100000)
+		{
+			richTextBox1->Text = richTextBox1->Text->Remove(0, 1000);
 		}
 	}
 }
