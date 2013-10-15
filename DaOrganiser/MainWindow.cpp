@@ -236,6 +236,13 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 			comboBox1->Select(comboBox1->Text->Length, 0); 
 		}
 	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::Right)
+	{
+		if (comboBox1->DroppedDown == true)
+		{
+			comboBox1->DroppedDown = false;
+		}
+	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::Escape)
 	{
 		e->Handled = true;
