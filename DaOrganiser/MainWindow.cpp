@@ -4,7 +4,19 @@
 #include "Parser.h"
 #include <cctype>
 
+#define AVAILABLE_CMDS "-add", "-delete", "-update", "-startdate", "-enddate", "-starttime", "-endtime", "-type", "-status"
+#define AVAILABLE_CMDS_NUM 9
+#define CMD_DELIMITER_CHAR '-'
+#define CMD_DELIMITER_STR "-"
+#define NULL_STRING ""
+#define TEXT_INDEX_START 0
+
 static Parser parseCmd;
+
+#pragma region Public Methods
+//<summary>
+//Public Methods
+//</summary>
 
 std::string DaOrganiser::MainWindow::sysStringToStdString(String^ stringToConvert)
 {
@@ -61,6 +73,51 @@ void DaOrganiser::MainWindow::exitProgram(void)
 	this->Close();
 }
 
+#pragma endregion
+
+#pragma region Private Methods
+// Private Methods
+
+//adds matching items to the suggestion box
+void DaOrganiser::MainWindow::suggestResults(void)
+{
+	array <String^>^ availableCmds = {AVAILABLE_CMDS};
+
+	for(int i=0; i<AVAILABLE_CMDS_NUM; i++)
+	{
+		comboBox1->Items->Remove(availableCmds[i]);
+
+		if(availableCmds[i]->StartsWith(userInputWord))
+		{
+			comboBox1->Items->Add(availableCmds[i]);
+		}
+	}
+}
+
+void DaOrganiser::MainWindow::openSuggestionBox(void)
+{
+	comboBox1->DroppedDown = true;
+}
+
+void DaOrganiser::MainWindow::closeSuggestionBox(void)
+{
+	comboBox1->DroppedDown = false;
+}
+
+void DaOrganiser::MainWindow::commitSelectedSuggestion(void)
+{
+	comboBox1->Text = userPrevInput;
+	comboBox1->Text += comboBox1->SelectedItem;
+}
+
+//focuses combobox1, sets caret to end
+void DaOrganiser::MainWindow::setCaretToEnd(void)
+{
+	comboBox1->Select(comboBox1->Text->Length, TEXT_INDEX_START);
+}
+
+#pragma endregion
+
 //stub
 /*void DaOrganiser::MainWindow::addToList(String^ details)
 {
@@ -72,6 +129,7 @@ void DaOrganiser::MainWindow::exitProgram(void)
 	delete item;
 }*/
 
+#pragma region Event Handlers
 /////////////////////////
 //    Event Handlers   //
 /////////////////////////
@@ -117,60 +175,38 @@ System::Void DaOrganiser::MainWindow::timer1_Tick(System::Object^  sender, Syste
 	}
 }
 
-// Following functions implement Autocomplete for commands
+// Following events implement Autocomplete for commands
+// Order of events called: PreviewKeyDown > KeyDown > KeyPress > KeyUp
 System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e)
 {
-	if(e->KeyChar == '-')
+	bool nonAlphaNumeric = (e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122);
+
+	if(e->KeyChar == CMD_DELIMITER_CHAR)
 	{
-		temp = comboBox1->Text;
-		comboBox1->DroppedDown = true;
+		userPrevInput = comboBox1->Text;
+
+		openSuggestionBox();
 		
-		std::string val = "";
-		val += tolower((char) e->KeyChar);
-		userInputWord = stdStringToSysString(val);
+		std::string charToConvert = NULL_STRING;
+		charToConvert += tolower((char) e->KeyChar);
+		userInputWord = stdStringToSysString(charToConvert);
 
-		array <String^>^ availableCmds = {"-hello", "-add", "-delete", "-haha", "-update"};
-
-		for(int i=0; i<5; i++)
-		{
-			comboBox1->Items->Remove(availableCmds[i]);
-
-			if(availableCmds[i]->StartsWith(userInputWord))
-			{
-				comboBox1->Items->Add(availableCmds[i]);
-			}
-		}
+		suggestResults();
 	}
-	else if(e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122)
+	else if(!nonAlphaNumeric)
 	{
-		//reset searching for autocomplete if non-alphanumeric key
-		//userInputWord = "";
-		//comboBox1->DroppedDown = false;
-	}
-	else
-	{
-		std::string val = "";
-		val += tolower((char) e->KeyChar);
-		userInputWord += stdStringToSysString(val);
+		std::string charToConvert = NULL_STRING;
+		charToConvert += tolower((char) e->KeyChar);
+		userInputWord += stdStringToSysString(charToConvert);
 		
-		array <String^>^ availableCmds = {"-hello", "-add", "-delete", "-haha", "-update"};
-
-		for(int i=0; i<5; i++)
-		{
-			comboBox1->Items->Remove(availableCmds[i]);
-
-			if(availableCmds[i]->StartsWith(userInputWord))
-			{
-				comboBox1->Items->Add(availableCmds[i]);
-			}
-		}
+		suggestResults();
 	}
 }
 
 System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
 {
 	int i = comboBox1->SelectionStart;
-	String^ currentChar = "";
+	String^ currentChar = NULL_STRING;
 
 	if ( i > 0 )
 	{
@@ -179,34 +215,27 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 
 	if(e->KeyCode == System::Windows::Forms::Keys::Back)
 	{
-		if (comboBox1->Text->Length > 0)
+		if (comboBox1->Text->Length > 0 && comboBox1->DroppedDown == true)
 		{	
-			if (currentChar == "-")
+			if (currentChar == CMD_DELIMITER_STR)
 			{
-				comboBox1->DroppedDown = false;
-				userInputWord = "";
+				closeSuggestionBox();
+				userInputWord = NULL_STRING;
 			}
 			else if(userInputWord->Length > 0)
 			{
 				userInputWord = userInputWord->Substring(0, userInputWord->Length -1);
-		
-				array <String^>^ availableCmds = {"-hello", "-add", "-delete", "-haha", "-update"};
-				for(int i=0; i<5; i++)
-				{
-					comboBox1->Items->Remove(availableCmds[i]);
-
-					if(availableCmds[i]->StartsWith(userInputWord))
-					{
-						comboBox1->Items->Add(availableCmds[i]);
-					}
-				}	
+				suggestResults();	
 			}
 		}
 	}
-	else if((e->KeyCode == System::Windows::Forms::Keys::Space) && (comboBox1->DroppedDown == true))
+	else if(e->KeyCode == System::Windows::Forms::Keys::Space)
 	{
-		comboBox1->DroppedDown = false;
-		comboBox1->Select(comboBox1->Text->Length, 0);
+		if(comboBox1->DroppedDown == true)
+		{
+			closeSuggestionBox();
+			setCaretToEnd();
+		}
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::Up)
 	{
@@ -217,9 +246,8 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 			{
 				comboBox1->SelectedIndex--;
 			}
-			comboBox1->Text = temp;
-			comboBox1->Text += comboBox1->SelectedItem;
-			comboBox1->Select(comboBox1->Text->Length, 0); 
+			commitSelectedSuggestion();
+			setCaretToEnd();
 		}
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::Down)
@@ -231,16 +259,15 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 			{
 				comboBox1->SelectedIndex++;
 			}
-			comboBox1->Text = temp;
-			comboBox1->Text += comboBox1->SelectedItem;
-			comboBox1->Select(comboBox1->Text->Length, 0); 
+			commitSelectedSuggestion();
+			setCaretToEnd();
 		}
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::Right)
 	{
 		if (comboBox1->DroppedDown == true)
 		{
-			comboBox1->DroppedDown = false;
+			closeSuggestionBox();
 		}
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::Escape)
@@ -248,10 +275,9 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 		e->Handled = true;
 		if(comboBox1->DroppedDown == true)
 		{
-			comboBox1->DroppedDown = false;
-			comboBox1->Text = temp;
-			comboBox1->Text += userInputWord;
-			comboBox1->Select(comboBox1->Text->Length, 0); 
+			closeSuggestionBox();
+			commitSelectedSuggestion();
+			setCaretToEnd();
 		}
 		else
 		{
@@ -266,18 +292,18 @@ System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  
 	{
 		if(comboBox1->SelectedIndex > 0)
 		{
-			comboBox1->DroppedDown = false;
-			comboBox1->Text = temp;
-			comboBox1->Text += comboBox1->SelectedItem;
-			comboBox1->Select(comboBox1->Text->Length, 0);
+			closeSuggestionBox();
+			commitSelectedSuggestion();
+			setCaretToEnd();
 		}
 		else
 		{
 			comboBox1->SelectedIndex = 0;
-			comboBox1->DroppedDown = false;
-			comboBox1->Text = temp;
-			comboBox1->Text += comboBox1->SelectedItem;
-			comboBox1->Select(comboBox1->Text->Length, 0);
+			closeSuggestionBox();
+			commitSelectedSuggestion();
+			setCaretToEnd();
 		}
 	}
 }
+
+#pragma endregion
