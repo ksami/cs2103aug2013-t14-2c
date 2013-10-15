@@ -226,8 +226,10 @@ namespace DaOrganiser {
 		}
 #pragma endregion
 
+		// Private Members
 	private: String^ userInputWord;
-	private: String^ temp;
+	private: String^ userPrevInput;
+
 		// Public Methods
 	//public: void addToList(String^ details);
 	public: std::string getUserInput(void);
@@ -237,6 +239,13 @@ namespace DaOrganiser {
 	public: std::string sysStringToStdString(String ^ stringToConvert);
 	public: String^ stdStringToSysString(std::string stringToConvert);
 	public: void exitProgram(void);
+
+		// Private Methods
+	private: void suggestResults(void);
+	private: void openSuggestionBox(void);
+	private: void closeSuggestionBox(void);
+	private: void commitSelectedSuggestion(void);
+	private: void setCaretToEnd(void);
 
 		// Events
 	private: System::Void textBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
