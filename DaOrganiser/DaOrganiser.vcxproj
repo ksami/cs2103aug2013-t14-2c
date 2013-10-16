@@ -88,6 +88,7 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="DaOrganiser.cpp" />
     <ClCompile Include="ListViewItemComparer.cpp" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="newprocess.cpp" />
     <ClCompile Include="newtask.cpp" />
@@ -101,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ListViewItemComparer.h" />
+    <ClInclude Include="Log.h" />
     <ClInclude Include="MainWindow.h">
       <FileType>CppForm</FileType>
     </ClInclude>
