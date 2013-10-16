@@ -22,27 +22,26 @@ void storage::initialOutputStream() {
 	}
 }
 
-/*void storage::writeAllToFile(vector<task> allTask) {
+void storage::writeAllToFile(vector<task> allTask) {
 	initialOutputStream();
 	//TODO
 	//writeOneToFile missing argument list
-	travelAllVector(allTask, writeOneToFile);
+	//solved, should work with warning
+	travelAllVector(allTask);
 	closeOutputStream();
 }
 
-void storage::travelAllVector(vector<task> allTask, void (storage::*work)(task)){
-	for_each(allTask.begin(), allTask.end(), work);
+void storage::travelAllVector(vector<task> allTask){
+	for(int i = 0; i < allTask.size(); i++)
+		writeOneToFile(allTask[i]);
 }
 
 void storage::writeOneToFile(task t) {
 	outputStream << getContentOfTask(t);
 }
-*/
-char* storage::getContentOfTask(task t) {
-	//TODO
-	//stub
-	return "hello i am a stub";
-	//return getStartDate() + "," + getStartTime() + "," + getEndDate() + "," + getEndTime();
+
+string storage::getContentOfTask(task t) {
+	return t.getDetailsAsString() + "," + t.getStatusAsString() + "," + t.getStartDateAsString() + "," + t.getStartTimeAsString() + "," + t.getEndDateAsString() + "," + t.getEndTimeAsString();
 }
 
 void storage::closeOutputStream(){
@@ -79,31 +78,19 @@ task storage::readOneFromFile(){
 char** storage::tokenize(char *temp){
 	char** info = new char*[4];
 	int i = 0;
-	info[0] = strtok(temp, ",");
+	strtok_s(temp, ",", &info[0]);
 	while (info[i] != NULL) {
 		i++;
-		info[i] = strtok(temp, ",");
+		strtok_s(temp, ",", &info[i]);
 	}
 	return info;
 }
 
 task storage::putContentIntoTask(char** info){
 	task t;
-	if(info[2] != NULL){
-		//TODO
-		//stub
-		//task* t = new task(info[0], info[1], info[2], info[3]);
-		//t.assignDateValue(date, char);
-		//t.assignTimeValue(time, char);
-		//t.assignKind(char);
-		//t.assignDetails(string);
-	}
-	else if(info[0] != NULL){
-		//TODO
-		//stub
-		//task* t = new task(info[0], info[1]);
-	}
-	//stub
+	//sscanf(info[2],"%4d%2d%2d %2d%2d%2d",&tm1.tm_year,&tm1.tm_mon,&tm1.tm_mday, &tm1.tm_hour,&tm1.tm_min,&tm1.tm_sec);
+	//t.assignDateValue(info[2], start);
+
 	return t;
 }
 
