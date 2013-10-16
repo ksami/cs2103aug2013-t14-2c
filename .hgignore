@@ -39,3 +39,4 @@ packages/**
 *.resharper
 *.ncrunch*
 *.ndproj
+Log *
