@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "storage.h"
+#include <assert.h>
 
 storage::storage(char* storageName) {
 	_storageName = storageName;
@@ -19,30 +20,34 @@ void storage::initialOutputStream() {
 	else{
 		closeOutputStream();
 		closeInputStream();
+		outputStream.open(_storageName);
 	}
 }
 
-/*void storage::writeAllToFile(vector<task> allTask) {
+char* storage::getStorageName(){
+	return _storageName;
+}
+
+void storage::writeAllToFile(vector<task> allTask) {
+
 	initialOutputStream();
-	//TODO
-	//writeOneToFile missing argument list
-	travelAllVector(allTask, writeOneToFile);
+	travelAllVector(allTask);
 	closeOutputStream();
 }
 
-void storage::travelAllVector(vector<task> allTask, void (storage::*work)(task)){
-	for_each(allTask.begin(), allTask.end(), work);
+void storage::travelAllVector(vector<task> allTask){
+	outputStream << allTask.size() << "\n";
+	for(int i = 0; i < allTask.size(); i++){
+		writeOneToFile(allTask[i]);
+	}
 }
 
 void storage::writeOneToFile(task t) {
 	outputStream << getContentOfTask(t);
 }
-*/
-char* storage::getContentOfTask(task t) {
-	//TODO
-	//stub
-	return "hello i am a stub";
-	//return getStartDate() + "," + getStartTime() + "," + getEndDate() + "," + getEndTime();
+
+string storage::getContentOfTask(task t) {
+	return t.getDetailsAsString() + "," + t.getStatusAsString() + "," + t.getStartDateAsString() + "," + t.getStartTimeAsString() + "," + t.getEndDateAsString() + "," + t.getEndTimeAsString() + "\n";
 }
 
 void storage::closeOutputStream(){
@@ -58,52 +63,59 @@ void storage::initialInputStream(){
 	else{
 		closeOutputStream();
 		closeInputStream();
+		inputStream.open(_storageName);
 	}
 }
 
-vector<task> storage::readAllFromFile(){
-	vector<task> vt;
-	while(!inputStream.eof()){
-		vt.insert(vt.end(), readOneFromFile());
+void storage::readAllFromFile(vector<task> &vt){
+	initialInputStream();
+	char* temp = new char[1024];
+	inputStream.getline(temp, 1024);
+	int noOfTask = atoi(temp);
+	for(int i = 0; i < noOfTask; i++){
+		vt.push_back(readOneFromFile());
 	}
-	return vt;
 }
 
 task storage::readOneFromFile(){
 	char* temp = new char[1024];
 	inputStream.getline(temp, 1024);
 	return putContentIntoTask(tokenize(temp));
-	delete temp;
 }
 
 char** storage::tokenize(char *temp){
-	char** info = new char*[4];
+	char** info = new char*[6];
+	char* nextToken = NULL;
 	int i = 0;
-	info[0] = strtok(temp, ",");
+	info[0] = strtok_s(temp, ",", &nextToken);
 	while (info[i] != NULL) {
 		i++;
-		info[i] = strtok(temp, ",");
+		info[i] = strtok_s(NULL, ",", &nextToken);
 	}
 	return info;
 }
 
 task storage::putContentIntoTask(char** info){
 	task t;
-	if(info[2] != NULL){
-		//TODO
-		//stub
-		//task* t = new task(info[0], info[1], info[2], info[3]);
-		//t.assignDateValue(date, char);
-		//t.assignTimeValue(time, char);
-		//t.assignKind(char);
-		//t.assignDetails(string);
-	}
-	else if(info[0] != NULL){
-		//TODO
-		//stub
-		//task* t = new task(info[0], info[1]);
-	}
-	//stub
+	date startDate, endDate;
+	time startTime, endTime;
+	t.assignDetails(info[0]);
+	t.assignKind(*info[1]);
+	sscanf_s(info[2],"%4d/%2d/%2d",&startDate.year, &startDate.month, &startDate.day);
+	t.assignDateValue(startDate, 's');
+	cout << t.getStartDateAsString() << endl;
+
+	sscanf_s(info[3],"%2d:%2d",&startTime.hr, &startTime.min);
+	t.assignTimeValue(startTime, 's');	
+	cout << t.getStartTimeAsString() << endl;
+
+	sscanf_s(info[4],"%4d/%2d/%2d",&endDate.year, &endDate.month, &endDate.day);
+	t.assignDateValue(endDate, 'e');
+	cout << t.getEndDateAsString() << endl;
+
+	sscanf_s(info[5],"%2d:%2d",&endTime.hr, &endTime.min);
+	t.assignTimeValue(endTime, 'e');
+	cout << t.getEndTimeAsString() << endl;
 	return t;
 }
 
