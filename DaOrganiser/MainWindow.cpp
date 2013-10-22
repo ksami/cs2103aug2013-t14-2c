@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include <msclr\marshal_cppstd.h>
 #include "MainWindow.h"
-#include "Parser.h"
 #include <cctype>
 
 //to switch off logging
@@ -14,8 +13,6 @@
 #define CMD_DELIMITER_STR "-"
 #define NULL_STRING ""
 #define TEXT_INDEX_START 0
-
-static Parser parseCmd;
 
 #pragma region Public Methods
 //<summary>
@@ -73,6 +70,8 @@ void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
 
 void DaOrganiser::MainWindow::exitProgram(void)
 {
+	logging("Exit program sequence initiated", LogLevel::Info);
+	//write goodbye messages (or not)
 	//save to file first
 	this->Close();
 }
@@ -141,7 +140,7 @@ void DaOrganiser::MainWindow::setCaretToEnd(void)
 //column click sorting for entire inventory
 System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e)
 {
-	log("Event listView1_ColumnClick called", LogLevel::Debug);
+	logging("Event listView1_ColumnClick called", LogLevel::Debug);
 	static int _sortColumnInv = 1;
 	listView1->ListViewItemSorter = gcnew ListViewItemComparer( e->Column, -1*_sortColumnInv);
 	_sortColumnInv*=-1;
@@ -150,7 +149,7 @@ System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sen
 System::Void DaOrganiser::MainWindow::timer1_Tick(System::Object^  sender, System::EventArgs^  e)
 {
 	static vector<task> allTasks;
-	allTasks=parseCmd.getTasks();
+	allTasks=progController->getTaskStorage();
 	listView1->Items->Clear();
 	for(int i=0; i<allTasks.size(); i++)
 	{
@@ -162,7 +161,7 @@ System::Void DaOrganiser::MainWindow::timer1_Tick(System::Object^  sender, Syste
 // Order of events called: PreviewKeyDown > KeyDown > KeyPress > KeyUp
 System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e)
 {
-	log("Event comboBox1_KeyPress called", LogLevel::Debug);
+	logging("Event comboBox1_KeyPress called", LogLevel::Debug);
 	const bool nonAlphaNumeric = (e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122);
 
 	if(e->KeyChar == CMD_DELIMITER_CHAR)
@@ -189,7 +188,7 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 
 System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
 {
-	log("Event comboBox1_KeyDown called", LogLevel::Debug);
+	logging("Event comboBox1_KeyDown called", LogLevel::Debug);
 	int i = comboBox1->SelectionStart;
 	String^ currentChar = NULL_STRING;
 
@@ -271,10 +270,13 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::Enter)
 	{
+		static bool toExit = false;
+
 		richTextBox1->Text += "\n";
 		richTextBox1->Text += comboBox1->Text;
-		richTextBox1->Text += "\n";
-		richTextBox1->Text += stdStringToSysString(parseCmd.parseString(getUserInput()));
+
+		progController->executeProgramme(toExit);
+		//logic will take care of user feedback here
 
 		clearInputField();
 
@@ -286,12 +288,17 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 		{
 			richTextBox1->Text = richTextBox1->Text->Remove(0, 1000);
 		}
+
+		if(toExit)
+		{
+			exitProgram();
+		}
 	}
 }
 
 System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e)
 {
-	log("Event comboBox1_PreviewKeyDown called", LogLevel::Debug);
+	logging("Event comboBox1_PreviewKeyDown called", LogLevel::Debug);
 	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true) && (comboBox1->Items->Count > 0))
 	{
 		if(comboBox1->SelectedIndex > 0)

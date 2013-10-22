@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 #include "MainWindow.h"
+#include "logic.h"
 
 using namespace DaOrganiser;
 

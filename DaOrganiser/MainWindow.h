@@ -2,7 +2,8 @@
 
 #include "stdafx.h"
 #include "ListViewItemComparer.h"
-#include "newtask.h"
+#include "task.h"
+//#include "logic.h"
 
 namespace DaOrganiser {
 
@@ -26,7 +27,6 @@ namespace DaOrganiser {
 			//TODO: Add the constructor code here
 			//
 		}
-
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
