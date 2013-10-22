@@ -163,7 +163,7 @@ System::Void DaOrganiser::MainWindow::timer1_Tick(System::Object^  sender, Syste
 System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e)
 {
 	log("Event comboBox1_KeyPress called", LogLevel::Debug);
-	const static bool nonAlphaNumeric = (e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122);
+	const bool nonAlphaNumeric = (e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122);
 
 	if(e->KeyChar == CMD_DELIMITER_CHAR)
 	{
