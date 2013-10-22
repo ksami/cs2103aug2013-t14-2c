@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "storage.h"
+#include "print.h"
 #include <assert.h>
 
 storage::storage(char* storageName) {
@@ -98,24 +99,24 @@ char** storage::tokenize(char *temp){
 task storage::putContentIntoTask(char** info){
 	task t;
 	date startDate, endDate;
-	time startTime, endTime;
+	time_s startTime, endTime;
 	t.assignDetails(info[0]);
 	t.assignKind(*info[1]);
 	sscanf_s(info[2],"%4d/%2d/%2d",&startDate.year, &startDate.month, &startDate.day);
 	t.assignDateValue(startDate, 's');
-	cout << t.getStartDateAsString() << endl;
+	toDisplay(t.getStartDateAsString());
 
 	sscanf_s(info[3],"%2d:%2d",&startTime.hr, &startTime.min);
 	t.assignTimeValue(startTime, 's');	
-	cout << t.getStartTimeAsString() << endl;
+	toDisplay(t.getStartTimeAsString());
 
 	sscanf_s(info[4],"%4d/%2d/%2d",&endDate.year, &endDate.month, &endDate.day);
 	t.assignDateValue(endDate, 'e');
-	cout << t.getEndDateAsString() << endl;
+	toDisplay(t.getEndDateAsString());
 
 	sscanf_s(info[5],"%2d:%2d",&endTime.hr, &endTime.min);
 	t.assignTimeValue(endTime, 'e');
-	cout << t.getEndTimeAsString() << endl;
+	toDisplay(t.getEndTimeAsString());
 	return t;
 }
 

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <algorithm>
 #include <vector>
-#include "newtask.h"
+#include "task.h"
 
 using namespace std;
 
