@@ -1,10 +1,10 @@
-#pragma once
+ #pragma once
 
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include <vector>
-#include "newtask.h"
+#include "task.h"
 
 using namespace std;
 
@@ -17,6 +17,7 @@ class storage{
 	public:
 		storage(char*);
 		~storage();
+		char* getStorageName();
 		bool isSafeToOpenStream();
 		void initialOutputStream();
 		void writeAllToFile(vector<task>);
@@ -24,9 +25,8 @@ class storage{
 		void writeOneToFile(task);
 		string getContentOfTask(task);
 		void closeOutputStream();
-
 		void initialInputStream();
-		vector<task> readAllFromFile();
+		void readAllFromFile(vector<task>&);
 		task readOneFromFile();
 		task putContentIntoTask(char**);
 		void closeInputStream();
