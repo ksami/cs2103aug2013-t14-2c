@@ -1,4 +1,4 @@
-#include "logic_v0.2.h"
+#include "logic.h"
 
 int main() {
 	logic startProgramme;

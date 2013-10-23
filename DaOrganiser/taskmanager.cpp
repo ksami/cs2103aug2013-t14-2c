@@ -1,37 +1,16 @@
-/*
+#include "stdafx.h"
+#include "taskmanager.h"
 
-Author: Priya
-
-Assumptions:
-
-By default all tasks have:
-status - not done 
-kind - floating
-start date - 000000
-end date - 000000
-start time - 0000
-end time - 0000
-deatils - ""
-
-*/
-#include"process.h"
-#include<string>
-#include<iostream>
-#include<vector>
-#include<stdio.h>
-
-using namespace std;
-
-bool process::createTask(vector<string>splitString)
+bool taskManager::createTask(vector<string>splitString,vector<task> &taskStorage)
 {
 	task newTask;
 	date d;
-	time t;
-	int i, j;
+	time_s t;
+	int j;
 	string singleWord, text;
 	bool returnvalue = true;
 
-	for(i=0;i<splitString.size();i++)
+	for(unsigned int i=0;i<splitString.size();i++)
 	{
 		if(splitString[i]=="-startdate")
 		{
@@ -85,7 +64,7 @@ bool process::createTask(vector<string>splitString)
 		{
 			string text = "";
 			j=i+1;
-			
+
 			// Checks if the first letter of the next string is a '-'
 			// if yes, the loop breaks else the words are assigned to the variable details
 
@@ -118,28 +97,34 @@ bool process::createTask(vector<string>splitString)
 		}
 	}
 
-	toBeDone.push_back(newTask);
+	taskStorage.push_back(newTask);
 	return returnvalue;
 }
 
-void process::readTask()
+//for CLI
+void taskManager::readTask(vector<task> &taskStorage)
 {
-	for(int i=0;i<toBeDone.size();i++)
+	if(taskStorage.empty())
+		cout<<"No tasks exists"<<endl;
+	else
 	{
-		cout<<i+1<<" .";
-		toBeDone[i].displayDetail();
-		cout<<endl;
+		for(unsigned int i=0;i<taskStorage.size();i++)
+		{
+			cout<<"--------------Task"<<i+1<<"--------------"<<endl;;
+			taskStorage[i].displayDetail();
+			cout<<endl;
+		}
 	}
 }
 
-bool process::updateTask(vector<string> splitString)
-{	
+bool taskManager::updateTask(vector<string> splitString,vector<task> &taskStorage)
+{       
 	date d;
-	time t;
+	time_s t;
 	int i, j;
 	string singleWord, text;
 
-	
+
 	// Searchs for the task number to be updated 
 	//------------------------------------------
 	i=0;
@@ -153,14 +138,14 @@ bool process::updateTask(vector<string> splitString)
 	// Converts the string to number
 	int number = atoi(splitString[i].c_str());
 
-	if(number<=0||number>toBeDone.size())
+	if(number<=0||number>taskStorage.size())
 		return false;
 
 	number--;
 
-	task newTask = toBeDone[number];
+	task newTask = taskStorage[number];
 
-	for(i=0;i<splitString.size();i++)
+	for(unsigned int i=0;i<splitString.size();i++)
 	{
 		if(splitString[i]=="-startdate")
 		{
@@ -172,9 +157,9 @@ bool process::updateTask(vector<string> splitString)
 			value/=100;
 			d.day = value;
 
-			if(!toBeDone[number].assignDateValue(d, 's'))
+			if(!taskStorage[number].assignDateValue(d, 's'))
 			{
-				toBeDone[number] = newTask;
+				taskStorage[number] = newTask;
 				return false;
 			}
 		}
@@ -188,9 +173,9 @@ bool process::updateTask(vector<string> splitString)
 			value/=100;
 			d.day = value;
 
-			if(!toBeDone[number].assignDateValue(d, 'e'))
+			if(!taskStorage[number].assignDateValue(d, 'e'))
 			{
-				toBeDone[number] = newTask;
+				taskStorage[number] = newTask;
 				return false;
 			}
 		}
@@ -202,9 +187,9 @@ bool process::updateTask(vector<string> splitString)
 			value/=100;
 			t.hr = value%100;
 
-			if(!toBeDone[number].assignTimeValue(t, 's'))
+			if(!taskStorage[number].assignTimeValue(t, 's'))
 			{
-				toBeDone[number] = newTask;
+				taskStorage[number] = newTask;
 				return false;
 			}
 		}
@@ -216,9 +201,9 @@ bool process::updateTask(vector<string> splitString)
 			value/=100;
 			t.hr = value%100;
 
-			if(!toBeDone[number].assignTimeValue(t, 'e'))
+			if(!taskStorage[number].assignTimeValue(t, 'e'))
 			{
-				toBeDone[number] = newTask;
+				taskStorage[number] = newTask;
 				return false;
 			}
 		}
@@ -226,7 +211,7 @@ bool process::updateTask(vector<string> splitString)
 		{
 			string text = "";
 			j=i+1;
-			
+
 			// Checks if the first letter of the next string is a '-'
 			// if yes, the loop breaks else the words are assigned to the variable details
 
@@ -244,38 +229,36 @@ bool process::updateTask(vector<string> splitString)
 			// Deleting the last extra space in the string 
 			text = text.substr(0, text.size()-1);
 
-			toBeDone[number].assignDetails(text);
+			taskStorage[number].assignDetails(text);
 		}
 		else if(splitString[i]=="-status")
 		{
-			toBeDone[number].changeStatus(splitString[i+1][0]);
-			if(!toBeDone[number].changeStatus(splitString[i+1][0]))
+			taskStorage[number].changeStatus(splitString[i+1][0]);
+			if(!taskStorage[number].changeStatus(splitString[i+1][0]))
 			{
-				toBeDone[number] = newTask;
+				taskStorage[number] = newTask;
 				return false;
 			}
 		}
 		else if(splitString[i]=="-kind")
 		{
-			if(!toBeDone[number].assignKind(splitString[i+1][0]))
+			if(!taskStorage[number].assignKind(splitString[i+1][0]))
 			{
-				toBeDone[number] = newTask;
+				taskStorage[number] = newTask;
 				return false;
 			}
 		}
 	}
-
 	return true;
-
 }
 
-bool process::deleteTask(vector<string> splitString)
+bool taskManager::deleteTask(vector<string> splitString, vector<task> &taskStorage)
 {
 	int number = atoi(splitString[1].c_str());
 
-	if(number<=0 || (number>toBeDone.size()))
+	if(number<=0 || (number>taskStorage.size()))
 		return false;
 
-	toBeDone.erase(toBeDone.begin()+number-1);
+	taskStorage.erase(taskStorage.begin()+number-1);
 	return true;
 }
