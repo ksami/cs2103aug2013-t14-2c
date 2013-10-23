@@ -1,7 +1,12 @@
 #include "stdafx.h"
 #include "logic.h"
+#include "Interface.h"
 
 logic::logic() {
+}
+
+logic::logic(void* inter) {
+	guiInterface = inter;
 }
 
 logic::~logic() {
@@ -33,14 +38,15 @@ vector<task> logic::getTaskStorage() {
 }
 
 bool logic::inputCommand() {
-	toDisplay("Enter instruction: ");
-	_userCommand=toGetInput();
+	Interface* guiLogicInterface = (Interface*) guiInterface;
+	guiLogicInterface->toDisplay("Enter instruction: ");
+	_userCommand=guiLogicInterface->toGetInput();
 
 	try {
 		checkCommand();
 		return true;
 	} catch (const char* msg) {
-		toDisplay(msg);
+		guiLogicInterface->toDisplay(msg);
 	}
 	return false;
 }
@@ -58,6 +64,7 @@ void logic::parserCommand() {
 }
 
 bool logic::executeCommand() {
+	Interface* guiLogicInterface = (Interface*) guiInterface;
 	if(_userCommand == "-quit" || _userCommand == "-Quit") 
 		return true;
 	else {
@@ -67,25 +74,25 @@ bool logic::executeCommand() {
 			{
 				bool value = p.createTask(commandInput,taskStorage);
 				if(value)
-					toDisplay("Task added successfully\n");
+					guiLogicInterface->toDisplay("Task added successfully\n");
 				else 
-					toDisplay("Error found while adding task\n");
+					guiLogicInterface->toDisplay("Error found while adding task\n");
 			}
 			else if(commandInput[i]=="-update")
 			{
 				bool value = p.updateTask(commandInput,taskStorage);
 				if(value)
-					toDisplay("Task updated successfully\n");
+					guiLogicInterface->toDisplay("Task updated successfully\n");
 				else
-					toDisplay("Error found while updating the task\n");
+					guiLogicInterface->toDisplay("Error found while updating the task\n");
 			}
 			else if(commandInput[i]=="-delete")
 			{
 				bool value = p.deleteTask(commandInput,taskStorage);
 				if(value)
-					toDisplay("Task deleted successfully\n");
+					guiLogicInterface->toDisplay("Task deleted successfully\n");
 				else
-					toDisplay("Error found while deleting the task\n");
+					guiLogicInterface->toDisplay("Error found while deleting the task\n");
 			}
 			else if (commandInput[i]=="-read")
 			{
@@ -93,21 +100,23 @@ bool logic::executeCommand() {
 			}
 		}
 	}
-	toDisplay("Operation executed successfully\n");
+	guiLogicInterface->toDisplay("Operation executed successfully\n");
 	commandInput.clear();
 	return false;
 }
 
 void logic::displayCommand() {
-	toDisplay(_userCommand);
-	toDisplay("\n");
+	Interface* guiLogicInterface = (Interface*) guiInterface;
+	guiLogicInterface->toDisplay(_userCommand);
+	guiLogicInterface->toDisplay("\n");
 }
 
 void logic::displayVector() {
+	Interface* guiLogicInterface = (Interface*) guiInterface;
 	int size=commandInput.size();
 	for (int i=0;i<size;i++) {
-		toDisplay(commandInput.at(i));
-		toDisplay("\n");
+		guiLogicInterface->toDisplay(commandInput.at(i));
+		guiLogicInterface->toDisplay("\n");
 	}
 }
 
