@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "storage.h"
-#include "print.h"
 #include <assert.h>
 
 storage::storage(char* storageName) {
@@ -104,19 +103,19 @@ task storage::putContentIntoTask(char** info){
 	t.assignKind(*info[1]);
 	sscanf_s(info[2],"%4d/%2d/%2d",&startDate.year, &startDate.month, &startDate.day);
 	t.assignDateValue(startDate, 's');
-	toDisplay(t.getStartDateAsString());
+	//toDisplay(t.getStartDateAsString());
 
 	sscanf_s(info[3],"%2d:%2d",&startTime.hr, &startTime.min);
 	t.assignTimeValue(startTime, 's');	
-	toDisplay(t.getStartTimeAsString());
+	//toDisplay(t.getStartTimeAsString());
 
 	sscanf_s(info[4],"%4d/%2d/%2d",&endDate.year, &endDate.month, &endDate.day);
 	t.assignDateValue(endDate, 'e');
-	toDisplay(t.getEndDateAsString());
+	//toDisplay(t.getEndDateAsString());
 
 	sscanf_s(info[5],"%2d:%2d",&endTime.hr, &endTime.min);
 	t.assignTimeValue(endTime, 'e');
-	toDisplay(t.getEndTimeAsString());
+	//toDisplay(t.getEndTimeAsString());
 	return t;
 }
 

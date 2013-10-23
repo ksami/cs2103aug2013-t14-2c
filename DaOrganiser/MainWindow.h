@@ -3,7 +3,6 @@
 #include "stdafx.h"
 #include "ListViewItemComparer.h"
 #include "task.h"
-//#include "logic.h"
 
 namespace DaOrganiser {
 
@@ -20,6 +19,7 @@ namespace DaOrganiser {
 	public ref class MainWindow : public System::Windows::Forms::Form
 	{
 	public:
+		void* progController;
 		MainWindow(void)
 		{
 			InitializeComponent();

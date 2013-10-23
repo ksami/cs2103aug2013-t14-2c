@@ -87,12 +87,12 @@
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="DaOrganiser.cpp" />
+    <ClCompile Include="Interface.cpp" />
     <ClCompile Include="ListViewItemComparer.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="logic.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="parser.cpp" />
-    <ClCompile Include="print.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -103,6 +103,7 @@
     <ClCompile Include="taskmanager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Interface.h" />
     <ClInclude Include="ListViewItemComparer.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="logic.h" />
@@ -110,7 +111,6 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="parser.h" />
-    <ClInclude Include="print.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="storage.h" />

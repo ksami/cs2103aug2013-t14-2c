@@ -6,17 +6,19 @@
 #include "task.h"
 #include "taskmanager.h"
 #include "parser.h"
-#include "print.h"
+
 using namespace std;
 
 class logic {
 private:
+		void* guiInterface;
         string _userCommand;
         vector<string> commandInput;
 		vector<task> taskStorage;
 		taskManager p;
 public:
         logic();
+		logic(void*);
         ~logic();
 		void executeProgramme();
 		void executeProgramme(bool& toExit);

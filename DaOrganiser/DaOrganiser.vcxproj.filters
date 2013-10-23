@@ -48,13 +48,13 @@
     <ClCompile Include="parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="print.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="task.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="taskmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Interface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,13 +83,13 @@
     <ClInclude Include="parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="print.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="taskmanager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="task.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

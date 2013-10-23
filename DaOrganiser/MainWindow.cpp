@@ -2,13 +2,14 @@
 #include <msclr\marshal_cppstd.h>
 #include "MainWindow.h"
 #include <cctype>
+#include "logic.h"
 
 //to switch off logging
 //#define NLOG
 #include "Log.h"
 
-#define AVAILABLE_CMDS "-add", "-delete", "-update", "-startdate", "-enddate", "-starttime", "-endtime", "-type", "-status"
-#define AVAILABLE_CMDS_NUM 9
+#define AVAILABLE_CMDS "-add", "-delete", "-update", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
+#define AVAILABLE_CMDS_NUM 10
 #define CMD_DELIMITER_CHAR '-'
 #define CMD_DELIMITER_STR "-"
 #define NULL_STRING ""
@@ -149,7 +150,8 @@ System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sen
 System::Void DaOrganiser::MainWindow::timer1_Tick(System::Object^  sender, System::EventArgs^  e)
 {
 	static vector<task> allTasks;
-	allTasks=progController->getTaskStorage();
+	logic* controller = (logic*)progController;
+	allTasks=controller->getTaskStorage();
 	listView1->Items->Clear();
 	for(int i=0; i<allTasks.size(); i++)
 	{
@@ -275,7 +277,8 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 		richTextBox1->Text += "\n";
 		richTextBox1->Text += comboBox1->Text;
 
-		progController->executeProgramme(toExit);
+		logic* controller = (logic*)progController;
+		controller->executeProgramme(toExit);
 		//logic will take care of user feedback here
 
 		clearInputField();
