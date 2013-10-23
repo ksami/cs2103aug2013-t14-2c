@@ -104,11 +104,16 @@ bool taskManager::createTask(vector<string>splitString,vector<task> &taskStorage
 //for CLI
 void taskManager::readTask(vector<task> &taskStorage)
 {
-	for(unsigned int i=0;i<taskStorage.size();i++)
+	if(taskStorage.empty())
+		cout<<"No tasks exists"<<endl;
+	else
 	{
-		cout<<"--------------Task"<<i+1<<"--------------"<<endl;;
-		taskStorage[i].displayDetail();
-		cout<<endl;
+		for(unsigned int i=0;i<taskStorage.size();i++)
+		{
+			cout<<"--------------Task"<<i+1<<"--------------"<<endl;;
+			taskStorage[i].displayDetail();
+			cout<<endl;
+		}
 	}
 }
 

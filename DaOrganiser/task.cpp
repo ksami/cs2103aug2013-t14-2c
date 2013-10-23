@@ -192,9 +192,18 @@ void task::displayDetail()
 		setfill('0')<<setw(2)<<to_string(endTime.min)<<endl;
 
 	cout<<"Details: "<<details<<endl;
-	cout<<"Status: "<<status<<endl;
-	cout<<"Kind: "<<kind;
 	
+	if(status == 'd')
+		cout<<"Status: Task completed"<<endl;
+	else
+		cout<<"Status: Task yet to be completed"<<endl;
+
+	if(kind == 'f')
+		cout<<"Kind: Floating task";
+	else if(kind == 'd')
+		cout<<"Kind: Task with deadline";
+	else
+		cout<<"Kind: Timed task";
 }
 
 char task::returnKind()

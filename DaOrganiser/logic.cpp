@@ -65,6 +65,7 @@ void logic::parserCommand() {
 
 bool logic::executeCommand() {
 	Interface* guiLogicInterface = (Interface*) guiInterface;
+	bool checkFlag = false;
 	if(_userCommand == "-quit" || _userCommand == "-Quit") 
 		return true;
 	else {
@@ -77,6 +78,7 @@ bool logic::executeCommand() {
 					guiLogicInterface->toDisplay("Task added successfully\n");
 				else 
 					guiLogicInterface->toDisplay("Error found while adding task\n");
+				checkFlag=true;
 			}
 			else if(commandInput[i]=="-update")
 			{
@@ -85,6 +87,7 @@ bool logic::executeCommand() {
 					guiLogicInterface->toDisplay("Task updated successfully\n");
 				else
 					guiLogicInterface->toDisplay("Error found while updating the task\n");
+				checkFlag=true;
 			}
 			else if(commandInput[i]=="-delete")
 			{
@@ -93,15 +96,20 @@ bool logic::executeCommand() {
 					guiLogicInterface->toDisplay("Task deleted successfully\n");
 				else
 					guiLogicInterface->toDisplay("Error found while deleting the task\n");
+				checkFlag=true;
 			}
 			else if (commandInput[i]=="-read")
 			{
 				p.readTask(taskStorage);
+				checkFlag=true;
 			}
 		}
 	}
-	guiLogicInterface->toDisplay("Operation executed successfully\n");
 	commandInput.clear();
+	if(checkFlag==false)
+	{
+		guiLogicInterface->toDisplay("Invalid command entered\n");
+	}
 	return false;
 }
 
