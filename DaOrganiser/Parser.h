@@ -1,20 +1,17 @@
 #pragma once
 
-#include <iostream>
-#include <conio.h>
 #include <string>
 #include <vector>
-#include "newtask.h"
-#include "newprocess.h"
+#include <sstream>
+using namespace std;
 
-class Parser
-{
-public:
-	Parser(void);
+class parser {
 private:
-	process p;
-public:
-	vector<task> getTasks();
-	string parseString(string);
-};
+	vector<string> splitString;
 
+
+public:
+	parser();
+	~parser();
+	vector<string> parseString(string);
+};
