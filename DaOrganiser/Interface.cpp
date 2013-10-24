@@ -16,7 +16,6 @@ Interface::Interface(void)
 
 Interface::~Interface(void)
 {
-	delete userInterface;
 	delete progController;
 }
 
