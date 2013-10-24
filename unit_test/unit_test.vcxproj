@@ -86,9 +86,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="testLog.cpp" />
+    <ClCompile Include="TestParser.cpp" />
     <ClCompile Include="TestStub.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="testLog.h" />
+    <ClInclude Include="TestParser.h" />
     <ClInclude Include="TestStub.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
