@@ -79,7 +79,13 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\DaOrganiser\Log.cpp" />
+    <ClCompile Include="..\DaOrganiser\Parser.cpp" />
     <ClCompile Include="..\DaOrganiser\stub.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\DaOrganiser\Log.h" />
+    <ClInclude Include="..\DaOrganiser\Parser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
