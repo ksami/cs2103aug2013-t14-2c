@@ -27,6 +27,9 @@
     <ClCompile Include="TestParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="testTaskMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TestStub.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TestParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="testTaskMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

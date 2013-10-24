@@ -89,11 +89,13 @@
     <ClCompile Include="testLog.cpp" />
     <ClCompile Include="TestParser.cpp" />
     <ClCompile Include="TestStub.cpp" />
+    <ClCompile Include="testTaskMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="testLog.h" />
     <ClInclude Include="TestParser.h" />
     <ClInclude Include="TestStub.h" />
+    <ClInclude Include="testTaskMgr.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
