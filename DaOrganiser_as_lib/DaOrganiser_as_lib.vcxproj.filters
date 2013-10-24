@@ -27,12 +27,24 @@
     <ClCompile Include="..\DaOrganiser\Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\DaOrganiser\taskmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DaOrganiser\task.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\DaOrganiser\Log.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\DaOrganiser\Parser.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DaOrganiser\taskmanager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DaOrganiser\task.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
