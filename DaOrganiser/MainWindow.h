@@ -51,7 +51,7 @@ namespace DaOrganiser {
 	private: System::Windows::Forms::ColumnHeader^  endDate;
 	private: System::Windows::Forms::ColumnHeader^  startTime;
 	private: System::Windows::Forms::ColumnHeader^  endTime;
-	private: System::Windows::Forms::Timer^  timer1;
+
 
 	private: System::Windows::Forms::ComboBox^  comboBox1;
 	private: System::Windows::Forms::ColumnHeader^  kind;
@@ -75,7 +75,6 @@ namespace DaOrganiser {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->components = (gcnew System::ComponentModel::Container());
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainWindow::typeid));
 			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
@@ -89,7 +88,6 @@ namespace DaOrganiser {
 			this->details = (gcnew System::Windows::Forms::ColumnHeader());
 			this->status = (gcnew System::Windows::Forms::ColumnHeader());
 			this->kind = (gcnew System::Windows::Forms::ColumnHeader());
-			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->tableLayoutPanel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -195,12 +193,6 @@ namespace DaOrganiser {
 			this->kind->Text = L"Kind";
 			this->kind->Width = 75;
 			// 
-			// timer1
-			// 
-			this->timer1->Enabled = true;
-			this->timer1->Interval = 500;
-			this->timer1->Tick += gcnew System::EventHandler(this, &MainWindow::timer1_Tick);
-			// 
 			// MainWindow
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
@@ -227,6 +219,7 @@ namespace DaOrganiser {
 	public: void clearInputField(void);
 	public: void appendToOutput(std::string feedbackToUser);
 	public: void addTaskToList(Task taskToAdd);
+	public: void updateList(void);
 	public: std::string sysStringToStdString(String ^ stringToConvert);
 	public: String^ stdStringToSysString(std::string stringToConvert);
 	public: void exitProgram(void);
@@ -240,7 +233,6 @@ namespace DaOrganiser {
 
 		// Events
 	private: System::Void listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e);
-	private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
 	private: System::Void comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e);

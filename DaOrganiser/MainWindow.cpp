@@ -46,6 +46,18 @@ void DaOrganiser::MainWindow::addTaskToList(Task taskToAdd)
 	listView1->Items->Add(itemToAdd);
 }
 
+void DaOrganiser::MainWindow::updateList(void)
+{
+	static vector<Task> allTasks;
+	Facade* controller = (Facade*)progController;
+	allTasks=controller->getTaskStorage();
+	listView1->Items->Clear();
+	for(int i=0; i<allTasks.size(); i++)
+	{
+		addTaskToList(allTasks[i]);
+	}
+}
+
 std::string DaOrganiser::MainWindow::getUserInput(void)
 {
 	std::string userInput = sysStringToStdString(comboBox1->Text);
@@ -157,18 +169,6 @@ System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sen
 	static int _sortColumnInv = 1;
 	listView1->ListViewItemSorter = gcnew ListViewItemComparer( e->Column, -1*_sortColumnInv);
 	_sortColumnInv*=-1;
-}
-
-System::Void DaOrganiser::MainWindow::timer1_Tick(System::Object^  sender, System::EventArgs^  e)
-{
-	static vector<Task> allTasks;
-	Facade* controller = (Facade*)progController;
-	allTasks=controller->getTaskStorage();
-	listView1->Items->Clear();
-	for(int i=0; i<allTasks.size(); i++)
-	{
-		addTaskToList(allTasks[i]);
-	}
 }
 
 // Following events implement Autocomplete for commands

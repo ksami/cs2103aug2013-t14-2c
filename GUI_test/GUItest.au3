@@ -1,10 +1,15 @@
 ;GUI testing for DaOrganiser
 
-Global $sleepVal = 2000
+Global $sleepVal = 100
+
+;use CTRL+p to toggle pausing of script
+HotKeySet("^p", "pauseScript")
 
 Run("DaOrganiser.exe")
 WinWaitActive("DaOrganiser")
-testAddValid()
+For $i = 1 To 20
+   testAddValid()
+Next
 testAddValid()
 testAutoCompleteValid()
 testUpdateUndo()
@@ -14,6 +19,12 @@ testAddValid()
 testUpdateValid()
 testDeleteValid()
 ;Send("{ESC}")
+
+Func pauseScript()
+   MsgBox(64, "GUI Test", "Script execution has been paused. Click OK or close this window to resume.")
+   WinWaitClose("GUI Test")
+   WinActivate("DaOrganiser")
+EndFunc
 
 Func testAddValid()
    Send("-add -startdate 121212 -starttime 1212 -enddate 121212 -endtime 1213 -details valid add task test case")

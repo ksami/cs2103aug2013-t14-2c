@@ -13,5 +13,6 @@ public:
 	~Interface(void);
 	void toDisplay(string sentence);
 	string toGetInput(void);
+	void updateGuiList(void);
 };
 
