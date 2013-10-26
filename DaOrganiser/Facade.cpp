@@ -39,7 +39,7 @@ vector<Task> Facade::getTaskStorage() {
 
 bool Facade::inputCommand() {
 	Interface* guiLogicInterface = (Interface*) guiInterface;
-	guiLogicInterface->toDisplay("Enter instruction: ");
+	//guiLogicInterface->toDisplay("Enter instruction: ");
 	_userCommand=guiLogicInterface->toGetInput();
 
 	try {
@@ -53,7 +53,7 @@ bool Facade::inputCommand() {
 
 bool Facade::checkCommand() {
 	if (_userCommand.empty()) {
-		throw "Command is blank\n";
+		throw "Command is blank";
 	}
 	return true;
 }
@@ -75,27 +75,27 @@ bool Facade::executeCommand() {
 			{
 				bool value = p.createTask(commandInput,taskStorage);
 				if(value)
-					guiLogicInterface->toDisplay("Task added successfully\n");
+					guiLogicInterface->toDisplay("Task added successfully");
 				else 
-					guiLogicInterface->toDisplay("Error found while adding task\n");
+					guiLogicInterface->toDisplay("Error found while adding task");
 				checkFlag=true;
 			}
 			else if(commandInput[i]=="-update")
 			{
 				bool value = p.updateTask(commandInput,taskStorage);
 				if(value)
-					guiLogicInterface->toDisplay("Task updated successfully\n");
+					guiLogicInterface->toDisplay("Task updated successfully");
 				else
-					guiLogicInterface->toDisplay("Error found while updating the task\n");
+					guiLogicInterface->toDisplay("Error found while updating the task");
 				checkFlag=true;
 			}
 			else if(commandInput[i]=="-delete")
 			{
 				bool value = p.deleteTask(commandInput,taskStorage);
 				if(value)
-					guiLogicInterface->toDisplay("Task deleted successfully\n");
+					guiLogicInterface->toDisplay("Task deleted successfully");
 				else
-					guiLogicInterface->toDisplay("Error found while deleting the task\n");
+					guiLogicInterface->toDisplay("Error found while deleting the task");
 				checkFlag=true;
 			}
 			else if (commandInput[i]=="-read")
@@ -113,7 +113,7 @@ bool Facade::executeCommand() {
 	commandInput.clear();
 	if(checkFlag==false)
 	{
-		guiLogicInterface->toDisplay("Invalid command entered\n");
+		guiLogicInterface->toDisplay("Invalid command entered");
 	}
 	return false;
 }
@@ -121,7 +121,7 @@ bool Facade::executeCommand() {
 void Facade::displayCommand() {
 	Interface* guiLogicInterface = (Interface*) guiInterface;
 	guiLogicInterface->toDisplay(_userCommand);
-	guiLogicInterface->toDisplay("\n");
+	//guiLogicInterface->toDisplay("\n");
 }
 
 void Facade::displayVector() {
@@ -129,7 +129,7 @@ void Facade::displayVector() {
 	int size=commandInput.size();
 	for (int i=0;i<size;i++) {
 		guiLogicInterface->toDisplay(commandInput.at(i));
-		guiLogicInterface->toDisplay("\n");
+		//guiLogicInterface->toDisplay("\n");
 	}
 }
 

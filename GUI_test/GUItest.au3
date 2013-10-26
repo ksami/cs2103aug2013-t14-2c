@@ -3,7 +3,7 @@
 Global $sleepVal = 2000
 
 Run("DaOrganiser.exe")
-WinWaitActive("MainWindow")
+WinWaitActive("DaOrganiser")
 testAddValid()
 testAddValid()
 testAutoCompleteValid()

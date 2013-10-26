@@ -79,6 +79,7 @@ namespace DaOrganiser {
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainWindow::typeid));
 			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
 			this->taskId = (gcnew System::Windows::Forms::ColumnHeader());
 			this->startDate = (gcnew System::Windows::Forms::ColumnHeader());
@@ -87,9 +88,8 @@ namespace DaOrganiser {
 			this->endTime = (gcnew System::Windows::Forms::ColumnHeader());
 			this->details = (gcnew System::Windows::Forms::ColumnHeader());
 			this->status = (gcnew System::Windows::Forms::ColumnHeader());
-			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
-			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->kind = (gcnew System::Windows::Forms::ColumnHeader());
+			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->tableLayoutPanel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -103,7 +103,7 @@ namespace DaOrganiser {
 			this->richTextBox1->Size = System::Drawing::Size(954, 128);
 			this->richTextBox1->TabIndex = 1;
 			this->richTextBox1->TabStop = false;
-			this->richTextBox1->Text = L"Hello! Welcome to our program! Wheeeeeeee~ :)";
+			this->richTextBox1->Text = L"Welcome to DaOrganiser!\n";
 			// 
 			// tableLayoutPanel1
 			// 
@@ -123,6 +123,21 @@ namespace DaOrganiser {
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 34)));
 			this->tableLayoutPanel1->Size = System::Drawing::Size(962, 618);
 			this->tableLayoutPanel1->TabIndex = 1;
+			// 
+			// comboBox1
+			// 
+			this->comboBox1->AllowDrop = true;
+			this->comboBox1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->comboBox1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->comboBox1->FormattingEnabled = true;
+			this->comboBox1->Location = System::Drawing::Point(4, 585);
+			this->comboBox1->Name = L"comboBox1";
+			this->comboBox1->Size = System::Drawing::Size(954, 28);
+			this->comboBox1->Sorted = true;
+			this->comboBox1->TabIndex = 0;
+			this->comboBox1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::comboBox1_KeyDown);
+			this->comboBox1->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainWindow::comboBox1_KeyPress);
+			this->comboBox1->PreviewKeyDown += gcnew System::Windows::Forms::PreviewKeyDownEventHandler(this, &MainWindow::comboBox1_PreviewKeyDown);
 			// 
 			// listView1
 			// 
@@ -175,30 +190,16 @@ namespace DaOrganiser {
 			this->status->Text = L"Status";
 			this->status->Width = 95;
 			// 
+			// kind
+			// 
+			this->kind->Text = L"Kind";
+			this->kind->Width = 75;
+			// 
 			// timer1
 			// 
 			this->timer1->Enabled = true;
 			this->timer1->Interval = 500;
 			this->timer1->Tick += gcnew System::EventHandler(this, &MainWindow::timer1_Tick);
-			// 
-			// comboBox1
-			// 
-			this->comboBox1->AllowDrop = true;
-			this->comboBox1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->comboBox1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Location = System::Drawing::Point(4, 585);
-			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(954, 28);
-			this->comboBox1->Sorted = true;
-			this->comboBox1->TabIndex = 0;
-			this->comboBox1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::comboBox1_KeyDown);
-			this->comboBox1->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainWindow::comboBox1_KeyPress);
-			this->comboBox1->PreviewKeyDown += gcnew System::Windows::Forms::PreviewKeyDownEventHandler(this, &MainWindow::comboBox1_PreviewKeyDown);
-			// 
-			// kind
-			// 
-			this->kind->Text = L"Kind";
 			// 
 			// MainWindow
 			// 
@@ -209,7 +210,7 @@ namespace DaOrganiser {
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
 			this->Name = L"MainWindow";
-			this->Text = L"MainWindow";
+			this->Text = L"DaOrganiser";
 			this->tableLayoutPanel1->ResumeLayout(false);
 			this->ResumeLayout(false);
 
