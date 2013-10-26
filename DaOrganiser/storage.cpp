@@ -28,25 +28,25 @@ char* storage::getStorageName(){
 	return _storageName;
 }
 
-void storage::writeAllToFile(vector<task> allTask) {
+void storage::writeAllToFile(vector<Task> allTask) {
 
 	initialOutputStream();
 	travelAllVector(allTask);
 	closeOutputStream();
 }
 
-void storage::travelAllVector(vector<task> allTask){
+void storage::travelAllVector(vector<Task> allTask){
 	outputStream << allTask.size() << "\n";
 	for(int i = 0; i < allTask.size(); i++){
 		writeOneToFile(allTask[i]);
 	}
 }
 
-void storage::writeOneToFile(task t) {
+void storage::writeOneToFile(Task t) {
 	outputStream << getContentOfTask(t);
 }
 
-string storage::getContentOfTask(task t) {
+string storage::getContentOfTask(Task t) {
 	return t.getDetailsAsString() + "," + t.getStatusAsString() + "," + t.getStartDateAsString() + "," + t.getStartTimeAsString() + "," + t.getEndDateAsString() + "," + t.getEndTimeAsString() + "\n";
 }
 
@@ -67,7 +67,7 @@ void storage::initialInputStream(){
 	}
 }
 
-void storage::readAllFromFile(vector<task> &vt){
+void storage::readAllFromFile(vector<Task> &vt){
 	initialInputStream();
 	char* temp = new char[1024];
 	inputStream.getline(temp, 1024);
@@ -77,7 +77,7 @@ void storage::readAllFromFile(vector<task> &vt){
 	}
 }
 
-task storage::readOneFromFile(){
+Task storage::readOneFromFile(){
 	char* temp = new char[1024];
 	inputStream.getline(temp, 1024);
 	return putContentIntoTask(tokenize(temp));
@@ -95,8 +95,8 @@ char** storage::tokenize(char *temp){
 	return info;
 }
 
-task storage::putContentIntoTask(char** info){
-	task t;
+Task storage::putContentIntoTask(char** info){
+	Task t;
 	date startDate, endDate;
 	time_s startTime, endTime;
 	t.assignDetails(info[0]);

@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 #include "ListViewItemComparer.h"
-#include "task.h"
+#include "Task.h"
 
 namespace DaOrganiser {
 
@@ -54,6 +54,7 @@ namespace DaOrganiser {
 	private: System::Windows::Forms::Timer^  timer1;
 
 	private: System::Windows::Forms::ComboBox^  comboBox1;
+	private: System::Windows::Forms::ColumnHeader^  kind;
 
 
 	private: System::ComponentModel::IContainer^  components;
@@ -88,17 +89,18 @@ namespace DaOrganiser {
 			this->status = (gcnew System::Windows::Forms::ColumnHeader());
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->kind = (gcnew System::Windows::Forms::ColumnHeader());
 			this->tableLayoutPanel1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// richTextBox1
 			// 
 			this->richTextBox1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->richTextBox1->Location = System::Drawing::Point(4, 470);
+			this->richTextBox1->Location = System::Drawing::Point(4, 450);
 			this->richTextBox1->Name = L"richTextBox1";
 			this->richTextBox1->ReadOnly = true;
 			this->richTextBox1->ScrollBars = System::Windows::Forms::RichTextBoxScrollBars::Vertical;
-			this->richTextBox1->Size = System::Drawing::Size(772, 134);
+			this->richTextBox1->Size = System::Drawing::Size(954, 128);
 			this->richTextBox1->TabIndex = 1;
 			this->richTextBox1->TabStop = false;
 			this->richTextBox1->Text = L"Hello! Welcome to our program! Wheeeeeeee~ :)";
@@ -109,6 +111,7 @@ namespace DaOrganiser {
 			this->tableLayoutPanel1->ColumnCount = 1;
 			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 
 				50)));
+			this->tableLayoutPanel1->Controls->Add(this->comboBox1, 0, 2);
 			this->tableLayoutPanel1->Controls->Add(this->richTextBox1, 0, 1);
 			this->tableLayoutPanel1->Controls->Add(this->listView1, 0, 0);
 			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
@@ -118,19 +121,19 @@ namespace DaOrganiser {
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 76.82481F)));
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 23.17518F)));
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 34)));
-			this->tableLayoutPanel1->Size = System::Drawing::Size(780, 644);
+			this->tableLayoutPanel1->Size = System::Drawing::Size(962, 618);
 			this->tableLayoutPanel1->TabIndex = 1;
 			// 
 			// listView1
 			// 
-			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->taskId, this->startDate, 
-				this->endDate, this->startTime, this->endTime, this->details, this->status});
+			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(8) {this->taskId, this->startDate, 
+				this->endDate, this->startTime, this->endTime, this->details, this->status, this->kind});
 			this->listView1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->listView1->FullRowSelect = true;
 			this->listView1->GridLines = true;
 			this->listView1->Location = System::Drawing::Point(4, 4);
 			this->listView1->Name = L"listView1";
-			this->listView1->Size = System::Drawing::Size(772, 459);
+			this->listView1->Size = System::Drawing::Size(954, 439);
 			this->listView1->TabIndex = 2;
 			this->listView1->TabStop = false;
 			this->listView1->UseCompatibleStateImageBehavior = false;
@@ -165,7 +168,7 @@ namespace DaOrganiser {
 			// details
 			// 
 			this->details->Text = L"Details";
-			this->details->Width = 318;
+			this->details->Width = 328;
 			// 
 			// status
 			// 
@@ -181,23 +184,27 @@ namespace DaOrganiser {
 			// comboBox1
 			// 
 			this->comboBox1->AllowDrop = true;
+			this->comboBox1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->comboBox1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Location = System::Drawing::Point(4, 611);
+			this->comboBox1->Location = System::Drawing::Point(4, 585);
 			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(774, 28);
+			this->comboBox1->Size = System::Drawing::Size(954, 28);
 			this->comboBox1->Sorted = true;
 			this->comboBox1->TabIndex = 0;
 			this->comboBox1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::comboBox1_KeyDown);
 			this->comboBox1->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainWindow::comboBox1_KeyPress);
 			this->comboBox1->PreviewKeyDown += gcnew System::Windows::Forms::PreviewKeyDownEventHandler(this, &MainWindow::comboBox1_PreviewKeyDown);
 			// 
+			// kind
+			// 
+			this->kind->Text = L"Kind";
+			// 
 			// MainWindow
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(780, 644);
-			this->Controls->Add(this->comboBox1);
+			this->ClientSize = System::Drawing::Size(962, 618);
 			this->Controls->Add(this->tableLayoutPanel1);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
@@ -218,7 +225,7 @@ namespace DaOrganiser {
 	public: std::string getUserInput(void);
 	public: void clearInputField(void);
 	public: void appendToOutput(std::string feedbackToUser);
-	public: void addTaskToList(task taskToAdd);
+	public: void addTaskToList(Task taskToAdd);
 	public: std::string sysStringToStdString(String ^ stringToConvert);
 	public: String^ stdStringToSysString(std::string stringToConvert);
 	public: void exitProgram(void);

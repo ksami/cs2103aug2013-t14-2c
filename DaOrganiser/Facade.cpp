@@ -1,19 +1,19 @@
 #include "stdafx.h"
-#include "logic.h"
+#include "Facade.h"
 #include "Interface.h"
 
-logic::logic() {
+Facade::Facade() {
 }
 
-logic::logic(void* inter) {
+Facade::Facade(void* inter) {
 	guiInterface = inter;
 }
 
-logic::~logic() {
+Facade::~Facade() {
 }
 
 //GUI's execute programme
-void logic::executeProgramme(bool& toExit) {
+void Facade::executeProgramme(bool& toExit) {
 	if (inputCommand()) {
 		parserCommand();
 		//displayVector();		//testing
@@ -22,7 +22,7 @@ void logic::executeProgramme(bool& toExit) {
 }
 
 //CLI's execute programme
-void logic::executeProgramme() {
+void Facade::executeProgramme() {
 	bool toExit=false;
 	while (!toExit) {
 		if (inputCommand()) {
@@ -33,11 +33,11 @@ void logic::executeProgramme() {
 	}
 }
 
-vector<task> logic::getTaskStorage() {
+vector<Task> Facade::getTaskStorage() {
 	return taskStorage;
 }
 
-bool logic::inputCommand() {
+bool Facade::inputCommand() {
 	Interface* guiLogicInterface = (Interface*) guiInterface;
 	guiLogicInterface->toDisplay("Enter instruction: ");
 	_userCommand=guiLogicInterface->toGetInput();
@@ -51,19 +51,19 @@ bool logic::inputCommand() {
 	return false;
 }
 
-bool logic::checkCommand() {
+bool Facade::checkCommand() {
 	if (_userCommand.empty()) {
 		throw "Command is blank\n";
 	}
 	return true;
 }
 
-void logic::parserCommand() {
+void Facade::parserCommand() {
 	parser commandline;
 	commandInput=commandline.parseString(_userCommand);
 }
 
-bool logic::executeCommand() {
+bool Facade::executeCommand() {
 	Interface* guiLogicInterface = (Interface*) guiInterface;
 	bool checkFlag = false;
 	if(_userCommand == "-quit" || _userCommand == "-Quit") 
@@ -103,6 +103,11 @@ bool logic::executeCommand() {
 				p.readTask(taskStorage);
 				checkFlag=true;
 			}
+			else if (commandInput[i]=="-undo")
+            {
+                p.undoTask(taskStorage);
+                checkFlag=true;
+            }
 		}
 	}
 	commandInput.clear();
@@ -113,13 +118,13 @@ bool logic::executeCommand() {
 	return false;
 }
 
-void logic::displayCommand() {
+void Facade::displayCommand() {
 	Interface* guiLogicInterface = (Interface*) guiInterface;
 	guiLogicInterface->toDisplay(_userCommand);
 	guiLogicInterface->toDisplay("\n");
 }
 
-void logic::displayVector() {
+void Facade::displayVector() {
 	Interface* guiLogicInterface = (Interface*) guiInterface;
 	int size=commandInput.size();
 	for (int i=0;i<size;i++) {
@@ -128,6 +133,6 @@ void logic::displayVector() {
 	}
 }
 
-void logic::setUserCommand(string input) {
+void Facade::setUserCommand(string input) {
 	_userCommand=input;
 }

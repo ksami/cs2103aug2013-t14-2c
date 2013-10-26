@@ -30,6 +30,6 @@ protected:
   }
  
   // Objects declared here can be used by all tests in the test case for Foo.
-  taskManager taskMgrUnderTest;
-  vector<task> stubTaskStorage;
+  TaskManager taskMgrUnderTest;
+  vector<Task> stubTaskStorage;
 };

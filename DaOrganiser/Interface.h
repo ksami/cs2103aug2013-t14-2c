@@ -1,12 +1,12 @@
 #pragma once
 
 #include "MainWindow.h"
-#include "logic.h"
+#include "Facade.h"
 
 class Interface
 {
 public:
-	logic* progController;
+	Facade* progController;
 	DaOrganiser::MainWindow^* userInterface;
 public:
 	Interface(void);

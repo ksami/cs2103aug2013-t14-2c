@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include"task.h"
+#include "Task.h"
 
-task::task()
+Task::Task()
 {
         status = notDone;
         kind = 'f';
@@ -12,7 +12,11 @@ task::task()
         details = "";
 }
 
-string task::getStartDateAsString()
+string Task::getIdAsString()
+{
+	return std::to_string(taskID);
+}
+string Task::getStartDateAsString()
 {
 	string startDateAsString;
 	startDateAsString += std::to_string(startDate.year);
@@ -22,7 +26,7 @@ string task::getStartDateAsString()
 	startDateAsString += std::to_string(startDate.day);
 	return startDateAsString;
 }
-string task::getEndDateAsString()
+string Task::getEndDateAsString()
 {
 	string endDateAsString;
 	endDateAsString += std::to_string(endDate.year);
@@ -32,7 +36,7 @@ string task::getEndDateAsString()
 	endDateAsString += std::to_string(endDate.day);
 	return endDateAsString;
 }
-string task::getStartTimeAsString()
+string Task::getStartTimeAsString()
 {
 	string startTimeAsString;
 	startTimeAsString += std::to_string(startTime.hr);
@@ -40,7 +44,7 @@ string task::getStartTimeAsString()
 	startTimeAsString += std::to_string(startTime.min);
 	return startTimeAsString;
 }
-string task::getEndTimeAsString()
+string Task::getEndTimeAsString()
 {	
 	string endTimeAsString;
 	endTimeAsString += std::to_string(endTime.hr);
@@ -48,18 +52,24 @@ string task::getEndTimeAsString()
 	endTimeAsString += std::to_string(endTime.min);
 	return endTimeAsString;
 }
-string task::getDetailsAsString()
+string Task::getDetailsAsString()
 {
 	return details;
 }
-string task::getStatusAsString()
+string Task::getStatusAsString()
 {
 	string statusAsString;
 	statusAsString += status;
 	return statusAsString;
 }
+string Task::getKindAsString()
+{
+	string kindAsString;
+	kindAsString += kind;
+	return kindAsString;
+}
 
-int task::checkDate(date first, date second)
+int Task::checkDate(date first, date second)
 {
         if(first.year>second.year)
                 return moreThan;
@@ -77,7 +87,7 @@ int task::checkDate(date first, date second)
         return equalTo; 
 }
 
-int task::checkTime(time_s first, time_s second)
+int Task::checkTime(time_s first, time_s second)
 {
         if(first.hr>second.hr)
                 return moreThan;
@@ -91,12 +101,12 @@ int task::checkTime(time_s first, time_s second)
         return equalTo;
 }
 
-char task::checkStatus()
+char Task::checkStatus()
 {
         return status;
 }
 
-bool task::changeStatus(char complete)
+bool Task::changeStatus(char complete)
 {
         if (complete == done)
                 status = done;
@@ -108,7 +118,7 @@ bool task::changeStatus(char complete)
         return true;
 }
 
-bool task::assignDateValue(date value, char dateOption)
+bool Task::assignDateValue(date value, char dateOption)
 {
         if(value.day<one||value.month<one||value.year<one)
                 return false;
@@ -141,7 +151,7 @@ bool task::assignDateValue(date value, char dateOption)
         return true;
 }
 
-bool task::assignTimeValue(time_s value, char timeOption)
+bool Task::assignTimeValue(time_s value, char timeOption)
 {
         if(value.hr>23||value.hr<0||value.min>59||value.min<0)
                 return false;
@@ -154,7 +164,7 @@ bool task::assignTimeValue(time_s value, char timeOption)
         return true;
 }
 
-bool task::assignKind(char value)
+bool Task::assignKind(char value)
 {
         if((value == timed)||(value == deadline)||(value == floating))
         {
@@ -165,48 +175,60 @@ bool task::assignKind(char value)
                 return false;
 }
 
-void task::assignDetails(string description)
+void Task::assignDetails(string description)
 {
         details = description;
 }
 
 //for CLI
-void task::displayDetail()
+void Task::displayDetail()
 {
-	cout<<"Start date: "<<
-		setfill('0')<<setw(2)<<to_string(startDate.day)<<" / "<<
-		setfill('0')<<setw(2)<<to_string(startDate.month)<<" / "<<
-		setfill('0')<<setw(2)<<to_string(startDate.year)<<endl;
+    cout<<taskID<<endl;
+ 
+    cout<<"Start date: "<<
+        setfill('0')<<setw(2)<<to_string(startDate.day)<<" / "<<
+        setfill('0')<<setw(2)<<to_string(startDate.month)<<" / "<<
+        setfill('0')<<setw(2)<<to_string(startDate.year)<<endl;
+ 
+    cout<<"End date: "<<
+        setfill('0')<<setw(2)<<to_string(endDate.day)<<" / "<<
+        setfill('0')<<setw(2)<<to_string(endDate.month)<<" / "<<
+        setfill('0')<<setw(2)<<to_string(endDate.year)<<endl;
+ 
+    cout<<"Start time: "<<        
+        setfill('0')<<setw(2)<<to_string(startTime.hr)<<" : "<<
+        setfill('0')<<setw(2)<<to_string(startTime.min)<<endl;
+ 
+    cout<<"End time: "<<
+        setfill('0')<<setw(2)<<to_string(endTime.hr)<<" : "<<
+        setfill('0')<<setw(2)<<to_string(endTime.min)<<endl;
+ 
+    cout<<"Details: "<<details<<endl;
+ 
+    if(status == 'd') 
+        cout<<"Status: Task completed"<<endl; 
+    else
+        cout<<"Status: Task yet to be complete"<<endl; 
+  
+    if(kind == 'f') 
+        cout<<"Kind: Floating Task"; 
+    else if (kind == 'd') 
+        cout<<"Kind: Task with deadline";
+    else
+        cout<<"Kind: Timed Task";
+    cout<<endl<<"--------------------------------------------";
 
-	cout<<"End date: "<<
-		setfill('0')<<setw(2)<<to_string(endDate.day)<<" / "<<
-		setfill('0')<<setw(2)<<to_string(endDate.month)<<" / "<<
-		setfill('0')<<setw(2)<<to_string(endDate.year)<<endl;
-
-	cout<<"Start time: "<<
-		setfill('0')<<setw(2)<<to_string(startTime.hr)<<" : "<<
-		setfill('0')<<setw(2)<<to_string(startTime.min)<<endl;
-
-	cout<<"End time: "<<
-		setfill('0')<<setw(2)<<to_string(endTime.hr)<<" : "<<
-		setfill('0')<<setw(2)<<to_string(endTime.min)<<endl;
-
-	cout<<"Details: "<<details<<endl;
-	
-	if(status == 'd')
-		cout<<"Status: Task completed"<<endl;
-	else
-		cout<<"Status: Task yet to be completed"<<endl;
-
-	if(kind == 'f')
-		cout<<"Kind: Floating task";
-	else if(kind == 'd')
-		cout<<"Kind: Task with deadline";
-	else
-		cout<<"Kind: Timed task";
 }
 
-char task::returnKind()
+void Task::assignIDNumber(int number) {
+    taskID=number;
+}
+ 
+char Task::returnKind()
 {
         return kind;
+}
+ 
+int Task::getTaskID() {
+    return taskID;
 }

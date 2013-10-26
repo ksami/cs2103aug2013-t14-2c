@@ -2,7 +2,7 @@
 #include <msclr\marshal_cppstd.h>
 #include "MainWindow.h"
 #include <cctype>
-#include "logic.h"
+#include "Facade.h"
 
 //to switch off logging
 //#define NLOG
@@ -30,9 +30,10 @@ String^ DaOrganiser::MainWindow::stdStringToSysString(std::string stringToConver
 	return msclr::interop::marshal_as <String^> (stringToConvert);
 }
 
-void DaOrganiser::MainWindow::addTaskToList(task taskToAdd)
+void DaOrganiser::MainWindow::addTaskToList(Task taskToAdd)
 {
-	ListViewItem^ itemToAdd=gcnew ListViewItem();
+	//assumption: taskid is unique
+	ListViewItem^ itemToAdd=gcnew ListViewItem(stdStringToSysString(taskToAdd.getIdAsString()));
 
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStartDateAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getEndDateAsString()));
@@ -40,6 +41,7 @@ void DaOrganiser::MainWindow::addTaskToList(task taskToAdd)
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getEndTimeAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getDetailsAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStatusAsString()));
+	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getKindAsString()));
 
 	listView1->Items->Add(itemToAdd);
 }
@@ -149,8 +151,8 @@ System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sen
 
 System::Void DaOrganiser::MainWindow::timer1_Tick(System::Object^  sender, System::EventArgs^  e)
 {
-	static vector<task> allTasks;
-	logic* controller = (logic*)progController;
+	static vector<Task> allTasks;
+	Facade* controller = (Facade*)progController;
 	allTasks=controller->getTaskStorage();
 	listView1->Items->Clear();
 	for(int i=0; i<allTasks.size(); i++)
@@ -277,7 +279,7 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 		richTextBox1->Text += "\n";
 		richTextBox1->Text += comboBox1->Text;
 
-		logic* controller = (logic*)progController;
+		Facade* controller = (Facade*)progController;
 		controller->executeProgramme(toExit);
 		//logic will take care of user feedback here
 
