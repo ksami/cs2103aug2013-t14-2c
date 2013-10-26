@@ -22,7 +22,7 @@
 //
 // Creates a file called Log PROGRAM_NAME YYYYMMDDHHMMSS.txt
 // Write logs using the macro function logging(string message, LogLevel level)
-// Logging Severity Levels: DEBUG, INFO, WARNING, ERROR
+// Logging Severity Levels: DEBUG, EVENT, INFO, WARNING, ERROR
 // Use #define NLOG before #include "Log.h" to switch off logging
 //
 
@@ -59,6 +59,7 @@ class Log
 {
 public:
 	static void logging(std::string, LogLevel);
+	static void initialiseLog(std::string&, std::ofstream&);
 	static std::string getCurrentTime(void);
 };
 
