@@ -6,6 +6,7 @@
 #include "Task.h"
 #include "TaskManager.h"
 #include "Parser.h"
+#include "Storage.h"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ private:
         vector<string> commandInput;
 		vector<Task> taskStorage;
 		TaskManager p;
+		Storage* saveFile;
 public:
         Facade();
 		Facade(void*);

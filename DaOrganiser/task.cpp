@@ -3,13 +3,13 @@
 
 Task::Task()
 {
-        status = notDone;
-        kind = 'f';
-        startDate.day = startDate.month = startDate.year = 0;
-        endDate.day = endDate.month = endDate.year = 0;
-        startTime.hr = startTime.min = 0;
-        endTime.hr = endTime.min = 0;
-        details = "";
+    status = notDone;
+    kind = 'f';
+    startDate.day = startDate.month = startDate.year = 0;
+    endDate.day = endDate.month = endDate.year = 0;
+    startTime.hr = startTime.min = 0;
+    endTime.hr = endTime.min = 0;
+    details = "";
 }
 
 string Task::getIdAsString()

@@ -8,25 +8,27 @@
 
 using namespace std;
 
-class storage{
+class Storage{
 	private:
 		ofstream outputStream;
 		ifstream inputStream;
 		char* _storageName;
 
 	public:
-		storage(char*);
-		~storage();
+		Storage(char*);
+		~Storage();
+
+		void readAllFromFile(vector<Task>&);
+		void writeAllToFile(vector<Task>);
+
 		char* getStorageName();
 		bool isSafeToOpenStream();
 		void initialOutputStream();
-		void writeAllToFile(vector<Task>);
 		void travelAllVector(vector<Task>);
 		void writeOneToFile(Task);
 		string getContentOfTask(Task);
 		void closeOutputStream();
 		void initialInputStream();
-		void readAllFromFile(vector<Task>&);
 		Task readOneFromFile();
 		Task putContentIntoTask(char**);
 		void closeInputStream();
