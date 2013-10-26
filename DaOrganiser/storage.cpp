@@ -1,19 +1,20 @@
 #include "stdafx.h"
-#include "storage.h"
-#include <assert.h>
+#include "Storage.h"
+#include "Log.h"
+//#include <assert.h>
 
-storage::storage(char* storageName) {
+Storage::Storage(char* storageName) {
 	_storageName = storageName;
 }
 
-storage::~storage() {
+Storage::~Storage() {
 }
 
-bool storage::isSafeToOpenStream() {
+bool Storage::isSafeToOpenStream() {
 	return !(outputStream.is_open()||inputStream.is_open());
 }
 
-void storage::initialOutputStream() {
+void Storage::initialOutputStream() {
 	if(isSafeToOpenStream()){
 		outputStream.open(_storageName);
 	}
@@ -24,39 +25,40 @@ void storage::initialOutputStream() {
 	}
 }
 
-char* storage::getStorageName(){
+char* Storage::getStorageName(){
 	return _storageName;
 }
 
-void storage::writeAllToFile(vector<Task> allTask) {
+void Storage::writeAllToFile(vector<Task> allTask) {
 
 	initialOutputStream();
 	travelAllVector(allTask);
 	closeOutputStream();
 }
 
-void storage::travelAllVector(vector<Task> allTask){
+void Storage::travelAllVector(vector<Task> allTask){
 	outputStream << allTask.size() << "\n";
 	for(int i = 0; i < allTask.size(); i++){
 		writeOneToFile(allTask[i]);
 	}
 }
 
-void storage::writeOneToFile(Task t) {
+void Storage::writeOneToFile(Task t) {
 	outputStream << getContentOfTask(t);
 }
 
-string storage::getContentOfTask(Task t) {
-	return t.getDetailsAsString() + "," + t.getStatusAsString() + "," + t.getStartDateAsString() + "," + t.getStartTimeAsString() + "," + t.getEndDateAsString() + "," + t.getEndTimeAsString() + "\n";
+string Storage::getContentOfTask(Task t) {
+	logging("Task " + t.getIdAsString() + "," + t.getDetailsAsString(), LogLevel::Debug);
+	return t.getIdAsString() + "," + t.getDetailsAsString() + "," + t.getStatusAsString() + "," + t.getStartDateAsString() + "," + t.getStartTimeAsString() + "," + t.getEndDateAsString() + "," + t.getEndTimeAsString() + "\n";
 }
 
-void storage::closeOutputStream(){
+void Storage::closeOutputStream(){
 	if(outputStream.is_open()){
 		outputStream.close();
 	}
 }
 
-void storage::initialInputStream(){
+void Storage::initialInputStream(){
 	if(isSafeToOpenStream()){
 		inputStream.open(_storageName);
 	}
@@ -67,7 +69,7 @@ void storage::initialInputStream(){
 	}
 }
 
-void storage::readAllFromFile(vector<Task> &vt){
+void Storage::readAllFromFile(vector<Task> &vt){
 	initialInputStream();
 	char* temp = new char[1024];
 	inputStream.getline(temp, 1024);
@@ -77,14 +79,14 @@ void storage::readAllFromFile(vector<Task> &vt){
 	}
 }
 
-Task storage::readOneFromFile(){
+Task Storage::readOneFromFile(){
 	char* temp = new char[1024];
 	inputStream.getline(temp, 1024);
 	return putContentIntoTask(tokenize(temp));
 }
 
-char** storage::tokenize(char *temp){
-	char** info = new char*[6];
+char** Storage::tokenize(char *temp){
+	char** info = new char*[7];
 	char* nextToken = NULL;
 	int i = 0;
 	info[0] = strtok_s(temp, ",", &nextToken);
@@ -95,31 +97,32 @@ char** storage::tokenize(char *temp){
 	return info;
 }
 
-Task storage::putContentIntoTask(char** info){
+Task Storage::putContentIntoTask(char** info){
 	Task t;
 	date startDate, endDate;
 	time_s startTime, endTime;
-	t.assignDetails(info[0]);
-	t.assignKind(*info[1]);
-	sscanf_s(info[2],"%4d/%2d/%2d",&startDate.year, &startDate.month, &startDate.day);
+	t.assignIDNumber(*info[0]);
+	t.assignDetails(info[1]);
+	t.assignKind(*info[2]);
+	sscanf_s(info[3],"%4d/%2d/%2d",&startDate.year, &startDate.month, &startDate.day);
 	t.assignDateValue(startDate, 's');
 	//toDisplay(t.getStartDateAsString());
 
-	sscanf_s(info[3],"%2d:%2d",&startTime.hr, &startTime.min);
+	sscanf_s(info[4],"%2d:%2d",&startTime.hr, &startTime.min);
 	t.assignTimeValue(startTime, 's');	
 	//toDisplay(t.getStartTimeAsString());
 
-	sscanf_s(info[4],"%4d/%2d/%2d",&endDate.year, &endDate.month, &endDate.day);
+	sscanf_s(info[5],"%4d/%2d/%2d",&endDate.year, &endDate.month, &endDate.day);
 	t.assignDateValue(endDate, 'e');
 	//toDisplay(t.getEndDateAsString());
 
-	sscanf_s(info[5],"%2d:%2d",&endTime.hr, &endTime.min);
+	sscanf_s(info[6],"%2d:%2d",&endTime.hr, &endTime.min);
 	t.assignTimeValue(endTime, 'e');
 	//toDisplay(t.getEndTimeAsString());
 	return t;
 }
 
-void storage::closeInputStream(){
+void Storage::closeInputStream(){
 	if(inputStream.is_open()){
 		inputStream.close();
 	}

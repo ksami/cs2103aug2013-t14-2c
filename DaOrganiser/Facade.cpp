@@ -2,14 +2,19 @@
 #include "Facade.h"
 #include "Interface.h"
 
+#define SAVE_FILENAME "storage.txt"
+
 Facade::Facade() {
 }
 
 Facade::Facade(void* inter) {
+	saveFile = new Storage(SAVE_FILENAME);
+	saveFile->readAllFromFile(taskStorage);
 	guiInterface = inter;
 }
 
 Facade::~Facade() {
+	delete saveFile;
 }
 
 //GUI's execute programme
@@ -125,6 +130,7 @@ bool Facade::executeCommand() {
 	else
 	{
 		guiLogicInterface->updateGuiList();
+		saveFile->writeAllToFile(taskStorage);
 	}
 	return false;
 }
