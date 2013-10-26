@@ -3,28 +3,28 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "task.h"
-#include "taskmanager.h"
-#include "parser.h"
+#include "Task.h"
+#include "TaskManager.h"
+#include "Parser.h"
 
 using namespace std;
 
-class logic {
+class Facade {
 private:
 		void* guiInterface;
         string _userCommand;
         vector<string> commandInput;
-		vector<task> taskStorage;
-		taskManager p;
+		vector<Task> taskStorage;
+		TaskManager p;
 public:
-        logic();
-		logic(void*);
-        ~logic();
+        Facade();
+		Facade(void*);
+        ~Facade();
 		void executeProgramme();
 		void executeProgramme(bool& toExit);
 		
 		//bool addTaskStorage();
-		vector<task> getTaskStorage();
+		vector<Task> getTaskStorage();
 		//void getCommand();
 
         bool inputCommand();

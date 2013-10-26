@@ -4,7 +4,7 @@
 #include <fstream>
 #include <algorithm>
 #include <vector>
-#include "task.h"
+#include "Task.h"
 
 using namespace std;
 
@@ -20,15 +20,15 @@ class storage{
 		char* getStorageName();
 		bool isSafeToOpenStream();
 		void initialOutputStream();
-		void writeAllToFile(vector<task>);
-		void travelAllVector(vector<task>);
-		void writeOneToFile(task);
-		string getContentOfTask(task);
+		void writeAllToFile(vector<Task>);
+		void travelAllVector(vector<Task>);
+		void writeOneToFile(Task);
+		string getContentOfTask(Task);
 		void closeOutputStream();
 		void initialInputStream();
-		void readAllFromFile(vector<task>&);
-		task readOneFromFile();
-		task putContentIntoTask(char**);
+		void readAllFromFile(vector<Task>&);
+		Task readOneFromFile();
+		Task putContentIntoTask(char**);
 		void closeInputStream();
 		char** tokenize(char*);
 		

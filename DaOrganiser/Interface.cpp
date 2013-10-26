@@ -7,7 +7,7 @@ Interface::Interface(void)
 {
 	DaOrganiser::MainWindow^ ui = gcnew DaOrganiser::MainWindow;
 	userInterface = &ui;
-	progController = new logic(this);
+	progController = new Facade(this);
 	(*userInterface)->progController = progController;
 	logging("application run", LogLevel::Debug);
 	Application::Run(ui);

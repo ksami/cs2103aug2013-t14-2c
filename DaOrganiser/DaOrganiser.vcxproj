@@ -87,35 +87,35 @@
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="DaOrganiser.cpp" />
+    <ClCompile Include="Facade.cpp" />
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="ListViewItemComparer.cpp" />
     <ClCompile Include="Log.cpp" />
-    <ClCompile Include="logic.cpp" />
     <ClCompile Include="MainWindow.cpp" />
-    <ClCompile Include="parser.cpp" />
+    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="storage.cpp" />
     <ClCompile Include="stub.cpp" />
-    <ClCompile Include="task.cpp" />
-    <ClCompile Include="taskmanager.cpp" />
+    <ClCompile Include="Task.cpp" />
+    <ClCompile Include="TaskManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Facade.h" />
     <ClInclude Include="Interface.h" />
     <ClInclude Include="ListViewItemComparer.h" />
     <ClInclude Include="Log.h" />
-    <ClInclude Include="logic.h" />
     <ClInclude Include="MainWindow.h">
       <FileType>CppForm</FileType>
     </ClInclude>
-    <ClInclude Include="parser.h" />
+    <ClInclude Include="Parser.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="storage.h" />
-    <ClInclude Include="task.h" />
-    <ClInclude Include="taskmanager.h" />
+    <ClInclude Include="Task.h" />
+    <ClInclude Include="TaskManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />

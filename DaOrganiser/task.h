@@ -30,23 +30,25 @@ struct time_s
 };
 
 
-class task
+class Task
 {
 private:
-	int taskid;
+	int taskID;
 	date startDate, endDate;
 	time_s startTime, endTime;
 	string details;
 	char status, kind;
 public:
-	task();
+	Task();
 
+	string getIdAsString();
 	string getStartDateAsString();
 	string getEndDateAsString();
 	string getStartTimeAsString();
 	string getEndTimeAsString();
 	string getDetailsAsString();
 	string getStatusAsString();
+	string getKindAsString();
 
 	int checkDate(date, date);
 	int checkTime(time_s, time_s);
@@ -57,5 +59,7 @@ public:
 	bool assignTimeValue(time_s, char);
 	bool assignKind(char);
 	void assignDetails(string);
+	void assignIDNumber(int);
 	void displayDetail();
+	int getTaskID();
 };
