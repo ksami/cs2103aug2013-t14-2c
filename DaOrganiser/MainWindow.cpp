@@ -8,8 +8,8 @@
 //#define NLOG
 #include "Log.h"
 
-#define AVAILABLE_CMDS "-add", "-delete", "-update", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
-#define AVAILABLE_CMDS_NUM 10
+#define AVAILABLE_CMDS "-add", "-delete", "-update", "-undo", "-quit", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
+#define AVAILABLE_CMDS_NUM 12
 #define CMD_DELIMITER_CHAR '-'
 #define CMD_DELIMITER_STR "-"
 #define NULL_STRING ""
@@ -75,7 +75,7 @@ void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
 
 void DaOrganiser::MainWindow::exitProgram(void)
 {
-	logging("Exit program sequence initiated", LogLevel::Info);
+	logging("Exit program sequence initiated", LogLevel::Debug);
 	//write goodbye messages (or not)
 	//save to file first
 	this->Close();
@@ -166,6 +166,7 @@ System::Void DaOrganiser::MainWindow::timer1_Tick(System::Object^  sender, Syste
 // Order of events called: PreviewKeyDown > KeyDown > KeyPress > KeyUp
 System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e)
 {
+	logging("comboBox1_KeyPress called", LogLevel::Event);
 	const bool nonAlphaNumeric = (e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122);
 
 	if(e->KeyChar == CMD_DELIMITER_CHAR)
@@ -192,6 +193,7 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 
 System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
 {
+	logging("comboBox1_KeyDown called", LogLevel::Event);
 	int i = comboBox1->SelectionStart;
 	String^ currentChar = NULL_STRING;
 
@@ -273,9 +275,11 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::Enter)
 	{
+		e->Handled = true;
 		static bool toExit = false;
-
-		appendToOutput(sysStringToStdString(comboBox1->Text));
+		string userInput = sysStringToStdString(comboBox1->Text);
+		appendToOutput(userInput);
+		logging("Input entered: " + userInput, LogLevel::Info);
 
 		Facade* controller = (Facade*)progController;
 		controller->executeProgramme(toExit);
@@ -292,6 +296,11 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 			richTextBox1->Text = richTextBox1->Text->Remove(0, 1000);
 		}
 
+		if(comboBox1->DroppedDown == true)
+		{
+			closeSuggestionBox();
+		}
+
 		if(toExit)
 		{
 			exitProgram();
@@ -301,6 +310,7 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 
 System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e)
 {
+	logging("comboBox1_PreviewKeyDown called", LogLevel::Event);
 	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true) && (comboBox1->Items->Count > 0))
 	{
 		if(comboBox1->SelectedIndex > 0)

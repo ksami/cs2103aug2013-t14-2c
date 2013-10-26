@@ -54,6 +54,9 @@ void logging(std::string message, LogLevel level)
 	#ifndef NLOG_DEBUG
 		logFile<<" DEBUG";
 	#endif
+	#ifndef NLOG_EVENT
+		logFile<<" EVENT";
+	#endif
 	#ifndef NLOG_INFO
 		logFile<<" INFO";
 	#endif
@@ -75,6 +78,14 @@ void logging(std::string message, LogLevel level)
 		{
 			logFile<<getCurrentTime()<<" ";
 			logFile<<"Debug: "<<message<<std::endl;
+			break;
+		}
+#endif
+#ifndef NLOG_EVENT
+		case LogLevel::Event:
+		{
+			logFile<<getCurrentTime()<<" ";
+			logFile<<"Event: "<<message<<std::endl;
 			break;
 		}
 #endif

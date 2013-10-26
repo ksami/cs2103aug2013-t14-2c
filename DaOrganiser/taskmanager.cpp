@@ -297,7 +297,7 @@ bool TaskManager::deleteTask(vector<string> splitString, vector<Task> &TaskStora
 }
 
 void TaskManager::undoTask(vector<Task> &TaskStorage) {
-	try {
+	try{
 		if (checkRecordCommand()) {
 			int toUndoID=recordCommand.back();
 			int getCommand=toUndoID%10;
@@ -319,10 +319,11 @@ void TaskManager::undoTask(vector<Task> &TaskStorage) {
 				recordTask.pop_back();
 				recordCommand.pop_back();
 			}
-			cout<<"Undo successful"<<endl;
+			throw "Undo successful";
 		}
-	} catch (const char* msg) {
-		cout<<msg<<endl;
+	}
+	catch(const char* except){
+		throw except;
 	}
 }
 
@@ -353,7 +354,7 @@ int TaskManager::findIDPos(int number,vector<Task> TaskStorage) {
 	int toReturn;
 	if (checkID(number,TaskStorage,toReturn))
 			return toReturn;
-	else throw "Invalid task ID entered\n";	
+	else throw "Invalid task ID entered";	
 	//if (checkID(number,TaskStorage,toReturn))
 	/*	for (unsigned int i=0;i<TaskStorage.size();i++) {
 	if (TaskStorage.at(i).getTaskID()==number) 
@@ -375,6 +376,6 @@ bool TaskManager::checkID(int number,vector<Task>TaskStorage,int &toReturn) {
 
 bool TaskManager::checkRecordCommand(){
 	if (recordCommand.empty())
-		throw "no more commands to undo";
+		throw "No more commands to undo";
 	return true;
 }

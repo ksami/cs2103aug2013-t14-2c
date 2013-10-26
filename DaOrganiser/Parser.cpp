@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "Parser.h"
 
-parser::parser() {
+Parser::Parser() {
 }
 
-parser::~parser() {
+Parser::~Parser() {
 }
 
-vector<string> parser::parseString(string userCommand) {
+vector<string> Parser::parseString(string userCommand) {
 	string singleWord;
 	istringstream toSplitString(userCommand);
 

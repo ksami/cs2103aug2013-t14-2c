@@ -5,13 +5,13 @@
 #include <sstream>
 using namespace std;
 
-class parser {
+class Parser {
 private:
 	vector<string> splitString;
 
 
 public:
-	parser();
-	~parser();
+	Parser();
+	~Parser();
 	vector<string> parseString(string);
 };

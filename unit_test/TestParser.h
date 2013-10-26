@@ -29,5 +29,5 @@ protected:
   }
  
   // Objects declared here can be used by all tests in the test case for Foo.
-  parser parserUnderTest;
+  Parser parserUnderTest;
 };
