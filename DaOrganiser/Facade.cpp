@@ -122,6 +122,10 @@ bool Facade::executeCommand() {
 	{
 		guiLogicInterface->toDisplay("Invalid command entered");
 	}
+	else
+	{
+		guiLogicInterface->updateGuiList();
+	}
 	return false;
 }
 

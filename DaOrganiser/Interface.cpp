@@ -32,3 +32,8 @@ string Interface::toGetInput()
 	//return input;
 	return (*userInterface)->getUserInput();
 }
+
+void Interface::updateGuiList()
+{
+	(*userInterface)->updateList();
+}
