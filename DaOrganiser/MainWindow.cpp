@@ -109,7 +109,16 @@ void DaOrganiser::MainWindow::openSuggestionBox(void)
 
 void DaOrganiser::MainWindow::closeSuggestionBox(void)
 {
-	comboBox1->DroppedDown = false;
+	if(comboBox1->Items->Count == 0)
+	{
+		comboBox1->Items->Add("");
+		comboBox1->DroppedDown = false;
+		comboBox1->Items->Remove("");
+	}
+	else
+	{
+		comboBox1->DroppedDown = false;
+	}
 }
 
 void DaOrganiser::MainWindow::commitSelectedSuggestion(void)
