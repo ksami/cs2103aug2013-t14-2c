@@ -59,7 +59,7 @@ bool Facade::checkCommand() {
 }
 
 void Facade::parserCommand() {
-	parser commandline;
+	Parser commandline;
 	commandInput=commandline.parseString(_userCommand);
 }
 
@@ -105,7 +105,14 @@ bool Facade::executeCommand() {
 			}
 			else if (commandInput[i]=="-undo")
             {
-                p.undoTask(taskStorage);
+				try
+				{
+					p.undoTask(taskStorage);
+				}
+				catch(const char* except)
+				{
+					guiLogicInterface->toDisplay(except);
+				}
                 checkFlag=true;
             }
 		}

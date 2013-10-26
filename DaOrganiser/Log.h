@@ -44,12 +44,13 @@
 #else
 #define logging(string, LogLevel) Log::logging(string, LogLevel)
 
-enum LogLevel {Debug, Info, Warning, Error};
+enum LogLevel {Debug, Event, Info, Warning, Error};
 
 #define PROGRAM_NAME "DaOrganiser"
 
 // Use to selectively switch off logging messages
 //#define NLOG_DEBUG
+//#define NLOG_EVENT
 //#define NLOG_INFO
 //#define NLOG_WARNING
 //#define NLOG_ERROR
