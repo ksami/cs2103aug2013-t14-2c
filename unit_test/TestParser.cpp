@@ -12,6 +12,12 @@ TEST_F(TestParser, parse_simplestring_return2elements) {
 	EXPECT_EQ("World!",result[1]);
 }
 
+TEST_F(TestParser, parse_undocmd_return1element) {
+	vector<string> result = parserUnderTest.parseString("-undo");
+	EXPECT_EQ("-undo",result[0]);
+	EXPECT_EQ(1,result.size());
+}
+
 TEST_F(TestParser, parse_leadingspace_return1element) {
 	vector<string> result = parserUnderTest.parseString(" 123asd");
 	EXPECT_EQ("123asd",result[0]);

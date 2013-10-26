@@ -46,7 +46,7 @@
 
 enum LogLevel {Debug, Info, Warning, Error};
 
-#define PROGRAM_NAME "yourProgramName"
+#define PROGRAM_NAME "DaOrganiser"
 
 // Use to selectively switch off logging messages
 //#define NLOG_DEBUG
