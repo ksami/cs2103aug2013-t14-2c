@@ -94,11 +94,12 @@ namespace DaOrganiser {
 			// richTextBox1
 			// 
 			this->richTextBox1->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->richTextBox1->Location = System::Drawing::Point(4, 450);
+			this->richTextBox1->Location = System::Drawing::Point(4, 359);
+			this->richTextBox1->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->richTextBox1->Name = L"richTextBox1";
 			this->richTextBox1->ReadOnly = true;
 			this->richTextBox1->ScrollBars = System::Windows::Forms::RichTextBoxScrollBars::Vertical;
-			this->richTextBox1->Size = System::Drawing::Size(954, 128);
+			this->richTextBox1->Size = System::Drawing::Size(847, 103);
 			this->richTextBox1->TabIndex = 1;
 			this->richTextBox1->TabStop = false;
 			this->richTextBox1->Text = L"Welcome to DaOrganiser!\n";
@@ -114,12 +115,13 @@ namespace DaOrganiser {
 			this->tableLayoutPanel1->Controls->Add(this->listView1, 0, 0);
 			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 0);
+			this->tableLayoutPanel1->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
 			this->tableLayoutPanel1->RowCount = 3;
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 76.82481F)));
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 23.17518F)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 34)));
-			this->tableLayoutPanel1->Size = System::Drawing::Size(962, 618);
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 27)));
+			this->tableLayoutPanel1->Size = System::Drawing::Size(855, 494);
 			this->tableLayoutPanel1->TabIndex = 1;
 			// 
 			// comboBox1
@@ -128,9 +130,10 @@ namespace DaOrganiser {
 			this->comboBox1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->comboBox1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Location = System::Drawing::Point(4, 585);
+			this->comboBox1->Location = System::Drawing::Point(4, 467);
+			this->comboBox1->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(954, 28);
+			this->comboBox1->Size = System::Drawing::Size(847, 24);
 			this->comboBox1->Sorted = true;
 			this->comboBox1->TabIndex = 0;
 			this->comboBox1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::comboBox1_KeyDown);
@@ -144,9 +147,10 @@ namespace DaOrganiser {
 			this->listView1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->listView1->FullRowSelect = true;
 			this->listView1->GridLines = true;
-			this->listView1->Location = System::Drawing::Point(4, 4);
+			this->listView1->Location = System::Drawing::Point(4, 3);
+			this->listView1->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->listView1->Name = L"listView1";
-			this->listView1->Size = System::Drawing::Size(954, 439);
+			this->listView1->Size = System::Drawing::Size(847, 351);
 			this->listView1->TabIndex = 2;
 			this->listView1->TabStop = false;
 			this->listView1->UseCompatibleStateImageBehavior = false;
@@ -156,7 +160,7 @@ namespace DaOrganiser {
 			// taskId
 			// 
 			this->taskId->Text = L"Task ID";
-			this->taskId->Width = 73;
+			this->taskId->Width = 61;
 			// 
 			// startDate
 			// 
@@ -181,25 +185,26 @@ namespace DaOrganiser {
 			// details
 			// 
 			this->details->Text = L"Details";
-			this->details->Width = 328;
+			this->details->Width = 273;
 			// 
 			// status
 			// 
 			this->status->Text = L"Status";
-			this->status->Width = 95;
+			this->status->Width = 71;
 			// 
 			// kind
 			// 
 			this->kind->Text = L"Kind";
-			this->kind->Width = 75;
+			this->kind->Width = 58;
 			// 
 			// MainWindow
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
+			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(962, 618);
+			this->ClientSize = System::Drawing::Size(855, 494);
 			this->Controls->Add(this->tableLayoutPanel1);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
+			this->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->MaximizeBox = false;
 			this->Name = L"MainWindow";
 			this->Text = L"DaOrganiser";

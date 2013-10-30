@@ -17,6 +17,10 @@ TEST_F(testTaskMgr, create_emptystorage_simplevalidstring_returntrue) {
 	testString.push_back("1212");
 	testString.push_back("-endtime");
 	testString.push_back("1213");
+	testString.push_back("-details");
+	testString.push_back("simple");
+	testString.push_back("valid");
+	testString.push_back("case");
 	bool createTaskSuccess = taskMgrUnderTest.createTask(testString, stubTaskStorage);
 	EXPECT_TRUE(createTaskSuccess);
 }
@@ -31,6 +35,9 @@ TEST_F(testTaskMgr, create_emptystorage_overlaptime_returnfalse) {
 	testString.push_back("1212");
 	testString.push_back("-endtime");
 	testString.push_back("1210");
+	testString.push_back("-details");
+	testString.push_back("overlap");
+	testString.push_back("time");
 	bool createTaskSuccess = taskMgrUnderTest.createTask(testString, stubTaskStorage);
 	EXPECT_FALSE(createTaskSuccess);
 }
@@ -45,6 +52,10 @@ TEST_F(testTaskMgr, create_emptystorage_overlapdate_returnfalse) {
 	testString.push_back("1212");
 	testString.push_back("-endtime");
 	testString.push_back("1212");
+	testString.push_back("-details");
+	testString.push_back("overlap");
+	testString.push_back("date");
 	bool createTaskSuccess = taskMgrUnderTest.createTask(testString, stubTaskStorage);
 	EXPECT_FALSE(createTaskSuccess);
 }
+

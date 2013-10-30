@@ -50,7 +50,7 @@ enum LogLevel {Debug, Event, Info, Warning, Error};
 
 // Use to selectively switch off logging messages
 //#define NLOG_DEBUG
-//#define NLOG_EVENT
+#define NLOG_EVENT
 //#define NLOG_INFO
 //#define NLOG_WARNING
 //#define NLOG_ERROR
