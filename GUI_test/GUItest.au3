@@ -1,13 +1,32 @@
 ;GUI testing for DaOrganiser
+;NOTE: does not test storage
+#include <GUIConstantsEx.au3>
+#include <ListviewConstants.au3>
+#include <WindowsConstants.au3>
 
-Global $sleepVal = 100
+Global $count=1
+Global $sleepVal = 500
+Global $exePath = "DaOrganiser.exe"
+Global $winTitle = "DaOrganiser"
+Global $storageFilePath = "storage.txt"
+Global $resultWindow = GUICreate("GUI Test Results",600,600)
+Global $resultList = GUICtrlCreateListView("Name of Test|Result|Expected|Actual", -1, -1,600,600,-1,$LVS_EX_GRIDLINES)
+
 
 ;use CTRL+p to toggle pausing of script
 HotKeySet("^p", "pauseScript")
+;use CTRL+e to end script
+HotKeySet("^e", "endScript")
 
-Run("DaOrganiser.exe")
-WinWaitActive("DaOrganiser")
-For $i = 1 To 20
+;start new run
+If(FileExists($storageFilePath)) Then
+   FileDelete($storageFilePath)
+EndIf
+
+Run($exePath)
+WinWaitActive($winTitle)
+
+For $i = 1 To 5
    testAddValid()
 Next
 testAddValid()
@@ -18,6 +37,8 @@ testDeleteUndo()
 testAddValid()
 testUpdateValid()
 testDeleteValid()
+
+showResults()
 ;Send("{ESC}")
 
 Func pauseScript()
@@ -26,16 +47,67 @@ Func pauseScript()
    WinActivate("DaOrganiser")
 EndFunc
 
+Func endScript()
+   Exit(0)
+EndFunc
+
+Func expectEQ($expected, $actual, $testName)
+   Local $result = False
+   If ($expected = $actual) Then
+	  $result = True
+   EndIf
+   Local $listViewItem = GUICtrlCreateListViewItem($testName & "|" & $result& "|" & $expected & "|" & $actual, $resultList)
+   If ($result = True) Then
+	  GUICtrlSetBkColor($listViewItem, 0x00ff00)
+   Else
+	  GUICtrlSetBkColor($listViewItem, 0xff0000)
+   EndIf
+EndFunc
+
+Func testListviewItem($expected, $testName)
+   Local $col = 0
+   For $element in $expected
+	  Local $itemID = ControlListView($winTitle, "", "[NAME:listView1]", "FindItem", $element, $col)
+	  ;if not found, display actual
+	  If($itemID = -1) Then
+		 $itemID = ControlListView($winTitle, "", "[NAME:listView1]", "FindItem", $expected[0], 0)
+	  EndIf
+	  Local $actual = ControlListView($winTitle, "", "[NAME:listView1]", "GetText", $itemID, $col)
+	  expectEQ($element, $actual, $testName)
+	  $col = $col + 1
+   Next
+EndFunc
+
+Func showResults()
+   GUISetState(@SW_SHOW)
+   Do
+	  $msg = GUIGetMsg()
+   Until $msg = $GUI_EVENT_CLOSE
+EndFunc
+
 Func testAddValid()
-   Send("-add -startdate 121212 -starttime 1212 -enddate 121212 -endtime 1213 -details valid add task test case")
+   Send("-add -startdate 121212 -starttime 1212 -enddate 121212 -endtime 1213 -details valid add task test case" & $count)
    Send("{ENTER}")
    Sleep($sleepVal)
+   Local $array[8]
+   $array[0]=$count * 10
+   $array[1]="12/12/12"
+   $array[2]="12/12/12"
+   $array[3]="12:12"
+   $array[4]="12:13"
+   $array[5]="valid add task test case" & $count
+   $array[6]="Not done"
+   $array[7]="Timed task"
+   testListviewItem($array, "add_Valid")
+   $count = $count + 1
 EndFunc
 
 Func testDeleteValid()
-   Send("-delete 20")
+   Send("-delete 10")
    Send("{ENTER}")
    Sleep($sleepVal)
+   Local $itemID = ControlListView($winTitle, "", "[NAME:listView1]", "FindItem", "10", 0)
+   expectEQ("-1", $itemID, "delete_Valid")
 EndFunc
 
 Func testUpdateValid()
@@ -49,14 +121,31 @@ EndFunc
 
 Func testAutoCompleteValid()
    Send("-ad")
-   Send("{TAB}")
+   Send("{TAB}")  ;-add
    Send(" -start")
-   Send("{DOWN}{RIGHT}")
-   Send(" 121212 -det")
-   Send("{TAB}")
+   Send("{DOWN}{RIGHT}")  ;-startdate
+   Send(" 121212 -starttime")
+   Send("{DOWN}{DOWN}{RIGHT}")  ;-starttime
+   Send(" 1212 -enddate")
+   Send("{RIGHT}")  ;-enddate
+   Send(" 121212 -endtime")
+   Send("{SPACE}")  ;-endtime
+   Send(" 1213 -det")
+   Send("{TAB}")  ;-details
    Send(" valid autocomplete test case")
    Send("{ENTER}")
    Sleep($sleepVal)
+   
+   Local $array[8]
+   $array[0]=$count * 10
+   $array[1]="12/12/12"
+   $array[2]="12/12/12"
+   $array[3]="12:12"
+   $array[4]="12:13"
+   $array[5]="valid autocomplete test case"
+   $array[6]="Not done"
+   $array[7]="Timed task"
+   testListviewItem($array, "autocomplete_add_valid")
 EndFunc
 
 Func testAddUndo()
