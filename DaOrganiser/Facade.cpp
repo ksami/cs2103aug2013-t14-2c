@@ -32,7 +32,6 @@ void Facade::executeProgramme() {
 	while (!toExit) {
 		if (inputCommand()) {
 			parserCommand();
-			//displayVector();		//testing
 			toExit=executeCommand();
 		}
 	}

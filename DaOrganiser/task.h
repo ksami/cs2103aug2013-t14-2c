@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <ctime>
 #include <assert.h>
 using namespace std;
 
@@ -55,6 +56,8 @@ public:
 	int checkTime(time_s, time_s);
 	char checkStatus();
 	char returnKind();
+	date returnDate(char);
+    time_s returnTime(char);
 	bool changeStatus(char);
 	bool assignDateValue(date, char);
 	bool assignTimeValue(time_s, char);

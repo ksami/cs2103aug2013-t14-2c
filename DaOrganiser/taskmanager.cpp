@@ -14,9 +14,11 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
     Task newTask; 
     date d, zeroDate; 
     time_s t, zeroTime; 
-    int i, j; 
+    int i, j, dateFlag1, dateFlag2, timeFlag1, timeFlag2; 
     string singleWord, text; 
   
+    dateFlag1 = dateFlag2 = timeFlag1 = timeFlag2 = 0;
+
     for(i=0;i<splitString.size();i++) 
     { 
         if(splitString[i]=="-startdate") 
@@ -31,6 +33,7 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
   
             if(!newTask.assignDateValue(d, 's')) 
                 return false; 
+            dateFlag1 = 1;
         } 
         else if(splitString[i]=="-enddate") 
         { 
@@ -43,7 +46,8 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
             d.day = value; 
   
             if(!newTask.assignDateValue(d, 'e')) 
-                return false; 
+                return false;
+             dateFlag2 = 1; 
         } 
         else if(splitString[i]=="-starttime") 
         { 
@@ -55,6 +59,7 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
   
             if(!newTask.assignTimeValue(t, 's')) 
                 return false; 
+            timeFlag1 = 1;
         } 
         else if(splitString[i]=="-endtime") 
         { 
@@ -66,6 +71,7 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
   
             if(!newTask.assignTimeValue(t, 'e')) 
                 return false; 
+            timeFlag2 = 1;
         } 
         else if(splitString[i]=="-details") 
         { 
@@ -106,6 +112,23 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
 		
 		
 	} 
+
+  	// Checking if time and date have logical values
+	if((dateFlag1)&&(dateFlag2))
+	{
+		date date1 = newTask.returnDate('s'), date2 = newTask.returnDate('e');
+		if(newTask.checkDate(date1, date2) == 1)
+			return false;
+	}
+
+	if((timeFlag1)&&(timeFlag2))
+	{
+		time_s time1 = newTask.returnTime('s'), time2 = newTask.returnTime('e');
+		if(newTask.checkTime(time1, time2) == 1)
+			return false;
+	}
+
+	
   
     // Checking if time and date have logical values 
       
@@ -140,9 +163,10 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 {       
 	date d;
 	time_s t;
-	int i, j;
+	int i, j, dateFlag1, dateFlag2, timeFlag1, timeFlag2;
 	string singleWord, text;
 
+	dateFlag1 = dateFlag2 = timeFlag1 = timeFlag2 = 0;
 
 	// Searchs for the Task number to be updated 
 	//------------------------------------------
@@ -153,6 +177,7 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 	}
 	i++;
 	//------------------------------------------
+	//please change and refactor the code below 
 	if (i>=splitString.size())
 		return false;
 		// Converts the string to number
@@ -185,6 +210,7 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 					TaskStorage[pos] = newTask;
 					return false;
 				}
+				dateFlag1 = 1;
 			}
 			else if(splitString[i]=="-enddate")
 			{
@@ -201,6 +227,7 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 					TaskStorage[pos] = newTask;
 					return false;
 				}
+				 dateFlag2 = 1;
 			}
 			else if(splitString[i]=="-starttime")
 			{
@@ -215,6 +242,7 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 					TaskStorage[pos] = newTask;
 					return false;
 				}
+				timeFlag1 = 1;
 			}
 			else if(splitString[i]=="-endtime")
 			{
@@ -229,6 +257,7 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 					TaskStorage[pos] = newTask;
 					return false;
 				}
+				timeFlag2 = 1;
 			}
 			else if(splitString[i]=="-details")
 			{
@@ -271,13 +300,27 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 					return false;
 				}
 			}
+			  if((dateFlag1)&&(dateFlag2))
+                {
+                        date date1 = newTask.returnDate('s'), date2 = newTask.returnDate('e');
+                        if(newTask.checkDate(date1, date2) == 1)
+                                return false;
+                }
+
+                if((timeFlag1)&&(timeFlag2))
+                {
+                        time_s time1 = newTask.returnTime('s'), time2 = newTask.returnTime('e');
+                        if(newTask.checkTime(time1, time2) == 1)
+                                return false;
+                }
 		}
 		return true;
 	} catch (const char* msg) {
-		cout<<msg;
+		cout<<msg;  // TODO: thrown from where??
 	}
 	return false;
 }
+
 
 bool TaskManager::deleteTask(vector<string> splitString, vector<Task> &TaskStorage)
 {

@@ -3,11 +3,17 @@
 
 Task::Task()
 {
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+ 
     status = notDone;
     kind = 'f';
-    startDate.day = startDate.month = startDate.year = 0;
+    startDate.day = ltm->tm_mday;
+    startDate.month = 1 + ltm->tm_mon;
+    startDate.year = 1900 + ltm->tm_year;
     endDate.day = endDate.month = endDate.year = 0;
-    startTime.hr = startTime.min = 0;
+    startTime.hr = ltm->tm_hour;
+    startTime.min = 1 + ltm->tm_min;
     endTime.hr = endTime.min = 0;
     details = "";
 }
@@ -242,4 +248,30 @@ char Task::returnKind()
  
 int Task::getTaskID() {
     return taskID;
+}
+
+date Task::returnDate(char check)
+{
+        date d;
+        d.day = d.month = d.year = 0;
+ 
+        if(check == 's')
+                return startDate;
+        else if(check == 'e')
+                return endDate;
+        else
+                return d;
+}
+ 
+time_s Task::returnTime(char check)
+{
+        time_s t;
+        t.hr = t.min = 0;
+ 
+        if(check == 's')
+                return startTime;
+        else if(check == 'e')
+                return endTime;
+        else
+                return t;
 }
