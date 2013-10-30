@@ -59,13 +59,24 @@ string Task::getDetailsAsString()
 string Task::getStatusAsString()
 {
 	string statusAsString;
-	statusAsString += status;
+	switch(status)
+	{
+	case 'n': statusAsString = "Not done"; break;
+	case 'd': statusAsString = "Done"; break;
+	default: assert(false); break;  //invalid status
+	}
 	return statusAsString;
 }
 string Task::getKindAsString()
 {
 	string kindAsString;
-	kindAsString += kind;
+	switch(kind)
+	{
+	case 'd': kindAsString = "Deadline Task"; break;
+	case 'f': kindAsString = "Floating Task"; break;
+	case 't': kindAsString = "Timed Task"; break;
+	default: assert(false); break;  //invalid kind
+	}
 	return kindAsString;
 }
 
