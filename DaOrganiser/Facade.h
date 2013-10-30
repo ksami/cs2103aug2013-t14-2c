@@ -25,9 +25,7 @@ public:
 		void executeProgramme();
 		void executeProgramme(bool& toExit);
 		
-		//bool addTaskStorage();
 		vector<Task> getTaskStorage();
-		//void getCommand();
 
         bool inputCommand();
 		bool checkCommand();
