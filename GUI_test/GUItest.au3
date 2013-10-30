@@ -76,6 +76,8 @@ Func testListviewItem($expected, $testName)
 	  expectEQ($element, $actual, $testName)
 	  $col = $col + 1
    Next
+   ;add separator
+   GUICtrlCreateListViewItem("|||", $resultList)
 EndFunc
 
 Func showResults()
@@ -108,15 +110,27 @@ Func testDeleteValid()
    Sleep($sleepVal)
    Local $itemID = ControlListView($winTitle, "", "[NAME:listView1]", "FindItem", "10", 0)
    expectEQ("-1", $itemID, "delete_Valid")
+   ;add separator
+   GUICtrlCreateListViewItem("|||", $resultList)
 EndFunc
 
 Func testUpdateValid()
-   Send("-update 10 -endtime 1214 -startdate 101010")
+   Send("-update 10 -endtime 1214 -startdate 101010 -status d -kind t")
    Send("{ENTER}")
    Sleep($sleepVal)
-   Send("-update 10 -details details updated")
+   Send("-update 10 -details update test case -starttime 1213 -enddate 111111")
    Send("{ENTER}")
    Sleep($sleepVal)
+   Local $array[8]
+   $array[0]="10"
+   $array[1]="10/10/10"
+   $array[2]="11/11/11"
+   $array[3]="12:13"
+   $array[4]="12:14"
+   $array[5]="update test case"
+   $array[6]="Done"
+   $array[7]="Timed task"
+   testListviewItem($array, "update_Valid")
 EndFunc
 
 Func testAutoCompleteValid()
@@ -149,28 +163,39 @@ Func testAutoCompleteValid()
 EndFunc
 
 Func testAddUndo()
-   Send("-add -startdate 121212 -starttime 1212 -enddate 121212 -endtime 1213 -details valid add task test case")
+   Send("-add -startdate 121212 -starttime 1212 -enddate 121212 -endtime 1213 -details undo add test case")
    Send("{ENTER}")
    Sleep($sleepVal)
    Send("-undo")
    Send("{ENTER}")
    Sleep($sleepVal)
+   Local $itemID = ControlListView($winTitle, "", "[NAME:listView1]", "FindItem", "undo add test case", 5)
+   expectEQ("-1", $itemID, "undo_add")
+   ;add separator
+   GUICtrlCreateListViewItem("|||", $resultList)
 EndFunc
 
 Func testDeleteUndo()
-   Send("-delete 20")
+   Send("-delete 10")
    Send("{ENTER}")
    Sleep($sleepVal)
    Send("-undo")
    Send("{ENTER}")
    Sleep($sleepVal)
+   Local $itemID = ControlListView($winTitle, "", "[NAME:listView1]", "FindItem", "10", 0)
+   If($itemID > 0) Then
+	  $itemID = "Found"
+   EndIf
+   expectEQ("Found", $itemID, "undo_delete")
+   ;add separator
+   GUICtrlCreateListViewItem("|||", $resultList)
 EndFunc
 
 Func testUpdateUndo()
-   Send("-update 10 -endtime 1214 -startdate 101010")
+   Send("-update 10 -endtime 1214 -startdate 101010 -status d -kind t")
    Send("{ENTER}")
    Sleep($sleepVal)
-   Send("-update 10 -details details updated for undo")
+   Send("-update 10 -details update test case -starttime 1213 -enddate 111111")
    Send("{ENTER}")
    Sleep($sleepVal)
    Send("-undo")
