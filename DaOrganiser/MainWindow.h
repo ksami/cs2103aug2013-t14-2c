@@ -57,6 +57,7 @@ namespace DaOrganiser {
 	private: System::Windows::Forms::ColumnHeader^  kind;
 
 
+
 	private: System::ComponentModel::IContainer^  components;
 
 
@@ -230,6 +231,7 @@ namespace DaOrganiser {
 			this->MaximizeBox = false;
 			this->Name = L"MainWindow";
 			this->Text = L"DaOrganiser";
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MainWindow::MainWindow_FormClosing);
 			this->Load += gcnew System::EventHandler(this, &MainWindow::MainWindow_Load);
 			this->tableLayoutPanel1->ResumeLayout(false);
 			this->ResumeLayout(false);
@@ -266,6 +268,7 @@ namespace DaOrganiser {
 	private: System::Void comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
 	private: System::Void comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e);
 	private: System::Void MainWindow_Load(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void MainWindow_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e);
 };
 }
 
