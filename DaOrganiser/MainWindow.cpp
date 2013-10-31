@@ -85,14 +85,36 @@ void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
 
 	if(userFeedback.find("success")!=string::npos)
 	{
-		System::Drawing::Icon^ succIcon = gcnew System::Drawing::Icon("pika.ico");
-		this->Icon = succIcon;
+		try
+		{
+			System::Drawing::Icon^ succIcon = gcnew System::Drawing::Icon("resource/pika.ico");
+			this->Icon = succIcon;
+		}
+		catch(System::IO::DirectoryNotFoundException^)
+		{
+			logging("/resource folder not found", LogLevel::Error);
+		}
+		catch(System::IO::FileNotFoundException^)
+		{
+			logging("pika.ico not found", LogLevel::Error);
+		}
 		richTextBox1->BackColor = System::Drawing::Color::PaleGreen;
 	}
 	else if(userFeedback.find("fail")!=string::npos||userFeedback.find("Error")!=string::npos||userFeedback.find("Invalid")!=string::npos||userFeedback.find("No")!=string::npos)
 	{
-		System::Drawing::Icon^ failIcon = gcnew System::Drawing::Icon("pikared.ico");
-		this->Icon = failIcon;
+		try
+		{
+			System::Drawing::Icon^ failIcon = gcnew System::Drawing::Icon("resource/pikared.ico");
+			this->Icon = failIcon;
+		}
+		catch(System::IO::DirectoryNotFoundException^)
+		{
+			logging("/resource folder not found", LogLevel::Error);
+		}
+		catch(System::IO::FileNotFoundException^)
+		{
+			logging("pikared.ico not found", LogLevel::Error);
+		}
 		richTextBox1->BackColor = System::Drawing::Color::Tomato;
 	}
 
@@ -206,8 +228,12 @@ System::Void DaOrganiser::MainWindow::MainWindow_Load(System::Object^  sender, S
 		/*System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
 		System::IO::Stream^ s = a->GetManifestResourceStream("pikaatk.wav");
 		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);*/
-		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer("pikaatk.wav");
+		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer("resource/pikaatk.wav");
 		sound->Play();
+	}
+	catch(System::IO::DirectoryNotFoundException^)
+	{
+		logging("/resource folder not found", LogLevel::Error);
 	}
 	catch(System::IO::FileNotFoundException^)
 	{
@@ -222,9 +248,13 @@ System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  se
 		/*System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
 		System::IO::Stream^ s = a->GetManifestResourceStream("pikaslp.wav");
 		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);*/
-		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer("pikaslp.wav");
+		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer("resource/pikaslp.wav");
 		sound->Play();
 		Sleep(2000);
+	}
+	catch(System::IO::DirectoryNotFoundException^)
+	{
+		logging("/resource folder not found", LogLevel::Error);
 	}
 	catch(System::IO::FileNotFoundException^)
 	{
