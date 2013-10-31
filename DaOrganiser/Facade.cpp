@@ -119,6 +119,18 @@ bool Facade::executeCommand() {
 				}
                 checkFlag=true;
             }
+			else if (commandInput[i]=="-redo")
+			{
+				try
+				{
+					p.redoTask(taskStorage);
+				}
+				catch(const char* except)
+				{
+					guiLogicInterface->toDisplay(except);
+				}
+                checkFlag=true;
+			}
 		}
 	}
 	commandInput.clear();
