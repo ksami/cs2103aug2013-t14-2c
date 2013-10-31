@@ -142,6 +142,7 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
 	insertTaskExecuted(ID,"create");
   
     TaskStorage.push_back(newTask);
+	recordRedoCommand.clear();
     return true; 
 } 
 
@@ -188,6 +189,7 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 	try {
 		pos=findIDPos(number,TaskStorage);
 		insertTaskExecuted(number,"update");
+		recordRedoCommand.clear();
 
 		Task newTask = TaskStorage[pos];
 		//store the task before it is updated
@@ -341,28 +343,69 @@ bool TaskManager::deleteTask(vector<string> splitString, vector<Task> &TaskStora
 
 void TaskManager::undoTask(vector<Task> &TaskStorage) {
 	try{
-		if (checkRecordCommand()) {
-			int toUndoID=recordCommand.back();
+		if (checkRecordUndoCommand()) {
+			int toUndoID=recordUndoCommand.back();
 			int getCommand=toUndoID%10;
 			int determinePos;
 
 			if (getCommand==1) {
 				determinePos=findIDPos(toUndoID-1,TaskStorage);
+				recordRedoTask.push_back(TaskStorage.at(determinePos));
 				TaskStorage.erase(TaskStorage.begin()+determinePos);
-				recordCommand.pop_back();
+				recordRedoCommand.push_back(toUndoID);
+				recordUndoCommand.pop_back();
 			}
 			else if (getCommand==2) {
-				TaskStorage.push_back(recordTask.back());
-				recordTask.pop_back();
-				recordCommand.pop_back();
+				TaskStorage.push_back(recordUndoTask.back());
+				recordUndoTask.pop_back();
+				recordRedoCommand.push_back(toUndoID);
+				recordUndoCommand.pop_back();
 			}
 			else if (getCommand==3) {
 				determinePos=findIDPos(toUndoID-3,TaskStorage);
-				TaskStorage[determinePos]=recordTask.back();
-				recordTask.pop_back();
-				recordCommand.pop_back();
+				recordRedoTask.push_back(TaskStorage[determinePos]);
+				TaskStorage[determinePos]=recordUndoTask.back();
+				recordUndoTask.pop_back();
+				recordRedoCommand.push_back(toUndoID);
+				recordUndoCommand.pop_back();
 			}
 			throw "Undo successful";
+		}
+	}
+	catch(const char* except){
+		throw except;
+	}
+}
+
+void TaskManager::redoTask(vector<Task> &taskStorage) {
+	try {
+		if (checkRecordRedoCommand()){
+			int toRedoID=recordRedoCommand.back();
+			int getCommand=toRedoID%10;
+			int determinePos;
+
+			if (getCommand==1) {
+				taskStorage.push_back(recordRedoTask.back());
+				recordRedoTask.pop_back();
+				recordUndoCommand.push_back(toRedoID);
+				recordRedoCommand.pop_back();
+			}
+			else if (getCommand==2) {
+				determinePos=findIDPos(toRedoID-2,taskStorage);
+				recordUndoTask.push_back(taskStorage[determinePos]);
+				recordUndoCommand.push_back(toRedoID);
+				taskStorage.erase(taskStorage.begin()+determinePos);
+				recordRedoCommand.pop_back();
+			}
+			else if (getCommand==3) {
+				determinePos=findIDPos(toRedoID-3,taskStorage);
+				recordUndoTask.push_back(taskStorage[determinePos]);
+				taskStorage[determinePos]=recordRedoTask.back();
+				recordRedoTask.pop_back();
+				recordUndoCommand.push_back(toRedoID);
+				recordRedoCommand.pop_back();
+			}
+			throw "Redo Successful";
 		}
 	}
 	catch(const char* except){
@@ -376,20 +419,20 @@ void TaskManager::updateIDNumber() {
 
 void TaskManager::insertTaskExecuted(int commandNumber, string command) {
 	if (command=="create")
-		recordCommand.push_back(commandNumber+1);
+		recordUndoCommand.push_back(commandNumber+1);
 	else if (command=="delete")
-		recordCommand.push_back(commandNumber+2);
+		recordUndoCommand.push_back(commandNumber+2);
 	else if (command=="update")
-		recordCommand.push_back(commandNumber+3);
+		recordUndoCommand.push_back(commandNumber+3);
 }
 
 void TaskManager::storeTask(Task toStore) {
-	recordTask.push_back(toStore);
+	recordUndoTask.push_back(toStore);
 }
 
 void TaskManager::testingRecordCommand() {
-	for (unsigned int i=0;i<recordCommand.size();i++) {
-		cout<<recordCommand.at(i)<<endl;
+	for (unsigned int i=0;i<recordUndoCommand.size();i++) {
+		cout<<recordUndoCommand.at(i)<<endl;
 	}
 }
 
@@ -417,8 +460,15 @@ bool TaskManager::checkID(int number,vector<Task>TaskStorage,int &toReturn) {
 
 }
 
-bool TaskManager::checkRecordCommand(){
-	if (recordCommand.empty())
+bool TaskManager::checkRecordUndoCommand(){
+	if (recordUndoCommand.empty())
 		throw "No more commands to undo";
+	return true;
+}
+
+
+bool TaskManager::checkRecordRedoCommand(){
+	if (recordRedoCommand.empty())
+		throw "No more commands to redo";
 	return true;
 }
