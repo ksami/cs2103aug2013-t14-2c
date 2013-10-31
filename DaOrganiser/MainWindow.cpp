@@ -40,9 +40,13 @@ void DaOrganiser::MainWindow::addTaskToList(Task taskToAdd)
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStartTimeAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getEndTimeAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getDetailsAsString()));
-	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStatusAsString()));
+
+	String^ status = stdStringToSysString(taskToAdd.getStatusAsString());
+	itemToAdd->SubItems->Add(status);
+
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getKindAsString()));
 
+	itemToAdd->BackColor = changeColor(status);
 	listView1->Items->Add(itemToAdd);
 }
 
@@ -79,6 +83,15 @@ void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
 		richTextBox1->Text = richTextBox1->Text->Remove(0, 1000);
 	}
 
+	if(userFeedback.find("success")!=string::npos)
+	{
+		richTextBox1->BackColor = System::Drawing::Color::PaleGreen;
+	}
+	else if(userFeedback.find("fail")!=string::npos||userFeedback.find("Error")!=string::npos||userFeedback.find("Invalid")!=string::npos||userFeedback.find("No")!=string::npos)
+	{
+		richTextBox1->BackColor = System::Drawing::Color::Tomato;
+	}
+
 	richTextBox1->Text+=stdStringToSysString(userFeedback);
 	richTextBox1->Select(richTextBox1->Text->Length - 1, 0);
 	richTextBox1->ScrollToCaret();
@@ -98,7 +111,24 @@ void DaOrganiser::MainWindow::exitProgram(void)
 #pragma region Private Methods
 // Private Methods
 
-//adds matching items to the suggestion box
+// Changes the background color of the listviewitem based on its status
+System::Drawing::Color DaOrganiser::MainWindow::changeColor(String^ status)
+{
+	if(status == "Not done")
+	{
+		return System::Drawing::Color::DeepSkyBlue;
+	}
+	else if(status == "Done")
+	{
+		return System::Drawing::Color::LightGray;
+	}
+	else
+	{
+		return System::Drawing::Color::Azure;
+	}
+}
+
+// Adds matching items to the suggestion box
 void DaOrganiser::MainWindow::suggestResults(void)
 {
 	array <String^>^ availableCmds = {AVAILABLE_CMDS};
@@ -162,6 +192,12 @@ void DaOrganiser::MainWindow::setCaretToEnd(void)
 /////////////////////////
 //    Event Handlers   //
 /////////////////////////
+
+// Initialise listview with contents of storage.txt
+System::Void DaOrganiser::MainWindow::MainWindow_Load(System::Object^  sender, System::EventArgs^  e)
+{
+	updateList();
+}
 
 //column click sorting for entire inventory
 System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e)

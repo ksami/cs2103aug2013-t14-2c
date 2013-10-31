@@ -25,21 +25,21 @@ string Task::getIdAsString()
 string Task::getStartDateAsString()
 {
 	string startDateAsString;
-	startDateAsString += std::to_string(startDate.year);
+	startDateAsString += std::to_string(startDate.day);
 	startDateAsString += "/";
 	startDateAsString += std::to_string(startDate.month);
 	startDateAsString += "/";
-	startDateAsString += std::to_string(startDate.day);
+	startDateAsString += std::to_string(startDate.year);
 	return startDateAsString;
 }
 string Task::getEndDateAsString()
 {
 	string endDateAsString;
-	endDateAsString += std::to_string(endDate.year);
+	endDateAsString += std::to_string(endDate.day);
 	endDateAsString += "/";
 	endDateAsString += std::to_string(endDate.month);
 	endDateAsString += "/";
-	endDateAsString += std::to_string(endDate.day);
+	endDateAsString += std::to_string(endDate.year);
 	return endDateAsString;
 }
 string Task::getStartTimeAsString()
