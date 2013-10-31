@@ -40,3 +40,7 @@ packages/**
 *.ncrunch*
 *.ndproj
 Log *
+GUI_test/hotkeyDaOrganiser.exe
+GUI_test/hotkeyDaOrganiser.au3
+GUI_test/controltest.exe
+GUI_test/controltest.au3

@@ -102,24 +102,10 @@
     <Image Include="app.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="pika.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="pikared.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainWindow.resX">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Media Include="pikaatk.wav">
-      <Filter>Resource Files</Filter>
-    </Media>
-    <Media Include="pikaslp.wav">
-      <Filter>Resource Files</Filter>
-    </Media>
   </ItemGroup>
 </Project>

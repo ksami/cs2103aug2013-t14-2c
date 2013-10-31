@@ -5,7 +5,7 @@
 #include <WindowsConstants.au3>
 
 Global $count=1
-Global $sleepVal = 500
+Global $sleepVal = 2000
 Global $exePath = "DaOrganiser.exe"
 Global $winTitle = "DaOrganiser"
 Global $storageFilePath = "storage.txt"
