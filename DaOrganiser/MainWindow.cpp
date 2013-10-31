@@ -8,7 +8,7 @@
 //#define NLOG
 #include "Log.h"
 
-#define AVAILABLE_CMDS "-add", "-delete", "-update", "-undo", "-quit", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
+#define AVAILABLE_CMDS "-add", "-delete", "-update", "-undo", "-redo", "-quit", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
 #define AVAILABLE_CMDS_NUM 12
 #define CMD_DELIMITER_CHAR '-'
 #define CMD_DELIMITER_STR "-"
@@ -40,13 +40,9 @@ void DaOrganiser::MainWindow::addTaskToList(Task taskToAdd)
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStartTimeAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getEndTimeAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getDetailsAsString()));
-
-	String^ status = stdStringToSysString(taskToAdd.getStatusAsString());
-	itemToAdd->SubItems->Add(status);
-
+	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStatusAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getKindAsString()));
 
-	itemToAdd->BackColor = changeColor(status);
 	listView1->Items->Add(itemToAdd);
 }
 
@@ -83,19 +79,6 @@ void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
 		richTextBox1->Text = richTextBox1->Text->Remove(0, 1000);
 	}
 
-	if(userFeedback.find("success")!=string::npos)
-	{
-		System::Drawing::Icon^ succIcon = gcnew System::Drawing::Icon("pika.ico");
-		this->Icon = succIcon;
-		richTextBox1->BackColor = System::Drawing::Color::PaleGreen;
-	}
-	else if(userFeedback.find("fail")!=string::npos||userFeedback.find("Error")!=string::npos||userFeedback.find("Invalid")!=string::npos||userFeedback.find("No")!=string::npos)
-	{
-		System::Drawing::Icon^ failIcon = gcnew System::Drawing::Icon("pikared.ico");
-		this->Icon = failIcon;
-		richTextBox1->BackColor = System::Drawing::Color::Tomato;
-	}
-
 	richTextBox1->Text+=stdStringToSysString(userFeedback);
 	richTextBox1->Select(richTextBox1->Text->Length - 1, 0);
 	richTextBox1->ScrollToCaret();
@@ -115,24 +98,7 @@ void DaOrganiser::MainWindow::exitProgram(void)
 #pragma region Private Methods
 // Private Methods
 
-// Changes the background color of the listviewitem based on its status
-System::Drawing::Color DaOrganiser::MainWindow::changeColor(String^ status)
-{
-	if(status == "Not done")
-	{
-		return System::Drawing::Color::DeepSkyBlue;
-	}
-	else if(status == "Done")
-	{
-		return System::Drawing::Color::LightGray;
-	}
-	else
-	{
-		return System::Drawing::Color::Azure;
-	}
-}
-
-// Adds matching items to the suggestion box
+//adds matching items to the suggestion box
 void DaOrganiser::MainWindow::suggestResults(void)
 {
 	array <String^>^ availableCmds = {AVAILABLE_CMDS};
@@ -196,41 +162,6 @@ void DaOrganiser::MainWindow::setCaretToEnd(void)
 /////////////////////////
 //    Event Handlers   //
 /////////////////////////
-
-// Initialise listview with contents of storage.txt
-System::Void DaOrganiser::MainWindow::MainWindow_Load(System::Object^  sender, System::EventArgs^  e)
-{
-	updateList();
-	try
-	{
-		/*System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
-		System::IO::Stream^ s = a->GetManifestResourceStream("pikaatk.wav");
-		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);*/
-		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer("pikaatk.wav");
-		sound->Play();
-	}
-	catch(System::IO::FileNotFoundException^)
-	{
-		logging("Startup sound file pikaatk.wav not found", LogLevel::Error);
-	}
-}
-
-System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e)
-{
-	try
-	{
-		/*System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
-		System::IO::Stream^ s = a->GetManifestResourceStream("pikaslp.wav");
-		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);*/
-		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer("pikaslp.wav");
-		sound->Play();
-		Sleep(2000);
-	}
-	catch(System::IO::FileNotFoundException^)
-	{
-		logging("Ending sound file pikaslp.wav not found", LogLevel::Error);
-	}
-}
 
 //column click sorting for entire inventory
 System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e)
