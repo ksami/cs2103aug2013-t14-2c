@@ -8,8 +8,8 @@
 //#define NLOG
 #include "Log.h"
 
-#define AVAILABLE_CMDS "-add", "-delete", "-update", "-undo", "-quit", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
-#define AVAILABLE_CMDS_NUM 12
+#define AVAILABLE_CMDS "-add", "-delete", "-update", "-undo", "-redo", "-quit", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
+#define AVAILABLE_CMDS_NUM 13
 #define CMD_DELIMITER_CHAR '-'
 #define CMD_DELIMITER_STR "-"
 #define NULL_STRING ""
