@@ -182,7 +182,7 @@ namespace DaOrganiser {
 			// 
 			this->startDate->DisplayIndex = 2;
 			this->startDate->Text = L"Start Date";
-			this->startDate->Width = 102;
+			this->startDate->Width = 116;
 			// 
 			// endDate
 			// 
@@ -205,7 +205,7 @@ namespace DaOrganiser {
 			// 
 			this->details->DisplayIndex = 1;
 			this->details->Text = L"Details";
-			this->details->Width = 273;
+			this->details->Width = 264;
 			// 
 			// status
 			// 

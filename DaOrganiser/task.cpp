@@ -25,8 +25,18 @@ string Task::getIdAsString()
 string Task::getStartDateAsString()
 {
 	string startDateAsString;
+
+	if(startDate.day<=9)
+	{
+		startDateAsString += '0';
+	}
 	startDateAsString += std::to_string(startDate.day);
 	startDateAsString += "/";
+
+	if(startDate.month<=9)
+	{
+		startDateAsString += '0';
+	}
 	startDateAsString += std::to_string(startDate.month);
 	startDateAsString += "/";
 	startDateAsString += std::to_string(startDate.year);
@@ -35,8 +45,18 @@ string Task::getStartDateAsString()
 string Task::getEndDateAsString()
 {
 	string endDateAsString;
+
+	if(endDate.day<=9)
+	{
+		endDateAsString += '0';
+	}
 	endDateAsString += std::to_string(endDate.day);
 	endDateAsString += "/";
+
+	if(endDate.month<=9)
+	{
+		endDateAsString += '0';
+	}
 	endDateAsString += std::to_string(endDate.month);
 	endDateAsString += "/";
 	endDateAsString += std::to_string(endDate.year);
@@ -45,16 +65,36 @@ string Task::getEndDateAsString()
 string Task::getStartTimeAsString()
 {
 	string startTimeAsString;
+
+	if(startTime.hr<=9)
+	{
+		startTimeAsString += '0';
+	}
 	startTimeAsString += std::to_string(startTime.hr);
 	startTimeAsString += ":";
+
+	if(startTime.min<=9)
+	{
+		startTimeAsString += '0';
+	}
 	startTimeAsString += std::to_string(startTime.min);
 	return startTimeAsString;
 }
 string Task::getEndTimeAsString()
 {	
 	string endTimeAsString;
+
+	if(endTime.hr<=9)
+	{
+		endTimeAsString += '0';
+	}
 	endTimeAsString += std::to_string(endTime.hr);
 	endTimeAsString += ":";
+
+	if(endTime.min<=9)
+	{
+		endTimeAsString += '0';
+	}
 	endTimeAsString += std::to_string(endTime.min);
 	return endTimeAsString;
 }
