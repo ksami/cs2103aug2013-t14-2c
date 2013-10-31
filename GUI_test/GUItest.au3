@@ -19,9 +19,9 @@ HotKeySet("^p", "pauseScript")
 HotKeySet("^e", "endScript")
 
 ;start new run
-If(FileExists($storageFilePath)) Then
-   FileDelete($storageFilePath)
-EndIf
+;If(FileExists($storageFilePath)) Then
+;   FileDelete($storageFilePath)
+;EndIf
 
 Run($exePath)
 WinWaitActive($winTitle)
@@ -31,7 +31,7 @@ For $i = 1 To 5
 Next
 testAddValid()
 testAutoCompleteValid()
-testUpdateUndo()
+testMultipleUndo()
 testAddUndo()
 testDeleteUndo()
 testAddValid()
@@ -91,6 +91,7 @@ Func testAddValid()
    Send("-add -startdate 121212 -starttime 1212 -enddate 121212 -endtime 1213 -details valid add task test case" & $count)
    Send("{ENTER}")
    Sleep($sleepVal)
+   
    Local $array[8]
    $array[0]=$count * 10
    $array[1]="12/12/12"
@@ -108,6 +109,7 @@ Func testDeleteValid()
    Send("-delete 10")
    Send("{ENTER}")
    Sleep($sleepVal)
+   
    Local $itemID = ControlListView($winTitle, "", "[NAME:listView1]", "FindItem", "10", 0)
    expectEQ("-1", $itemID, "delete_Valid")
    ;add separator
@@ -121,6 +123,7 @@ Func testUpdateValid()
    Send("-update 10 -details update test case -starttime 1213 -enddate 111111")
    Send("{ENTER}")
    Sleep($sleepVal)
+   
    Local $array[8]
    $array[0]="10"
    $array[1]="10/10/10"
@@ -169,6 +172,7 @@ Func testAddUndo()
    Send("-undo")
    Send("{ENTER}")
    Sleep($sleepVal)
+   
    Local $itemID = ControlListView($winTitle, "", "[NAME:listView1]", "FindItem", "undo add test case", 5)
    expectEQ("-1", $itemID, "undo_add")
    ;add separator
@@ -182,6 +186,7 @@ Func testDeleteUndo()
    Send("-undo")
    Send("{ENTER}")
    Sleep($sleepVal)
+   
    Local $itemID = ControlListView($winTitle, "", "[NAME:listView1]", "FindItem", "10", 0)
    If($itemID > 0) Then
 	  $itemID = "Found"
@@ -191,14 +196,25 @@ Func testDeleteUndo()
    GUICtrlCreateListViewItem("|||", $resultList)
 EndFunc
 
-Func testUpdateUndo()
-   Send("-update 10 -endtime 1214 -startdate 101010 -status d -kind t")
+Func testMultipleUndo()
+   Send("-add -startdate 121212 -starttime 1212 -enddate 121212 -endtime 1213 -details multiple undo test case")
    Send("{ENTER}")
    Sleep($sleepVal)
-   Send("-update 10 -details update test case -starttime 1213 -enddate 111111")
+   Send("-add -startdate 121212 -starttime 1212 -enddate 121212 -endtime 1213 -details multiple undo test case")
    Send("{ENTER}")
    Sleep($sleepVal)
-   Send("-undo")
+   Send("-add -startdate 121212 -starttime 1212 -enddate 121212 -endtime 1213 -details multiple undo test case")
    Send("{ENTER}")
    Sleep($sleepVal)
+   Send("-add -startdate 121212 -starttime 1212 -enddate 121212 -endtime 1213 -details multiple undo test case")
+   Send("{ENTER}")
+   Sleep($sleepVal)
+   Send("-undo -undo -undo -undo")
+   Send("{ENTER}")
+   Sleep($sleepVal)
+   
+   Local $itemID = ControlListView($winTitle, "", "[NAME:listView1]", "FindItem", "multiple undo test case", 5)
+   expectEQ("-1", $itemID, "undo_multiple")
+   ;add separator
+   GUICtrlCreateListViewItem("|||", $resultList)
 EndFunc
