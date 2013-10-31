@@ -13,8 +13,10 @@ class TaskManager
 {
 private:
 	int ID;
-	vector<int> recordCommand;
-	vector<Task> recordTask;
+	vector<int> recordUndoCommand;
+	vector<Task> recordUndoTask;
+	vector<int>recordRedoCommand;
+	vector<Task> recordRedoTask;
 
 public:
 	TaskManager();
@@ -24,8 +26,10 @@ public:
 	bool updateTask(vector<string>,vector<Task>&);
 	bool deleteTask(vector<string>,vector<Task>&);
 	void undoTask(vector<Task>&);
+	void redoTask(vector<Task>&);
 	
-	bool checkRecordCommand();
+	bool checkRecordUndoCommand();
+	bool checkRecordRedoCommand();
 	bool checkID(int,vector<Task>,int&);
 	void updateIDNumber();
 	void insertTaskExecuted(int, string);
@@ -33,3 +37,4 @@ public:
 	void testingRecordCommand();
 	int findIDPos(int,vector<Task>);
 };
+
