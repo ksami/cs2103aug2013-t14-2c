@@ -101,7 +101,7 @@ Task Storage::putContentIntoTask(char** info){
 	Task t;
 	date startDate, endDate;
 	time_s startTime, endTime;
-	t.assignIDNumber(atoi(info[0]));
+	t.assignIDNumber(*info[0]);
 	t.assignDetails(info[1]);
 	t.assignKind(*info[2]);
 	sscanf_s(info[3],"%4d/%2d/%2d",&startDate.year, &startDate.month, &startDate.day);
