@@ -85,10 +85,14 @@ void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
 
 	if(userFeedback.find("success")!=string::npos)
 	{
+		System::Drawing::Icon^ succIcon = gcnew System::Drawing::Icon("pika.ico");
+		this->Icon = succIcon;
 		richTextBox1->BackColor = System::Drawing::Color::PaleGreen;
 	}
 	else if(userFeedback.find("fail")!=string::npos||userFeedback.find("Error")!=string::npos||userFeedback.find("Invalid")!=string::npos||userFeedback.find("No")!=string::npos)
 	{
+		System::Drawing::Icon^ failIcon = gcnew System::Drawing::Icon("pikared.ico");
+		this->Icon = failIcon;
 		richTextBox1->BackColor = System::Drawing::Color::Tomato;
 	}
 
@@ -197,6 +201,35 @@ void DaOrganiser::MainWindow::setCaretToEnd(void)
 System::Void DaOrganiser::MainWindow::MainWindow_Load(System::Object^  sender, System::EventArgs^  e)
 {
 	updateList();
+	try
+	{
+		/*System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
+		System::IO::Stream^ s = a->GetManifestResourceStream("pikaatk.wav");
+		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);*/
+		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer("pikaatk.wav");
+		sound->Play();
+	}
+	catch(System::IO::FileNotFoundException^)
+	{
+		logging("Startup sound file pikaatk.wav not found", LogLevel::Error);
+	}
+}
+
+System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e)
+{
+	try
+	{
+		/*System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
+		System::IO::Stream^ s = a->GetManifestResourceStream("pikaslp.wav");
+		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);*/
+		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer("pikaslp.wav");
+		sound->Play();
+		Sleep(2000);
+	}
+	catch(System::IO::FileNotFoundException^)
+	{
+		logging("Ending sound file pikaslp.wav not found", LogLevel::Error);
+	}
 }
 
 //column click sorting for entire inventory
