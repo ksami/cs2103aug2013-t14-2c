@@ -14,8 +14,10 @@ class Facade {
 private:
 		void* guiInterface;
         string _userCommand;
+		string searchKey;
         vector<string> commandInput;
 		vector<Task> taskStorage;
+		vector<Task> keySearch;
 		TaskManager p;
 		Storage* saveFile;
 public:
@@ -31,7 +33,8 @@ public:
 		bool checkCommand();
         void parserCommand();
 		bool executeCommand();
-
+		
+		bool checkSearchKey();
         void displayCommand();
         void displayVector();
 		void setUserCommand(string input); //for testing
