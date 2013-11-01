@@ -108,9 +108,6 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
 			if(!newTask.assignKind(splitString[i+1][0])) 
 				return false; 
 		} 
-
-		
-		
 	} 
 
   	// Checking if time and date have logical values
@@ -341,6 +338,17 @@ bool TaskManager::deleteTask(vector<string> splitString, vector<Task> &TaskStora
 	return true;
 }
 
+void TaskManager::searchkey(vector<Task> &taskStorage,vector<Task> &searchResults, string key) {
+	try {
+		if (searchKeyBlank(taskStorage,searchResults,key)) {
+			throw "Search completed";
+		}
+	}
+	catch(const char* except){
+		throw except;
+	}
+}
+
 void TaskManager::undoTask(vector<Task> &TaskStorage) {
 	try{
 		if (checkRecordUndoCommand()) {
@@ -411,6 +419,20 @@ void TaskManager::redoTask(vector<Task> &taskStorage) {
 	catch(const char* except){
 		throw except;
 	}
+}
+
+bool TaskManager::searchKeyBlank(vector<Task> &taskStorage,vector<Task> &searchResults, string key) {
+		size_t found;
+		int size=taskStorage.size();
+		for (int i=0;i<size;i++) {
+			found=taskStorage.at(i).getDetailsAsString().find(key);
+			if (found!=std::string::npos)
+				searchResults.push_back(taskStorage.at(i));
+		}
+		if (!searchResults.empty())
+			return true;
+		else 
+			throw "No search results found";
 }
 
 void TaskManager::updateIDNumber() {
