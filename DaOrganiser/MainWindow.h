@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stdafx.h"
+#include <vector>
 #include "ListViewItemComparer.h"
 #include "Task.h"
 
@@ -172,6 +173,7 @@ namespace DaOrganiser {
 			this->listView1->UseCompatibleStateImageBehavior = false;
 			this->listView1->View = System::Windows::Forms::View::Details;
 			this->listView1->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &MainWindow::listView1_ColumnClick);
+			this->listView1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::listView1_KeyDown);
 			// 
 			// taskId
 			// 
@@ -250,6 +252,8 @@ namespace DaOrganiser {
 	public: void appendToOutput(std::string feedbackToUser);
 	public: void addTaskToList(Task taskToAdd);
 	public: void updateList(void);
+	public: void displaySearchResult(std::vector<Task> searchResult);
+	public: void sortListColumn(unsigned int col);
 	public: std::string sysStringToStdString(String ^ stringToConvert);
 	public: String^ stdStringToSysString(std::string stringToConvert);
 	public: void exitProgram(void);
@@ -270,6 +274,7 @@ namespace DaOrganiser {
 	private: System::Void MainWindow_Load(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void MainWindow_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e);
 	private: System::Void comboBox1_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
+	private: System::Void listView1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
 };
 }
 
