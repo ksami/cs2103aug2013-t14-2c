@@ -1,30 +1,37 @@
-#pragma once
+ #pragma once
 
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include <vector>
+#include "Task.h"
+
 using namespace std;
 
-class storage {
-private:
-	ofstream outputStream;
-	ifstream inputStream;
-	static char STORAGE_NAME[99]; 
+class Storage{
+	private:
+		ofstream outputStream;
+		ifstream inputStream;
+		char* _storageName;
 
-public:
-	storage();
-	~storage();
-	bool isSafeToOpenStream();
-	void initialOutputStream();
-	void writeAllToFile(vector<task> allTask);
-	void travelAllVector(vector<task> allTask, void (storage::*work)(task));
-	void writeOneToFile(task t);
-	char* getContentOfTask(task t);
-	void closeOutputStream();
-	void initialInputStream();
-	vector<task> readAllFromFile();
-	task readOneFromFile();
-	task putContentIntoTask(char* temp);
-	void closeInputStream();	
+	public:
+		Storage(char*);
+		~Storage();
+
+		void readAllFromFile(vector<Task>&);
+		void writeAllToFile(vector<Task>);
+
+		char* getStorageName();
+		bool isSafeToOpenStream();
+		void initialOutputStream();
+		void travelAllVector(vector<Task>);
+		void writeOneToFile(Task);
+		string getContentOfTask(Task);
+		void closeOutputStream();
+		void initialInputStream();
+		Task readOneFromFile(char*);
+		Task putContentIntoTask(char**);
+		void closeInputStream();
+		char** tokenize(char*);
+		
 };
