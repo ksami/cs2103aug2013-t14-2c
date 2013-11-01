@@ -32,6 +32,7 @@ public:
 	bool checkRecordRedoCommand();
 	bool checkID(int,vector<Task>,int&);
 	void updateIDNumber();
+	void reupdateIDNumber(vector<Task>&);
 	void insertTaskExecuted(int, string);
 	void storeTask(Task);
 	void testingRecordCommand();
