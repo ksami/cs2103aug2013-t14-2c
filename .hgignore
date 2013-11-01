@@ -1,0 +1,46 @@
+# use glob syntax
+syntax: glob
+
+*.opensdf
+*.sdf
+*.obj
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.[Cc]ache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.scc
+*.DotSettings
+[Bb]in
+[Dd]ebug*/**
+[Ii]pch*/**
+obj/
+[Rr]elease*/**
+_ReSharper*/**
+NDependOut/**
+packages/**
+[Tt]humbs.db
+[Tt]est[Rr]esult*
+[Bb]uild[Ll]og.*
+*.[Pp]ublish.xml
+*.resharper
+*.ncrunch*
+*.ndproj
+Log *
+GUI_test/hotkeyDaOrganiser.exe
+GUI_test/hotkeyDaOrganiser.au3
+GUI_test/controltest.exe
+GUI_test/controltest.au3
