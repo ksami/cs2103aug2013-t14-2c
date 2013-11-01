@@ -8,8 +8,8 @@
 //#define NLOG
 #include "Log.h"
 
-#define AVAILABLE_CMDS "-add", "-delete", "-update", "-undo", "-redo", "-quit", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
-#define AVAILABLE_CMDS_NUM 13
+#define AVAILABLE_CMDS "-add", "-delete", "-update", "-search", "-undo", "-redo", "-quit", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
+#define AVAILABLE_CMDS_NUM 14
 #define CMD_DELIMITER_CHAR '-'
 #define CMD_DELIMITER_STR "-"
 #define NULL_STRING ""
@@ -60,6 +60,22 @@ void DaOrganiser::MainWindow::updateList(void)
 	{
 		addTaskToList(allTasks[i]);
 	}
+}
+
+void DaOrganiser::MainWindow::displaySearchResult(vector<Task> searchResult)
+{
+	listView1->Items->Clear();
+	for(int i=0; i<searchResult.size(); i++)
+	{
+		addTaskToList(searchResult[i]);
+	}
+}
+
+void DaOrganiser::MainWindow::sortListColumn(unsigned int col)
+{
+	static int sortColumnInv = 1;
+	listView1->ListViewItemSorter = gcnew ListViewItemComparer( col, -1*sortColumnInv);
+	sortColumnInv*=-1;
 }
 
 std::string DaOrganiser::MainWindow::getUserInput(void)
@@ -265,9 +281,7 @@ System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  se
 //column click sorting for entire inventory
 System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e)
 {
-	static int _sortColumnInv = 1;
-	listView1->ListViewItemSorter = gcnew ListViewItemComparer( e->Column, -1*_sortColumnInv);
-	_sortColumnInv*=-1;
+	sortListColumn(e->Column);
 }
 
 // Following events implement Autocomplete for commands
@@ -435,7 +449,6 @@ System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  
 			commitSelectedSuggestion();
 			setCaretToEnd();
 		}
-//		listView1->TabStop = true;
 	}
 }
 
@@ -444,6 +457,35 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyUp(System::Object^  sender, S
 	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == false))
 	{
 		listView1->TabStop = true;
+	}
+}
+
+// Keyboard navigation for listView1
+System::Void DaOrganiser::MainWindow::listView1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
+{
+	if(e->KeyCode == System::Windows::Forms::Keys::Escape)
+	{
+		exitProgram();
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::D1)
+	{
+		sortListColumn(0);
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::D2)
+	{
+		sortListColumn(1);
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::D3)
+	{
+		sortListColumn(2);
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::D4)
+	{
+		sortListColumn(3);
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::D5)
+	{
+		sortListColumn(4);
 	}
 }
 
