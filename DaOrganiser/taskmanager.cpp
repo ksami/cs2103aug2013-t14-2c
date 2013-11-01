@@ -417,6 +417,16 @@ void TaskManager::updateIDNumber() {
 	ID+=10;
 }
 
+void TaskManager::reupdateIDNumber(vector<Task> &taskStorage) {
+	int size=taskStorage.size();
+	int number=10;
+	for (int i=0;i<size;i++) {
+		taskStorage.at(i).assignIDNumber(number);
+		number+=10;
+	}
+	ID=number-10;
+}
+
 void TaskManager::insertTaskExecuted(int commandNumber, string command) {
 	if (command=="create")
 		recordUndoCommand.push_back(commandNumber+1);
