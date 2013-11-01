@@ -315,6 +315,7 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 		}
 		return true;
 	} catch (const char* msg) {
+		throw msg;
 		cout<<msg;  // TODO: thrown from where??
 	}
 	return false;
@@ -325,11 +326,7 @@ bool TaskManager::deleteTask(vector<string> splitString, vector<Task> &TaskStora
 {
 	int number = atoi(splitString[1].c_str());
 
-	if(number<=0 || (number>ID))
-		return false;
-
 	int delPos=findIDPos(number,TaskStorage);
-
 
 	storeTask(TaskStorage.at(delPos));
 	insertTaskExecuted(TaskStorage.at(delPos).getTaskID(),"delete");

@@ -15,6 +15,7 @@ private:
 		void* guiInterface;
         string _userCommand;
 		string searchKey;
+		string deleteInput;
         vector<string> commandInput;
 		vector<Task> taskStorage;
 		vector<Task> keySearch;
@@ -34,6 +35,7 @@ public:
         void parserCommand();
 		bool executeCommand();
 		
+		bool checkDeleteInput();
 		bool checkSearchKey();
         void displayCommand();
         void displayVector();
