@@ -88,21 +88,38 @@ bool Facade::executeCommand() {
 			}
 			else if(commandInput[i]=="-update")
 			{
-				bool value = p.updateTask(commandInput,taskStorage);
-				if(value)
-					guiLogicInterface->toDisplay("Task updated successfully");
-				else
-					guiLogicInterface->toDisplay("Error found while updating the task");
+				try {
+					bool value = p.updateTask(commandInput,taskStorage);
+					if(value)
+						guiLogicInterface->toDisplay("Task updated successfully");
+					else
+						guiLogicInterface->toDisplay("Error found while updating the task");
+				}
+				catch(const char* except)
+				{
+					guiLogicInterface->toDisplay(except);
+				}
+
 				checkFlag=true;
 				guiLogicInterface->updateGuiList();
 			}
 			else if(commandInput[i]=="-delete")
 			{
-				bool value = p.deleteTask(commandInput,taskStorage);
-				if(value)
-					guiLogicInterface->toDisplay("Task deleted successfully");
-				else
-					guiLogicInterface->toDisplay("Error found while deleting the task");
+				bool value;
+				try
+				{
+					if (checkDeleteInput()) {
+						bool value = p.deleteTask(commandInput,taskStorage);
+						if(value)
+							guiLogicInterface->toDisplay("Task deleted successfully");
+						else
+							guiLogicInterface->toDisplay("Error found while deleting the task");
+					}
+				}
+				catch(const char* except)
+				{
+					guiLogicInterface->toDisplay(except);
+				}
 				checkFlag=true;
 				guiLogicInterface->updateGuiList();
 			}
@@ -153,6 +170,8 @@ bool Facade::executeCommand() {
 				//displayVector();
 				guiLogicInterface->displayGuiSearchResults(keySearch);
 			}
+			else if (commandInput[i]=="-all") {
+			}
 		}
 	}
 	commandInput.clear();
@@ -166,6 +185,14 @@ bool Facade::executeCommand() {
 		saveFile->writeAllToFile(taskStorage);
 	}
 	return false;
+}
+
+bool Facade::checkDeleteInput() {
+	if (commandInput.size()>1) {
+		deleteInput=commandInput.at(1);
+		return true;
+	}
+	else throw "Invalid input";
 }
 
 bool Facade::checkSearchKey() {
