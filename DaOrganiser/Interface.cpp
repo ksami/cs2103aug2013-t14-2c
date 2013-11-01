@@ -33,6 +33,11 @@ string Interface::toGetInput()
 	return (*userInterface)->getUserInput();
 }
 
+void Interface::displayGuiSearchResults(vector<Task>& searchResults)
+{
+	(*userInterface)->displaySearchResult(searchResults);
+}
+
 void Interface::updateGuiList()
 {
 	(*userInterface)->updateList();

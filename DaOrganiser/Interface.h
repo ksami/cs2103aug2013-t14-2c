@@ -13,6 +13,7 @@ public:
 	~Interface(void);
 	void toDisplay(string sentence);
 	string toGetInput(void);
+	void displayGuiSearchResults(vector<Task>& searchResults);
 	void updateGuiList(void);
 };
 
