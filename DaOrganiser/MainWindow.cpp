@@ -142,7 +142,7 @@ System::Drawing::Color DaOrganiser::MainWindow::changeColor(String^ status)
 {
 	if(status == "Not done")
 	{
-		return System::Drawing::Color::DeepSkyBlue;
+		return System::Drawing::Color::WhiteSmoke;
 	}
 	else if(status == "Done")
 	{
@@ -421,6 +421,7 @@ System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  
 	logging("comboBox1_PreviewKeyDown called", LogLevel::Event);
 	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true) && (comboBox1->Items->Count > 0))
 	{
+		listView1->TabStop = false;
 		if(comboBox1->SelectedIndex > 0)
 		{
 			closeSuggestionBox();
@@ -434,6 +435,15 @@ System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  
 			commitSelectedSuggestion();
 			setCaretToEnd();
 		}
+//		listView1->TabStop = true;
+	}
+}
+
+System::Void DaOrganiser::MainWindow::comboBox1_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
+{
+	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == false))
+	{
+		listView1->TabStop = true;
 	}
 }
 

@@ -94,7 +94,7 @@ namespace DaOrganiser {
 			// 
 			// richTextBox1
 			// 
-			this->richTextBox1->BackColor = System::Drawing::Color::PaleGreen;
+			this->richTextBox1->BackColor = System::Drawing::Color::Azure;
 			this->richTextBox1->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->richTextBox1->DetectUrls = false;
 			this->richTextBox1->Dock = System::Windows::Forms::DockStyle::Fill;
@@ -106,7 +106,7 @@ namespace DaOrganiser {
 			this->richTextBox1->ReadOnly = true;
 			this->richTextBox1->ScrollBars = System::Windows::Forms::RichTextBoxScrollBars::Vertical;
 			this->richTextBox1->Size = System::Drawing::Size(1049, 126);
-			this->richTextBox1->TabIndex = 1;
+			this->richTextBox1->TabIndex = 2;
 			this->richTextBox1->TabStop = false;
 			this->richTextBox1->Text = L"Welcome to DaOrganiser!\n";
 			// 
@@ -148,12 +148,13 @@ namespace DaOrganiser {
 			this->comboBox1->TabIndex = 0;
 			this->comboBox1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::comboBox1_KeyDown);
 			this->comboBox1->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainWindow::comboBox1_KeyPress);
+			this->comboBox1->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::comboBox1_KeyUp);
 			this->comboBox1->PreviewKeyDown += gcnew System::Windows::Forms::PreviewKeyDownEventHandler(this, &MainWindow::comboBox1_PreviewKeyDown);
 			// 
 			// listView1
 			// 
 			this->listView1->AllowColumnReorder = true;
-			this->listView1->BackColor = System::Drawing::Color::DeepSkyBlue;
+			this->listView1->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->listView1->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(8) {this->taskId, this->startDate, 
 				this->endDate, this->startTime, this->endTime, this->details, this->status, this->kind});
@@ -166,8 +167,7 @@ namespace DaOrganiser {
 			this->listView1->Margin = System::Windows::Forms::Padding(1, 0, 1, 1);
 			this->listView1->Name = L"listView1";
 			this->listView1->Size = System::Drawing::Size(1049, 419);
-			this->listView1->TabIndex = 2;
-			this->listView1->TabStop = false;
+			this->listView1->TabIndex = 1;
 			this->listView1->TileSize = System::Drawing::Size(228, 36);
 			this->listView1->UseCompatibleStateImageBehavior = false;
 			this->listView1->View = System::Windows::Forms::View::Details;
@@ -269,6 +269,7 @@ namespace DaOrganiser {
 	private: System::Void comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e);
 	private: System::Void MainWindow_Load(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void MainWindow_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e);
+	private: System::Void comboBox1_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
 };
 }
 
