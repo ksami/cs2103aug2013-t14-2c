@@ -25,6 +25,7 @@ public:
 	void readTask(vector<Task>&);
 	bool updateTask(vector<string>,vector<Task>&);
 	bool deleteTask(vector<string>,vector<Task>&);
+	void searchkey(vector<Task> &,vector<Task> &,string);
 	void undoTask(vector<Task>&);
 	void redoTask(vector<Task>&);
 	
@@ -36,6 +37,7 @@ public:
 	void insertTaskExecuted(int, string);
 	void storeTask(Task);
 	void testingRecordCommand();
+	bool searchKeyBlank(vector<Task> &,vector<Task> &, string);
 	int findIDPos(int,vector<Task>);
 };
 
