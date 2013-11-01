@@ -130,7 +130,22 @@ bool Facade::executeCommand() {
 				{
 					guiLogicInterface->toDisplay(except);
 				}
-                checkFlag=true;
+				checkFlag=true;
+			}
+			else if (commandInput[i]=="-search")
+			{
+				try
+				{
+					if (checkSearchKey()) {
+						p.searchkey(taskStorage,keySearch,searchKey);
+					}
+				}
+				catch(const char* except)
+				{
+					guiLogicInterface->toDisplay(except);
+				}
+				checkFlag=true;
+				displayVector();
 			}
 		}
 	}
@@ -147,6 +162,14 @@ bool Facade::executeCommand() {
 	return false;
 }
 
+bool Facade::checkSearchKey() {
+	if (commandInput.size()>1) {
+		searchKey=commandInput.at(1);
+		return true;
+	}
+	else throw "Invalid input";
+}
+
 void Facade::displayCommand() {
 	Interface* guiLogicInterface = (Interface*) guiInterface;
 	guiLogicInterface->toDisplay(_userCommand);
@@ -155,9 +178,9 @@ void Facade::displayCommand() {
 
 void Facade::displayVector() {
 	Interface* guiLogicInterface = (Interface*) guiInterface;
-	int size=commandInput.size();
+	int size=keySearch.size();
 	for (int i=0;i<size;i++) {
-		guiLogicInterface->toDisplay(commandInput.at(i));
+		guiLogicInterface->toDisplay(keySearch.at(i).getDetailsAsString());
 		//guiLogicInterface->toDisplay("\n");
 	}
 }
