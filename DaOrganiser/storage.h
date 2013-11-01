@@ -29,7 +29,7 @@ class Storage{
 		string getContentOfTask(Task);
 		void closeOutputStream();
 		void initialInputStream();
-		Task readOneFromFile();
+		Task readOneFromFile(char*);
 		Task putContentIntoTask(char**);
 		void closeInputStream();
 		char** tokenize(char*);
