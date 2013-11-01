@@ -19,9 +19,9 @@ HotKeySet("^p", "pauseScript")
 HotKeySet("^e", "endScript")
 
 ;start new run
-;If(FileExists($storageFilePath)) Then
-;   FileDelete($storageFilePath)
-;EndIf
+If(FileExists($storageFilePath)) Then
+   FileDelete($storageFilePath)
+EndIf
 
 Run($exePath)
 WinWaitActive($winTitle)
@@ -209,7 +209,13 @@ Func testMultipleUndo()
    Send("-add -startdate 121212 -starttime 1212 -enddate 121212 -endtime 1213 -details multiple undo test case")
    Send("{ENTER}")
    Sleep($sleepVal)
-   Send("-undo -undo -undo -undo")
+   Send("-undo")
+   Send("{ENTER}")
+   Send("-undo")
+   Send("{ENTER}")
+   Send("-undo")
+   Send("{ENTER}")
+   Send("-undo")
    Send("{ENTER}")
    Sleep($sleepVal)
    
@@ -217,4 +223,14 @@ Func testMultipleUndo()
    expectEQ("-1", $itemID, "undo_multiple")
    ;add separator
    GUICtrlCreateListViewItem("|||", $resultList)
+EndFunc
+
+Func testMultipleSameCmd()
+   Send("-add -add -add -add")
+   Send("{ENTER}")
+EndFunc
+
+Func testMultipleDiffCmd()
+   Send("-add -delete -update -add")
+   Send("{ENTER}")
 EndFunc

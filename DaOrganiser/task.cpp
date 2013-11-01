@@ -10,7 +10,7 @@ Task::Task()
     kind = 'f';
     startDate.day = ltm->tm_mday;
     startDate.month = 1 + ltm->tm_mon;
-    startDate.year = 1900 + ltm->tm_year;
+    startDate.year = (1900 + ltm->tm_year)%100;
     endDate.day = endDate.month = endDate.year = 0;
     startTime.hr = ltm->tm_hour;
     startTime.min = 1 + ltm->tm_min;
@@ -39,6 +39,11 @@ string Task::getStartDateAsString()
 	}
 	startDateAsString += std::to_string(startDate.month);
 	startDateAsString += "/";
+	
+	if(startDate.year<=9)
+	{
+		startDateAsString += '0';
+	}
 	startDateAsString += std::to_string(startDate.year);
 	return startDateAsString;
 }
@@ -59,6 +64,11 @@ string Task::getEndDateAsString()
 	}
 	endDateAsString += std::to_string(endDate.month);
 	endDateAsString += "/";
+	
+	if(endDate.year<=9)
+	{
+		endDateAsString += '0';
+	}
 	endDateAsString += std::to_string(endDate.year);
 	return endDateAsString;
 }
