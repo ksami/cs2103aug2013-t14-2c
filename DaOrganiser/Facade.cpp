@@ -156,6 +156,7 @@ bool Facade::executeCommand() {
 		}
 	}
 	commandInput.clear();
+	keySearch.clear();
 	if(checkFlag==false)
 	{
 		guiLogicInterface->toDisplay("Invalid command entered");
