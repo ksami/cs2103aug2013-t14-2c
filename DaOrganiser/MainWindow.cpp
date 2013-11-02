@@ -471,19 +471,27 @@ System::Void DaOrganiser::MainWindow::listView1_KeyDown(System::Object^  sender,
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::D2)
 	{
-		sortListColumn(1);
+		sortListColumn(3);
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::D3)
 	{
-		sortListColumn(2);
+		sortListColumn(1);
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::D4)
 	{
-		sortListColumn(3);
+		sortListColumn(2);
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::D5)
 	{
 		sortListColumn(4);
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::D6)
+	{
+		sortListColumn(5);
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::D7)
+	{
+		sortListColumn(6);
 	}
 }
 

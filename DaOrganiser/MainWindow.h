@@ -43,7 +43,8 @@ namespace DaOrganiser {
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
 
 	private: System::Windows::Forms::ListView^  listView1;
-	private: System::Windows::Forms::ColumnHeader^  taskId;
+	private: System::Windows::Forms::ColumnHeader^  id;
+
 
 
 	private: System::Windows::Forms::ColumnHeader^  details;
@@ -86,7 +87,7 @@ namespace DaOrganiser {
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
-			this->taskId = (gcnew System::Windows::Forms::ColumnHeader());
+			this->id = (gcnew System::Windows::Forms::ColumnHeader());
 			this->start = (gcnew System::Windows::Forms::ColumnHeader());
 			this->end = (gcnew System::Windows::Forms::ColumnHeader());
 			this->details = (gcnew System::Windows::Forms::ColumnHeader());
@@ -159,7 +160,7 @@ namespace DaOrganiser {
 			this->listView1->AllowColumnReorder = true;
 			this->listView1->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->listView1->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(6) {this->taskId, this->start, 
+			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(6) {this->id, this->start, 
 				this->end, this->details, this->status, this->kind});
 			this->listView1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->listView1->Font = (gcnew System::Drawing::Font(L"Verdana", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
@@ -177,10 +178,10 @@ namespace DaOrganiser {
 			this->listView1->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &MainWindow::listView1_ColumnClick);
 			this->listView1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::listView1_KeyDown);
 			// 
-			// taskId
+			// id
 			// 
-			this->taskId->Text = L"Task ID";
-			this->taskId->Width = 73;
+			this->id->Text = L"ID";
+			this->id->Width = 73;
 			// 
 			// start
 			// 
