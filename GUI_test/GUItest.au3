@@ -5,7 +5,7 @@
 #include <WindowsConstants.au3>
 
 Global $count=1
-Global $sleepVal = 2000
+Global $sleepVal = 500
 Global $exePath = "DaOrganiser.exe"
 Global $winTitle = "DaOrganiser"
 Global $storageFilePath = "storage.txt"
@@ -92,15 +92,13 @@ Func testAddValid()
    Send("{ENTER}")
    Sleep($sleepVal)
    
-   Local $array[8]
+   Local $array[6]
    $array[0]=$count * 10
-   $array[1]="12/12/12"
-   $array[2]="12/12/12"
-   $array[3]="12:12"
-   $array[4]="12:13"
-   $array[5]="valid add task test case" & $count
-   $array[6]="Not done"
-   $array[7]="Timed task"
+   $array[1]="12/12/12 12:12"
+   $array[2]="12/12/12 12:13"
+   $array[3]="valid add task test case" & $count
+   $array[4]="Not done"
+   $array[5]="Timed task"
    testListviewItem($array, "add_Valid")
    $count = $count + 1
 EndFunc
@@ -124,15 +122,13 @@ Func testUpdateValid()
    Send("{ENTER}")
    Sleep($sleepVal)
    
-   Local $array[8]
+   Local $array[6]
    $array[0]="10"
-   $array[1]="10/10/10"
-   $array[2]="11/11/11"
-   $array[3]="12:13"
-   $array[4]="12:14"
-   $array[5]="update test case"
-   $array[6]="Done"
-   $array[7]="Timed task"
+   $array[1]="10/10/10 12:13"
+   $array[2]="11/11/11 12:14"
+   $array[3]="update test case"
+   $array[4]="Done"
+   $array[5]="Timed task"
    testListviewItem($array, "update_Valid")
 EndFunc
 
@@ -153,15 +149,13 @@ Func testAutoCompleteValid()
    Send("{ENTER}")
    Sleep($sleepVal)
    
-   Local $array[8]
+   Local $array[6]
    $array[0]=$count * 10
-   $array[1]="12/12/12"
-   $array[2]="12/12/12"
-   $array[3]="12:12"
-   $array[4]="12:13"
-   $array[5]="valid autocomplete test case"
-   $array[6]="Not done"
-   $array[7]="Timed task"
+   $array[1]="12/12/12 12:12"
+   $array[2]="12/12/12 12:13"
+   $array[3]="valid autocomplete test case"
+   $array[4]="Not done"
+   $array[5]="Timed task"
    testListviewItem($array, "autocomplete_add_valid")
 EndFunc
 

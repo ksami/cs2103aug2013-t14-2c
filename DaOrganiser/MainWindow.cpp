@@ -405,6 +405,15 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 		static bool toExit = false;
 		string userInput = sysStringToStdString(comboBox1->Text);
 
+		//check for input history overflow
+		if(inputHistory.size() > 300)
+		{
+			for(unsigned int i=0; i<100; i++)
+			{
+				inputHistory[i] = inputHistory[i+100];
+			}
+			inputHistory.resize(100);
+		}
 		inputHistory.push_back(userInput);
 		inputHistoryIndex = inputHistory.size();
 
