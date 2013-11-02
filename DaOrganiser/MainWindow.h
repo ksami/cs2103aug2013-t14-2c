@@ -43,15 +43,20 @@ namespace DaOrganiser {
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
 
 	private: System::Windows::Forms::ListView^  listView1;
-	private: System::Windows::Forms::ColumnHeader^  taskId;
+	private: System::Windows::Forms::ColumnHeader^  id;
+
 
 
 	private: System::Windows::Forms::ColumnHeader^  details;
 	private: System::Windows::Forms::ColumnHeader^  status;
-	private: System::Windows::Forms::ColumnHeader^  startDate;
-	private: System::Windows::Forms::ColumnHeader^  endDate;
-	private: System::Windows::Forms::ColumnHeader^  startTime;
-	private: System::Windows::Forms::ColumnHeader^  endTime;
+	private: System::Windows::Forms::ColumnHeader^  start;
+	private: System::Windows::Forms::ColumnHeader^  end;
+
+
+
+
+
+
 
 
 	private: System::Windows::Forms::ComboBox^  comboBox1;
@@ -82,11 +87,9 @@ namespace DaOrganiser {
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
-			this->taskId = (gcnew System::Windows::Forms::ColumnHeader());
-			this->startDate = (gcnew System::Windows::Forms::ColumnHeader());
-			this->endDate = (gcnew System::Windows::Forms::ColumnHeader());
-			this->startTime = (gcnew System::Windows::Forms::ColumnHeader());
-			this->endTime = (gcnew System::Windows::Forms::ColumnHeader());
+			this->id = (gcnew System::Windows::Forms::ColumnHeader());
+			this->start = (gcnew System::Windows::Forms::ColumnHeader());
+			this->end = (gcnew System::Windows::Forms::ColumnHeader());
 			this->details = (gcnew System::Windows::Forms::ColumnHeader());
 			this->status = (gcnew System::Windows::Forms::ColumnHeader());
 			this->kind = (gcnew System::Windows::Forms::ColumnHeader());
@@ -157,8 +160,8 @@ namespace DaOrganiser {
 			this->listView1->AllowColumnReorder = true;
 			this->listView1->BackColor = System::Drawing::Color::WhiteSmoke;
 			this->listView1->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(8) {this->taskId, this->startDate, 
-				this->endDate, this->startTime, this->endTime, this->details, this->status, this->kind});
+			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(6) {this->id, this->start, 
+				this->end, this->details, this->status, this->kind});
 			this->listView1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->listView1->Font = (gcnew System::Drawing::Font(L"Verdana", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
@@ -175,33 +178,22 @@ namespace DaOrganiser {
 			this->listView1->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &MainWindow::listView1_ColumnClick);
 			this->listView1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::listView1_KeyDown);
 			// 
-			// taskId
+			// id
 			// 
-			this->taskId->Text = L"Task ID";
-			this->taskId->Width = 73;
+			this->id->Text = L"ID";
+			this->id->Width = 73;
 			// 
-			// startDate
+			// start
 			// 
-			this->startDate->DisplayIndex = 2;
-			this->startDate->Text = L"Start Date";
-			this->startDate->Width = 116;
+			this->start->DisplayIndex = 2;
+			this->start->Text = L"Start";
+			this->start->Width = 205;
 			// 
-			// endDate
+			// end
 			// 
-			this->endDate->DisplayIndex = 4;
-			this->endDate->Text = L"End Date";
-			this->endDate->Width = 109;
-			// 
-			// startTime
-			// 
-			this->startTime->Text = L"Start Time";
-			this->startTime->Width = 101;
-			// 
-			// endTime
-			// 
-			this->endTime->DisplayIndex = 5;
-			this->endTime->Text = L"End Time";
-			this->endTime->Width = 100;
+			this->end->DisplayIndex = 3;
+			this->end->Text = L"End";
+			this->end->Width = 188;
 			// 
 			// details
 			// 
@@ -217,7 +209,7 @@ namespace DaOrganiser {
 			// kind
 			// 
 			this->kind->Text = L"Kind";
-			this->kind->Width = 98;
+			this->kind->Width = 126;
 			// 
 			// MainWindow
 			// 
