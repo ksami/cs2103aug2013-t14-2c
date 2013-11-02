@@ -112,7 +112,7 @@ Task Storage::putContentIntoTask(char** info){
 	t.assignDetails(info[0]);
 	t.assignKind(*info[1]);
 	//to-do
-	sscanf_s(info[2],"%d/%d/%d",&startDate.year, &startDate.month, &startDate.day);
+	sscanf_s(info[2],"%d/%d/%d",&startDate.day, &startDate.month, &startDate.year);
 	t.assignDateValue(startDate, 's');
 	//toDisplay(t.getStartDateAsString());
 
@@ -120,7 +120,7 @@ Task Storage::putContentIntoTask(char** info){
 	t.assignTimeValue(startTime, 's');	
 	//toDisplay(t.getStartTimeAsString());
 
-	sscanf_s(info[4],"%d/%d/%d",&endDate.year, &endDate.month, &endDate.day);
+	sscanf_s(info[4],"%d/%d/%d",&endDate.day, &endDate.month, &endDate.year);
 	t.assignDateValue(endDate, 'e');
 	//toDisplay(t.getEndDateAsString());
 

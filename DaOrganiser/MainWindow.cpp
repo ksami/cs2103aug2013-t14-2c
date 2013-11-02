@@ -35,10 +35,8 @@ void DaOrganiser::MainWindow::addTaskToList(Task taskToAdd)
 	//assumption: taskid is unique
 	ListViewItem^ itemToAdd=gcnew ListViewItem(stdStringToSysString(taskToAdd.getIdAsString()));
 
-	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStartDateAsString()));
-	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getEndDateAsString()));
-	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStartTimeAsString()));
-	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getEndTimeAsString()));
+	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStartDateTimeAsString()));
+	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getEndDateTimeAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getDetailsAsString()));
 
 	String^ status = stdStringToSysString(taskToAdd.getStatusAsString());
