@@ -35,10 +35,8 @@ void DaOrganiser::MainWindow::addTaskToList(Task taskToAdd)
 	//assumption: taskid is unique
 	ListViewItem^ itemToAdd=gcnew ListViewItem(stdStringToSysString(taskToAdd.getIdAsString()));
 
-	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStartDateAsString()));
-	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getEndDateAsString()));
-	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStartTimeAsString()));
-	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getEndTimeAsString()));
+	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStartDateTimeAsString()));
+	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getEndDateTimeAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getDetailsAsString()));
 
 	String^ status = stdStringToSysString(taskToAdd.getStatusAsString());
@@ -153,7 +151,7 @@ void DaOrganiser::MainWindow::exitProgram(void)
 #pragma region Private Methods
 // Private Methods
 
-// Changes the background color of the listviewitem based on its status
+// Returns the background color of the listviewitem based on its status
 System::Drawing::Color DaOrganiser::MainWindow::changeColor(String^ status)
 {
 	if(status == "Not done")
@@ -219,17 +217,6 @@ void DaOrganiser::MainWindow::setCaretToEnd(void)
 
 #pragma endregion
 
-//stub
-/*void DaOrganiser::MainWindow::addToList(String^ details)
-{
-	System::DateTime timeAdded = System::DateTime::Now;
-	ListViewItem^ item = gcnew ListViewItem(timeAdded.ToString());
-	item->SubItems->Add(details);
-	item->SubItems->Add("Not done");
-	listView1->Items->Add(item);
-	delete item;
-}*/
-
 #pragma region Event Handlers
 /////////////////////////
 //    Event Handlers   //
@@ -278,38 +265,27 @@ System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  se
 	}
 }
 
-//column click sorting for entire inventory
-System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e)
-{
-	sortListColumn(e->Column);
-}
-
 // Following events implement Autocomplete for commands
 // Order of events called: PreviewKeyDown > KeyDown > KeyPress > KeyUp
-System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e)
+System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e)
 {
-	logging("comboBox1_KeyPress called", LogLevel::Event);
-	const bool nonAlphaNumeric = (e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122);
-
-	if(e->KeyChar == CMD_DELIMITER_CHAR)
+	logging("comboBox1_PreviewKeyDown called", LogLevel::Event);
+	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true) && (comboBox1->Items->Count > 0))
 	{
-		userPrevInput = comboBox1->Text;
-
-		openSuggestionBox();
-		
-		std::string charToConvert = NULL_STRING;
-		charToConvert += tolower((char) e->KeyChar);
-		userInputWord = stdStringToSysString(charToConvert);
-
-		suggestResults();
-	}
-	else if(!nonAlphaNumeric)
-	{
-		std::string charToConvert = NULL_STRING;
-		charToConvert += tolower((char) e->KeyChar);
-		userInputWord += stdStringToSysString(charToConvert);
-		
-		suggestResults();
+		listView1->TabStop = false;
+		if(comboBox1->SelectedIndex > 0)
+		{
+			closeSuggestionBox();
+			commitSelectedSuggestion();
+			setCaretToEnd();
+		}
+		else
+		{
+			comboBox1->SelectedIndex = 0;
+			closeSuggestionBox();
+			commitSelectedSuggestion();
+			setCaretToEnd();
+		}
 	}
 }
 
@@ -430,25 +406,30 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 	}
 }
 
-System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e)
+System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e)
 {
-	logging("comboBox1_PreviewKeyDown called", LogLevel::Event);
-	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true) && (comboBox1->Items->Count > 0))
+	logging("comboBox1_KeyPress called", LogLevel::Event);
+	const bool nonAlphaNumeric = (e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122);
+
+	if(e->KeyChar == CMD_DELIMITER_CHAR)
 	{
-		listView1->TabStop = false;
-		if(comboBox1->SelectedIndex > 0)
-		{
-			closeSuggestionBox();
-			commitSelectedSuggestion();
-			setCaretToEnd();
-		}
-		else
-		{
-			comboBox1->SelectedIndex = 0;
-			closeSuggestionBox();
-			commitSelectedSuggestion();
-			setCaretToEnd();
-		}
+		userPrevInput = comboBox1->Text;
+
+		openSuggestionBox();
+		
+		std::string charToConvert = NULL_STRING;
+		charToConvert += tolower((char) e->KeyChar);
+		userInputWord = stdStringToSysString(charToConvert);
+
+		suggestResults();
+	}
+	else if(!nonAlphaNumeric)
+	{
+		std::string charToConvert = NULL_STRING;
+		charToConvert += tolower((char) e->KeyChar);
+		userInputWord += stdStringToSysString(charToConvert);
+		
+		suggestResults();
 	}
 }
 
@@ -458,6 +439,12 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyUp(System::Object^  sender, S
 	{
 		listView1->TabStop = true;
 	}
+}
+
+//column click sorting for entire inventory
+System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e)
+{
+	sortListColumn(e->Column);
 }
 
 // Keyboard navigation for listView1
@@ -473,19 +460,27 @@ System::Void DaOrganiser::MainWindow::listView1_KeyDown(System::Object^  sender,
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::D2)
 	{
-		sortListColumn(1);
+		sortListColumn(3);
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::D3)
 	{
-		sortListColumn(2);
+		sortListColumn(1);
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::D4)
 	{
-		sortListColumn(3);
+		sortListColumn(2);
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::D5)
 	{
 		sortListColumn(4);
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::D6)
+	{
+		sortListColumn(5);
+	}
+	else if(e->KeyCode == System::Windows::Forms::Keys::D7)
+	{
+		sortListColumn(6);
 	}
 }
 

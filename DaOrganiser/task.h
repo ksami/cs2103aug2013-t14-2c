@@ -44,6 +44,8 @@ public:
 	Task();
 
 	string getIdAsString();
+	string getStartDateTimeAsString();
+	string getEndDateTimeAsString();
 	string getStartDateAsString();
 	string getEndDateAsString();
 	string getStartTimeAsString();
