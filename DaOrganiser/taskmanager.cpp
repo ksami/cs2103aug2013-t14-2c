@@ -10,7 +10,6 @@ TaskManager::~TaskManager() {
 
 bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage) 
 { 
-	updateIDNumber();
     Task newTask; 
     date d, zeroDate; 
     time_s t, zeroTime; 
@@ -135,6 +134,7 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
             if(newTask.checkDate(newTask.returnDate('s'), newTask.returnDate('e')) == -1) 
                 return false; 
     */
+	updateIDNumber();
 	newTask.assignIDNumber(ID);
 	insertTaskExecuted(ID,"create");
   
