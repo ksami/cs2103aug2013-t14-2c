@@ -8,8 +8,8 @@
 //#define NLOG
 #include "Log.h"
 
-#define AVAILABLE_CMDS "-add", "-delete", "-update", "-search", "-undo", "-redo", "-quit", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
-#define AVAILABLE_CMDS_NUM 14
+#define AVAILABLE_CMDS "-add", "-delete", "-update", "-search", "-all", "-undo", "-redo", "-quit", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
+#define AVAILABLE_CMDS_NUM 15
 #define CMD_DELIMITER_CHAR '-'
 #define CMD_DELIMITER_STR "-"
 #define NULL_STRING ""
@@ -97,7 +97,7 @@ void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
 		richTextBox1->Text = richTextBox1->Text->Remove(0, 1000);
 	}
 
-	if(userFeedback.find("success")!=string::npos)
+	if(userFeedback.find("success")!=string::npos||userFeedback.find("complete")!=string::npos||userFeedback.find("Display")!=string::npos)
 	{
 		try
 		{
