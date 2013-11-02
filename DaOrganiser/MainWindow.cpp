@@ -292,6 +292,8 @@ System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  
 System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
 {
 	logging("comboBox1_KeyDown called", LogLevel::Event);
+	static vector<std::string> inputHistory;
+	static int inputHistoryIndex = 0;
 	int i = comboBox1->SelectionStart;
 	String^ currentChar = NULL_STRING;
 
@@ -336,6 +338,19 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 			commitSelectedSuggestion();
 			setCaretToEnd();
 		}
+		else
+		{
+			if(inputHistoryIndex == 0 && inputHistory.empty() == false)
+			{
+				comboBox1->Text=stdStringToSysString(inputHistory[inputHistoryIndex]);
+				setCaretToEnd();
+			}
+			else if(inputHistoryIndex-1 >= 0)
+			{
+				comboBox1->Text=stdStringToSysString(inputHistory[--inputHistoryIndex]);
+				setCaretToEnd();
+			}
+		}
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::Down)
 	{
@@ -348,6 +363,19 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 			}
 			commitSelectedSuggestion();
 			setCaretToEnd();
+		}
+		else
+		{
+			if(inputHistoryIndex == 0 && inputHistory.empty() == false)
+			{
+				comboBox1->Text=stdStringToSysString(inputHistory[++inputHistoryIndex]);
+				setCaretToEnd();
+			}
+			else if(inputHistoryIndex < inputHistory.size())
+			{
+				comboBox1->Text=stdStringToSysString(inputHistory[inputHistoryIndex++]);
+				setCaretToEnd();
+			}
 		}
 	}
 	else if(e->KeyCode == System::Windows::Forms::Keys::Right)
@@ -376,6 +404,10 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 		e->Handled = true;
 		static bool toExit = false;
 		string userInput = sysStringToStdString(comboBox1->Text);
+
+		inputHistory.push_back(userInput);
+		inputHistoryIndex = inputHistory.size();
+
 		appendToOutput(userInput);
 		logging("Input entered: " + userInput, LogLevel::Info);
 
