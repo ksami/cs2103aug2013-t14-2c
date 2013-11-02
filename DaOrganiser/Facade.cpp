@@ -170,7 +170,11 @@ bool Facade::executeCommand() {
 				//displayVector();
 				guiLogicInterface->displayGuiSearchResults(keySearch);
 			}
-			else if (commandInput[i]=="-all") {
+			else if (commandInput[i]=="-all")
+			{
+				checkFlag=true;
+				guiLogicInterface->toDisplay("Displaying all entries");
+				guiLogicInterface->updateGuiList();
 			}
 		}
 	}
