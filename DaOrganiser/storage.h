@@ -26,10 +26,12 @@ class Storage{
 		void initialOutputStream();
 		void travelAllVector(vector<Task>);
 		void writeOneToFile(Task);
+		void taskDetailsBlankedHandler(Task&);
 		string getContentOfTask(Task);
 		void closeOutputStream();
 		void initialInputStream();
 		Task readOneFromFile(char*);
+		string retrieveRealDetails(char*);
 		Task putContentIntoTask(char**);
 		void closeInputStream();
 		char** tokenize(char*);

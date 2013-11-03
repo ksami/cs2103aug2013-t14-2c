@@ -47,9 +47,15 @@ void Storage::writeOneToFile(Task t) {
 	outputStream << getContentOfTask(t);
 }
 
+void Storage::taskDetailsBlankedHandler(Task& t){
+	if(t.getDetailsAsString().compare("") == 0){
+		t.assignDetails("BLANKED");
+	}
+}
 string Storage::getContentOfTask(Task t) {
 	logging("Task " + t.getDetailsAsString(), LogLevel::Debug);
-	return t.getDetailsAsString() + "," + t.getStatusAsString() + "," + t.getStartDateAsString() + "," + t.getStartTimeAsString() + "," + t.getEndDateAsString() + "," + t.getEndTimeAsString() + "\n";
+	taskDetailsBlankedHandler(t);
+	return t.getDetailsAsString() + "," + t.getStatusAsString() + "," + t.getKindAsString() + "," + t.getStartDateAsString() + "," + t.getStartTimeAsString() + "," + t.getEndDateAsString() + "," + t.getEndTimeAsString() + "\n";
 }
 
 void Storage::closeOutputStream(){
@@ -72,23 +78,12 @@ void Storage::initialInputStream(){
 void Storage::readAllFromFile(vector<Task> &vt){
 	initialInputStream();
 	char* temp = new char[1024];
-	/*
-	inputStream.getline(temp, 1024);
-	int noOfTask = atoi(temp);
-	
-	for(int i = 0; i < noOfTask; i++){
-		vt.push_back(readOneFromFile());
-	}
-	*/
 	while(inputStream.getline(temp, 1024)){
 		vt.push_back(readOneFromFile(temp));
 	}
 }
 
 Task Storage::readOneFromFile(char* temp){
-	
-	//char* temp = new char[1024];
-	//inputStream.getline(temp, 1024);
 	return putContentIntoTask(tokenize(temp));
 }
 
@@ -104,27 +99,34 @@ char** Storage::tokenize(char *temp){
 	return info;
 }
 
+string Storage::retrieveRealDetails(char* details){
+	if(strcmp(details, "BLANKED") == 0){
+		return "";
+	}
+	else
+		return details;
+}
 Task Storage::putContentIntoTask(char** info){
 	Task t;
 	date startDate, endDate;
 	time_s startTime, endTime;
-	//t.assignIDNumber(atoi(info[0]));
-	t.assignDetails(info[0]);
-	t.assignKind(*info[1]);
+	t.assignDetails(retrieveRealDetails(info[0]));
+	t.changeStatus(*info[1]);
+	t.assignKind(*info[2]);
 	//to-do
-	sscanf_s(info[2],"%d/%d/%d",&startDate.day, &startDate.month, &startDate.year);
+	sscanf_s(info[3],"%d/%d/%d",&startDate.day, &startDate.month, &startDate.year);
 	t.assignDateValue(startDate, 's');
 	//toDisplay(t.getStartDateAsString());
 
-	sscanf_s(info[3],"%d:%d",&startTime.hr, &startTime.min);
+	sscanf_s(info[4],"%d:%d",&startTime.hr, &startTime.min);
 	t.assignTimeValue(startTime, 's');	
 	//toDisplay(t.getStartTimeAsString());
 
-	sscanf_s(info[4],"%d/%d/%d",&endDate.day, &endDate.month, &endDate.year);
+	sscanf_s(info[5],"%d/%d/%d",&endDate.day, &endDate.month, &endDate.year);
 	t.assignDateValue(endDate, 'e');
 	//toDisplay(t.getEndDateAsString());
 
-	sscanf_s(info[5],"%d:%d",&endTime.hr, &endTime.min);
+	sscanf_s(info[6],"%d:%d",&endTime.hr, &endTime.min);
 	t.assignTimeValue(endTime, 'e');
 	//toDisplay(t.getEndTimeAsString());
 	return t;
