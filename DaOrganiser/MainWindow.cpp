@@ -134,8 +134,6 @@ void DaOrganiser::MainWindow::exitProgram(void)
 // Changes color of background and/or text of the ListViewItem
 void DaOrganiser::MainWindow::changeColor(Task taskToAdd, ListViewItem^& itemToAdd)
 {
-	System::Drawing::Color backgrndColor;
-	System::Drawing::Color fontColor;
 	std::string taskStatus = taskToAdd.getStatusAsString();
 	std::string taskKind = taskToAdd.getKindAsString();
 	itemToAdd->UseItemStyleForSubItems = false;
@@ -143,35 +141,38 @@ void DaOrganiser::MainWindow::changeColor(Task taskToAdd, ListViewItem^& itemToA
 	//change background color based on status of task
 	if(taskStatus.find("Not done")!=std::string::npos)
 	{
-		 backgrndColor = System::Drawing::Color::WhiteSmoke;
+		 itemToAdd->BackColor = Color::WhiteSmoke;
 	}
 	else if(taskStatus.find("Done")!=std::string::npos)
 	{
 		itemToAdd->UseItemStyleForSubItems = true;
-		backgrndColor = System::Drawing::Color::LightGray;
-		itemToAdd->ForeColor = System::Drawing::Color::Gray;
+		itemToAdd->BackColor = Color::LightGray;
+		itemToAdd->ForeColor = Color::Gray;
 	}
-	else
+	else if(taskStatus.find("Approaching")!=std::string::npos)
 	{
-		backgrndColor = System::Drawing::Color::Azure;
+		itemToAdd->BackColor = Color::LightYellow;
+		itemToAdd->SubItems[4]->BackColor = Color::LightYellow;
+	}
+	else if(taskStatus.find("Missed")!=std::string::npos)
+	{
+		itemToAdd->BackColor = Color::OrangeRed;
+		itemToAdd->SubItems[4]->BackColor = Color::OrangeRed;
 	}
 
 	//change font color of task's kind
 	if(taskKind.find("Floating")!=std::string::npos)
 	{
-		fontColor = System::Drawing::Color::Maroon;
+		itemToAdd->SubItems[5]->ForeColor = Color::ForestGreen;
 	}
 	else if(taskKind.find("Timed")!=std::string::npos)
 	{
-		fontColor = System::Drawing::Color::DarkBlue;
+		itemToAdd->SubItems[5]->ForeColor = Color::DarkBlue;
 	}
 	else if(taskKind.find("Deadline")!=std::string::npos)
 	{
-		fontColor = System::Drawing::Color::DeepPink;
+		itemToAdd->SubItems[5]->ForeColor = Color::Maroon;
 	}
-
-	itemToAdd->SubItems[5]->ForeColor = fontColor;
-	itemToAdd->BackColor = backgrndColor;
 }
 
 // Changes background color of comboBox1 and icon based on operation success or failure
