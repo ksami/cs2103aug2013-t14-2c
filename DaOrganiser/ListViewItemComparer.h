@@ -4,7 +4,7 @@ Done by Kenneth
 
 */
 
-//Implementation of comparer/sorter for listview
+// Implements sorting by columns for ListViewItems
 
 #pragma once
 
@@ -15,13 +15,15 @@ using namespace System::Windows::Forms;
 public ref class ListViewItemComparer: public IComparer
 {
 protected:
+	// Column number to sort by
 	int col;
+
+	// Sort by ascending or descending order
 	int asc;
 
 public:
 	ListViewItemComparer();
 	ListViewItemComparer(int, int);
 	
-	//Implements sorting by columns for listview
 	virtual int Compare(Object^ x, Object^ y);
 };
