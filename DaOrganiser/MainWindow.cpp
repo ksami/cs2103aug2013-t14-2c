@@ -138,32 +138,42 @@ void DaOrganiser::MainWindow::changeColor(Task taskToAdd, ListViewItem^& itemToA
 	std::string taskKind = taskToAdd.getKindAsString();
 	itemToAdd->UseItemStyleForSubItems = false;
 
+	//alternate colors of columns
+	itemToAdd->SubItems[0]->BackColor = Color::LightGray;
+	itemToAdd->SubItems[1]->BackColor = Color::LightGray;
+	itemToAdd->SubItems[4]->BackColor = Color::LightGray;
+
 	//change background color based on status of task
 	if(taskStatus.find("Not done")!=std::string::npos)
 	{
-		 itemToAdd->BackColor = Color::WhiteSmoke;
+		itemToAdd->SubItems[0]->ForeColor = Color::DarkSlateGray;
+		itemToAdd->SubItems[1]->ForeColor = Color::DarkSlateGray;
+		itemToAdd->SubItems[2]->ForeColor = Color::DarkSlateGray;
+		itemToAdd->SubItems[4]->ForeColor = Color::DarkSlateGray;
 	}
 	else if(taskStatus.find("Done")!=std::string::npos)
 	{
 		itemToAdd->UseItemStyleForSubItems = true;
-		itemToAdd->BackColor = Color::LightGray;
-		itemToAdd->ForeColor = Color::Gray;
+		itemToAdd->BackColor = Color::WhiteSmoke;
+		itemToAdd->ForeColor = Color::Gainsboro;
 	}
 	else if(taskStatus.find("Approaching")!=std::string::npos)
 	{
 		itemToAdd->BackColor = Color::LightYellow;
+		itemToAdd->SubItems[4]->ForeColor = Color::DarkMagenta;
 		itemToAdd->SubItems[4]->BackColor = Color::LightYellow;
 	}
 	else if(taskStatus.find("Missed")!=std::string::npos)
 	{
 		itemToAdd->BackColor = Color::OrangeRed;
+		itemToAdd->SubItems[4]->ForeColor = Color::Maroon;
 		itemToAdd->SubItems[4]->BackColor = Color::OrangeRed;
 	}
 
 	//change font color of task's kind
 	if(taskKind.find("Floating")!=std::string::npos)
 	{
-		itemToAdd->SubItems[5]->ForeColor = Color::ForestGreen;
+		itemToAdd->SubItems[5]->ForeColor = Color::DarkGreen;
 	}
 	else if(taskKind.find("Timed")!=std::string::npos)
 	{
@@ -171,7 +181,7 @@ void DaOrganiser::MainWindow::changeColor(Task taskToAdd, ListViewItem^& itemToA
 	}
 	else if(taskKind.find("Deadline")!=std::string::npos)
 	{
-		itemToAdd->SubItems[5]->ForeColor = Color::Maroon;
+		itemToAdd->SubItems[5]->ForeColor = Color::DarkRed;
 	}
 }
 
@@ -593,6 +603,21 @@ System::Void DaOrganiser::MainWindow::listView1_KeyDown(System::Object^  sender,
 	if(e->KeyCode == System::Windows::Forms::Keys::Escape)
 	{
 		exitProgram();
+	}
+	// Q Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::Q)
+	{
+		static bool alternate = true;
+		if(alternate)
+		{
+			listView1->TileSize = Drawing::Size((this->Width - 100)/5, 200);
+			listView1->View = System::Windows::Forms::View::Tile;
+		}
+		else
+		{
+			listView1->View = System::Windows::Forms::View::Details;
+		}
+		alternate=!alternate;
 	}
 	// 1 Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::D1)
