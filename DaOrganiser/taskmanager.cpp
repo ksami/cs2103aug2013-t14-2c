@@ -1,18 +1,48 @@
 #include "stdafx.h"
 #include "TaskManager.h"
 
-TaskManager::TaskManager() {
+TaskManager::TaskManager()
+{
 	ID=0;
 }
 
-TaskManager::~TaskManager() {
+TaskManager::~TaskManager()
+{
+}
+
+char TaskManager::initStatus(Task newTask)
+{
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+ 
+    date temp, edate;
+    temp.day = ltm->tm_mday;
+    temp.month = 1 + ltm->tm_mon;
+    temp.year = (1900 + ltm->tm_year)%100;
+ 
+    time_s tempTime, etime;
+    tempTime.hr = ltm->tm_hour;
+    tempTime.min = 1 + ltm->tm_min;
+ 
+    if(newTask.returnKind() == 'd' || newTask.returnKind() == 't')
+    {
+        edate = newTask.returnDate('e');
+        etime = newTask.returnTime('e');
+        if(newTask.checkDate(edate, temp) == 0)
+            if(newTask.checkTime(etime, tempTime) == 1)
+                return 'm';
+            else
+                return 'a';
+    }
+ 
+    return 'n';
 }
 
 bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage) 
 { 
     Task newTask; 
-    date d, zeroDate; 
-    time_s t, zeroTime; 
+    date d; 
+    time_s t; 
     int i, j, dateFlag1, dateFlag2, timeFlag1, timeFlag2; 
     string singleWord, text; 
   
@@ -28,9 +58,10 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
             value/=100; 
             d.month = value%100; 
             value/=100; 
-            d.day = value; 
+            d.day = value%100;
+			value/=100;
   
-            if(!newTask.assignDateValue(d, 's')) 
+            if(!newTask.assignDateValue(d, 's')||value) 
                 return false; 
             dateFlag1 = 1;
         } 
@@ -42,9 +73,10 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
             value/=100; 
             d.month = value%100; 
             value/=100; 
-            d.day = value; 
+            d.day = value%100; 
+			value/=100;
   
-            if(!newTask.assignDateValue(d, 'e')) 
+            if(!newTask.assignDateValue(d, 'e')||value) 
                 return false;
              dateFlag2 = 1; 
         } 
@@ -55,8 +87,9 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
             t.min = value%100; 
             value/=100; 
             t.hr = value%100; 
+			value/=100;
   
-            if(!newTask.assignTimeValue(t, 's')) 
+            if(!newTask.assignTimeValue(t, 's')||value) 
                 return false; 
             timeFlag1 = 1;
         } 
@@ -66,9 +99,10 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
             int value = atoi(splitString[i+1].c_str()); 
             t.min = value%100; 
             value/=100; 
-            t.hr = value%100; 
+            t.hr = value%100;
+			value/=100;
   
-            if(!newTask.assignTimeValue(t, 'e')) 
+            if(!newTask.assignTimeValue(t, 'e')||value) 
                 return false; 
             timeFlag2 = 1;
         } 
@@ -102,11 +136,11 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
 			if(!newTask.changeStatus(splitString[i+1][0])) 
 				return false; 
 		} 
-		else if(splitString[i]=="-kind") 
-		{ 
-			if(!newTask.assignKind(splitString[i+1][0])) 
-				return false; 
-		} 
+		//else if(splitString[i]=="-kind") 
+		//{ 
+		//	if(!newTask.assignKind(splitString[i+1][0])) 
+		//		return false; 
+		//} 
 	} 
 
   	// Checking if time and date have logical values
@@ -124,16 +158,41 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
 			return false;
 	}
 
-	
-  
-    // Checking if time and date have logical values 
-      
-    /* 
-    if(newTask.returnDate('s') != newTask.returnDate('0')) 
-        if(newTask.returnDate('e') != newTask.returnDate('0')) 
-            if(newTask.checkDate(newTask.returnDate('s'), newTask.returnDate('e')) == -1) 
-                return false; 
-    */
+	if((timeFlag1)&&(timeFlag2))
+    {
+ 
+ 
+        time_s time1 = newTask.returnTime('s'), time2 = newTask.returnTime('e');
+        if(newTask.checkTime(time1, time2) == 1)
+            return false;
+    }
+ 
+    if(dateFlag2 && timeFlag2 && (!dateFlag1) && (!timeFlag1))
+        newTask.assignKind('d');
+    else if(dateFlag1 && dateFlag2 && timeFlag1 && timeFlag2)
+        newTask.assignKind('t');
+    else
+    {
+        newTask.assignKind('f');
+        // Here the newTask has to take system time and date as start time and date
+        time_t now = time(0);
+        tm *ltm = localtime(&now);
+        date temp;
+        temp.day = ltm->tm_mday;
+        temp.month = 1 + ltm->tm_mon;
+        temp.year = (1900 + ltm->tm_year)%100;
+        time_s tempTime;
+        tempTime.hr = ltm->tm_hour;
+        tempTime.min = 1 + ltm->tm_min;
+ 
+        newTask.assignDateValue(temp,'s');
+        newTask.assignTimeValue(tempTime,'s');
+    }
+ 
+    // Status assignment occurs here
+    char statusAssign = initStatus(newTask);
+    newTask.changeStatus(statusAssign);
+
 	updateIDNumber();
 	newTask.assignIDNumber(ID);
 	insertTaskExecuted(ID,"create");
@@ -161,10 +220,10 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 {       
 	date d;
 	time_s t;
-	int i, j, dateFlag1, dateFlag2, timeFlag1, timeFlag2;
+	int i, j, dateFlag1, dateFlag2, timeFlag1, timeFlag2, statusFlag;
 	string singleWord, text;
 
-	dateFlag1 = dateFlag2 = timeFlag1 = timeFlag2 = 0;
+	dateFlag1 = dateFlag2 = timeFlag1 = timeFlag2 = statusFlag = 0;
 
 	// Searchs for the Task number to be updated 
 	//------------------------------------------
@@ -202,9 +261,10 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 				value/=100;
 				d.month = value%100;
 				value/=100;
-				d.day = value;
+				d.day = value%100;
+				value/=100;
 
-				if(!TaskStorage[pos].assignDateValue(d, 's'))
+				if(!TaskStorage[pos].assignDateValue(d, 's')||value)
 				{
 					TaskStorage[pos] = newTask;
 					return false;
@@ -219,9 +279,10 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 				value/=100;
 				d.month = value%100;
 				value/=100;
-				d.day = value;
+				d.day = value%100;
+				value/=100;
 
-				if(!TaskStorage[pos].assignDateValue(d, 'e'))
+				if(!TaskStorage[pos].assignDateValue(d, 'e')||value)
 				{
 					TaskStorage[pos] = newTask;
 					return false;
@@ -235,8 +296,9 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 				t.min = value%100;
 				value/=100;
 				t.hr = value%100;
+				value/=100;
 
-				if(!TaskStorage[pos].assignTimeValue(t, 's'))
+				if(!TaskStorage[pos].assignTimeValue(t, 's')||value)
 				{
 					TaskStorage[pos] = newTask;
 					return false;
@@ -250,8 +312,9 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 				t.min = value%100;
 				value/=100;
 				t.hr = value%100;
+				value/=100;
 
-				if(!TaskStorage[pos].assignTimeValue(t, 'e'))
+				if(!TaskStorage[pos].assignTimeValue(t, 'e')||value)
 				{
 					TaskStorage[pos] = newTask;
 					return false;
@@ -290,33 +353,63 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 					TaskStorage[pos] = newTask;
 					return false;
 				}
+				statusFlag = 1;
 			}
-			else if(splitString[i]=="-kind")
-			{
-				if(!TaskStorage[pos].assignKind(splitString[i+1][0]))
-				{
-					TaskStorage[pos] = newTask;
-					return false;
-				}
-			}
-			  if((dateFlag1)&&(dateFlag2))
-                {
-                        date date1 = newTask.returnDate('s'), date2 = newTask.returnDate('e');
-                        if(newTask.checkDate(date1, date2) == 1)
-                                return false;
-                }
+			//else if(splitString[i]=="-kind")
+			//{
+			//	if(!TaskStorage[pos].assignKind(splitString[i+1][0]))
+			//	{
+			//		TaskStorage[pos] = newTask;
+			//		return false;
+			//	}
+			//}
+			if((dateFlag1)&&(dateFlag2))
+            {
+                    date date1 = newTask.returnDate('s'), date2 = newTask.returnDate('e');
+                    if(newTask.checkDate(date1, date2) == 1)
+                            return false;
+            }
 
-                if((timeFlag1)&&(timeFlag2))
-                {
-                        time_s time1 = newTask.returnTime('s'), time2 = newTask.returnTime('e');
-                        if(newTask.checkTime(time1, time2) == 1)
-                                return false;
-                }
+            if((timeFlag1)&&(timeFlag2))
+            {
+                    time_s time1 = newTask.returnTime('s'), time2 = newTask.returnTime('e');
+                    if(newTask.checkTime(time1, time2) == 1)
+                            return false;
+            }
+
+			if(dateFlag2 && timeFlag2 && (!dateFlag1) && (!timeFlag1))
+                newTask.assignKind('d');
+            else if(dateFlag1 && dateFlag2 && timeFlag1 && timeFlag2)
+                newTask.assignKind('t');
+            else
+            {
+                newTask.assignKind('f');
+                // Here the newTask has to take system time and date as start time and date
+ 
+                time_t now = time(0);
+                tm *ltm = localtime(&now);
+                date temp;
+                temp.day = ltm->tm_mday;
+                temp.month = 1 + ltm->tm_mon;
+                temp.year = (1900 + ltm->tm_year)%100;
+                time_s tempTime;
+                tempTime.hr = ltm->tm_hour;
+                tempTime.min = 1 + ltm->tm_min;
+ 
+                newTask.assignDateValue(temp,'s');
+                newTask.assignTimeValue(tempTime,'s');
+ 
+            }
+ 
+            if(!statusFlag)
+            {
+                char statusAssign = initStatus(newTask);
+                newTask.changeStatus(statusAssign);
+            }
 		}
 		return true;
 	} catch (const char* msg) {
 		throw msg;
-		cout<<msg;  // TODO: thrown from where??
 	}
 	return false;
 }

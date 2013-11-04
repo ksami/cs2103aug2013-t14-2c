@@ -71,112 +71,124 @@ void Facade::parserCommand() {
 bool Facade::executeCommand() {
 	Interface* guiLogicInterface = (Interface*) guiInterface;
 	bool checkFlag = false;
+	int counter = 0;
 	if(_userCommand == "-quit" || _userCommand == "-Quit") 
 		return true;
-	else {
+	else
+	{
 		for(int i=0;i<commandInput.size();i++)
-		{
-			if(commandInput[i]=="-add")
+        {
+            if(commandInput[i]=="-add"||commandInput[i]=="-update"||commandInput[i]=="-delete"||commandInput[i]=="-read"||commandInput[i]=="-undo"||commandInput[i]=="-redo"||commandInput[i]=="-search"||commandInput[i]=="-all")
+                counter++;
+        }
+ 
+        if(counter == 1)
+        {
+			for(int i=0;i<commandInput.size();i++)
 			{
-				bool value = p.createTask(commandInput,taskStorage);
-				if(value)
-					guiLogicInterface->toDisplay("Task added successfully");
-				else 
-					guiLogicInterface->toDisplay("Error found while adding task");
-				checkFlag=true;
-				guiLogicInterface->updateGuiList();
-			}
-			else if(commandInput[i]=="-update")
-			{
-				try {
-					bool value = p.updateTask(commandInput,taskStorage);
+				if(commandInput[i]=="-add")
+				{
+					bool value = p.createTask(commandInput,taskStorage);
 					if(value)
-						guiLogicInterface->toDisplay("Task updated successfully");
-					else
-						guiLogicInterface->toDisplay("Error found while updating the task");
+						guiLogicInterface->toDisplay("Task added successfully");
+					else 
+						guiLogicInterface->toDisplay("Error found while adding task");
+					checkFlag=true;
+					guiLogicInterface->updateGuiList();
 				}
-				catch(const char* except)
+				else if(commandInput[i]=="-update")
 				{
-					guiLogicInterface->toDisplay(except);
-				}
-
-				checkFlag=true;
-				guiLogicInterface->updateGuiList();
-			}
-			else if(commandInput[i]=="-delete")
-			{
-				bool value;
-				try
-				{
-					if (checkDeleteInput()) {
-						bool value = p.deleteTask(commandInput,taskStorage);
+					try {
+						bool value = p.updateTask(commandInput,taskStorage);
 						if(value)
-							guiLogicInterface->toDisplay("Task deleted successfully");
+							guiLogicInterface->toDisplay("Task updated successfully");
 						else
-							guiLogicInterface->toDisplay("Error found while deleting the task");
+							guiLogicInterface->toDisplay("Error found while updating the task");
 					}
-				}
-				catch(const char* except)
-				{
-					guiLogicInterface->toDisplay(except);
-				}
-				checkFlag=true;
-				guiLogicInterface->updateGuiList();
-			}
-			else if (commandInput[i]=="-read")
-			{
-				p.readTask(taskStorage);
-				checkFlag=true;
-			}
-			else if (commandInput[i]=="-undo")
-            {
-				try
-				{
-					p.undoTask(taskStorage);
-				}
-				catch(const char* except)
-				{
-					guiLogicInterface->toDisplay(except);
-				}
-                checkFlag=true;
-				guiLogicInterface->updateGuiList();
-            }
-			else if (commandInput[i]=="-redo")
-			{
-				try
-				{
-					p.redoTask(taskStorage);
-				}
-				catch(const char* except)
-				{
-					guiLogicInterface->toDisplay(except);
-				}
-				checkFlag=true;
-				guiLogicInterface->updateGuiList();
-			}
-			else if (commandInput[i]=="-search")
-			{
-				try
-				{
-					if (checkSearchKey()) {
-						p.searchkey(taskStorage,keySearch,searchKey);
+					catch(const char* except)
+					{
+						guiLogicInterface->toDisplay(except);
 					}
+
+					checkFlag=true;
+					guiLogicInterface->updateGuiList();
 				}
-				catch(const char* except)
+				else if(commandInput[i]=="-delete")
 				{
-					guiLogicInterface->toDisplay(except);
+					try
+					{
+						if (checkDeleteInput()) {
+							bool value = p.deleteTask(commandInput,taskStorage);
+							if(value)
+								guiLogicInterface->toDisplay("Task deleted successfully");
+							else
+								guiLogicInterface->toDisplay("Error found while deleting the task");
+						}
+					}
+					catch(const char* except)
+					{
+						guiLogicInterface->toDisplay(except);
+					}
+					checkFlag=true;
+					guiLogicInterface->updateGuiList();
 				}
-				checkFlag=true;
-				//displayVector();
-				guiLogicInterface->displayGuiSearchResults(keySearch);
-			}
-			else if (commandInput[i]=="-all")
-			{
-				checkFlag=true;
-				guiLogicInterface->toDisplay("Displaying all entries");
-				guiLogicInterface->updateGuiList();
+				else if (commandInput[i]=="-read")
+				{
+					p.readTask(taskStorage);
+					checkFlag=true;
+				}
+				else if (commandInput[i]=="-undo")
+				{
+					try
+					{
+						p.undoTask(taskStorage);
+					}
+					catch(const char* except)
+					{
+						guiLogicInterface->toDisplay(except);
+					}
+					checkFlag=true;
+					guiLogicInterface->updateGuiList();
+				}
+				else if (commandInput[i]=="-redo")
+				{
+					try
+					{
+						p.redoTask(taskStorage);
+					}
+					catch(const char* except)
+					{
+						guiLogicInterface->toDisplay(except);
+					}
+					checkFlag=true;
+					guiLogicInterface->updateGuiList();
+				}
+				else if (commandInput[i]=="-search")
+				{
+					try
+					{
+						if (checkSearchKey()) {
+							p.searchkey(taskStorage,keySearch,searchKey);
+						}
+					}
+					catch(const char* except)
+					{
+						guiLogicInterface->toDisplay(except);
+					}
+					checkFlag=true;
+					//displayVector();
+					guiLogicInterface->displayGuiSearchResults(keySearch);
+				}
+				else if (commandInput[i]=="-all")
+				{
+					checkFlag=true;
+					guiLogicInterface->toDisplay("Displaying all entries");
+					guiLogicInterface->updateGuiList();
+				}
 			}
 		}
+		else
+			checkFlag = false;
 	}
 	commandInput.clear();
 	keySearch.clear();
