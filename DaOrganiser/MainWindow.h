@@ -20,7 +20,6 @@ namespace DaOrganiser {
 	public ref class MainWindow : public System::Windows::Forms::Form
 	{
 	public:
-		void* progController;
 		MainWindow(void)
 		{
 			InitializeComponent();
@@ -40,34 +39,20 @@ namespace DaOrganiser {
 			}
 		}
 	private: System::Windows::Forms::RichTextBox^  richTextBox1;
+	
 	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
 
 	private: System::Windows::Forms::ListView^  listView1;
 	private: System::Windows::Forms::ColumnHeader^  id;
-
-
-
 	private: System::Windows::Forms::ColumnHeader^  details;
 	private: System::Windows::Forms::ColumnHeader^  status;
 	private: System::Windows::Forms::ColumnHeader^  start;
 	private: System::Windows::Forms::ColumnHeader^  end;
-
-
-
-
-
-
-
-
-	private: System::Windows::Forms::ComboBox^  comboBox1;
 	private: System::Windows::Forms::ColumnHeader^  kind;
 
-
+	private: System::Windows::Forms::ComboBox^  comboBox1;
 
 	private: System::ComponentModel::IContainer^  components;
-
-
-
 
 	private:
 		/// <summary>
@@ -87,7 +72,7 @@ namespace DaOrganiser {
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->listView1 = (gcnew System::Windows::Forms::ListView());
-			this->id = (gcnew System::Windows::Forms::ColumnHeader());
+			this->id = (gcnew System::Windows::Forms::ColumnHeader(L"(none)"));
 			this->start = (gcnew System::Windows::Forms::ColumnHeader());
 			this->end = (gcnew System::Windows::Forms::ColumnHeader());
 			this->details = (gcnew System::Windows::Forms::ColumnHeader());
@@ -180,35 +165,35 @@ namespace DaOrganiser {
 			// 
 			// id
 			// 
-			this->id->Text = L"ID";
+			this->id->Text = L"ID (1)";
 			this->id->Width = 73;
 			// 
 			// start
 			// 
 			this->start->DisplayIndex = 2;
-			this->start->Text = L"Start";
+			this->start->Text = L"Start (3)";
 			this->start->Width = 205;
 			// 
 			// end
 			// 
 			this->end->DisplayIndex = 3;
-			this->end->Text = L"End";
+			this->end->Text = L"End (4)";
 			this->end->Width = 188;
 			// 
 			// details
 			// 
 			this->details->DisplayIndex = 1;
-			this->details->Text = L"Details";
+			this->details->Text = L"Details (2)";
 			this->details->Width = 264;
 			// 
 			// status
 			// 
-			this->status->Text = L"Status";
+			this->status->Text = L"Status (5)";
 			this->status->Width = 147;
 			// 
 			// kind
 			// 
-			this->kind->Text = L"Kind";
+			this->kind->Text = L"Kind (6)";
 			this->kind->Width = 126;
 			// 
 			// MainWindow
@@ -233,40 +218,47 @@ namespace DaOrganiser {
 		}
 #pragma endregion
 
+		// Public Member
+	public: void* progController;
+		
 		// Private Members
 	private: String^ userInputWord;
 	private: String^ userPrevInput;
 
 		// Public Methods
-	//public: void addToList(String^ details);
 	public: std::string getUserInput(void);
-	public: void clearInputField(void);
-	public: void appendToOutput(std::string feedbackToUser);
-	public: void addTaskToList(Task taskToAdd);
-	public: void updateList(void);
-	public: void displaySearchResult(std::vector<Task> searchResult);
-	public: void sortListColumn(unsigned int col);
+
 	public: std::string sysStringToStdString(String ^ stringToConvert);
 	public: String^ stdStringToSysString(std::string stringToConvert);
+
+	public: void addTaskToList(Task taskToAdd);
+	public: void appendToOutput(std::string feedbackToUser);
+	public: void clearInputField(void);
+	public: void displaySearchResult(std::vector<Task> searchResult);
 	public: void exitProgram(void);
+	public: void sortListColumn(unsigned int col);
+	public: void updateList(void);
 
 		// Private Methods
-	private: System::Drawing::Color changeColor(String^);
-	private: void suggestResults(void);
-	private: void openSuggestionBox(void);
+	private: void changeColor(Task taskToAdd, ListViewItem^& itemToAdd);
 	private: void closeSuggestionBox(void);
 	private: void commitSelectedSuggestion(void);
+	private: void openSuggestionBox(void);
 	private: void setCaretToEnd(void);
+	private: void successOrFailure(std::string userFeedback);
+	private: void suggestResults(void);
 
 		// Events
-	private: System::Void listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e);
-	private: System::Void comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
-	private: System::Void comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e);
-	private: System::Void MainWindow_Load(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void MainWindow_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e);
+	private: System::Void comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
 	private: System::Void comboBox1_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
+	private: System::Void comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e);
+
+	private: System::Void listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e);
 	private: System::Void listView1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
+
+	private: System::Void MainWindow_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e);
+	private: System::Void MainWindow_Load(System::Object^  sender, System::EventArgs^  e);
 };
 }
 
