@@ -21,6 +21,7 @@ private:
 public:
 	TaskManager();
 	~TaskManager();
+	char initStatus(Task);
 	bool createTask(vector<string>,vector<Task>&);
 	void readTask(vector<Task>&);
 	bool updateTask(vector<string>,vector<Task>&);

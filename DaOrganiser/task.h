@@ -9,6 +9,8 @@ using namespace std;
 
 const char notDone = 'n';
 const char done = 'd';
+const char approachingDeadline = 'a';
+const char missedDeadline = 'm';
 const char start = 's';
 const char end = 'e';
 const char timed = 't';

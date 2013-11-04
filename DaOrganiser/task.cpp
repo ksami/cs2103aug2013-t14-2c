@@ -3,17 +3,19 @@
 
 Task::Task()
 {
-    time_t now = time(0);
-    tm *ltm = localtime(&now);
+    //time_t now = time(0);
+    //tm *ltm = localtime(&now);
  
     status = notDone;
     kind = 'f';
-    startDate.day = ltm->tm_mday;
-    startDate.month = 1 + ltm->tm_mon;
-    startDate.year = (1900 + ltm->tm_year)%100;
+    //startDate.day = ltm->tm_mday;
+    //startDate.month = 1 + ltm->tm_mon;
+    //startDate.year = (1900 + ltm->tm_year)%100;
+	startDate.day = startDate.month = startDate.year = 0;
     endDate.day = endDate.month = endDate.year = 0;
-    startTime.hr = ltm->tm_hour;
-    startTime.min = 1 + ltm->tm_min;
+    //startTime.hr = ltm->tm_hour;
+    //startTime.min = 1 + ltm->tm_min;
+	startTime.hr = startTime.min = 0;
     endTime.hr = endTime.min = 0;
     details = "";
 }
@@ -204,6 +206,10 @@ bool Task::changeStatus(char complete)
                 status = done;
         else if(complete == notDone)
                 status = notDone;
+		else if(complete == approachingDeadline)
+				status = approachingDeadline;
+		else if(complete == missedDeadline)
+				status = missedDeadline;
         else
                 return false;
 
@@ -299,6 +305,10 @@ void Task::displayDetail()
  
     if(status == 'd') 
         cout<<"Status: Task completed"<<endl; 
+	else if(status == 'a')
+        cout<<"Status: Task approaching deadline"<<endl;
+    else if(status == 'm')
+        cout<<"Status: Task missed deadline"<<endl;
     else
         cout<<"Status: Task yet to be complete"<<endl; 
   
