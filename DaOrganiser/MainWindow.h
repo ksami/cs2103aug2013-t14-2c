@@ -89,12 +89,12 @@ namespace DaOrganiser {
 			this->richTextBox1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->richTextBox1->Font = (gcnew System::Drawing::Font(L"Verdana", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->richTextBox1->Location = System::Drawing::Point(1, 420);
-			this->richTextBox1->Margin = System::Windows::Forms::Padding(1, 0, 1, 0);
+			this->richTextBox1->Location = System::Drawing::Point(0, 445);
+			this->richTextBox1->Margin = System::Windows::Forms::Padding(0, 1, 0, 0);
 			this->richTextBox1->Name = L"richTextBox1";
 			this->richTextBox1->ReadOnly = true;
 			this->richTextBox1->ScrollBars = System::Windows::Forms::RichTextBoxScrollBars::Vertical;
-			this->richTextBox1->Size = System::Drawing::Size(1049, 126);
+			this->richTextBox1->Size = System::Drawing::Size(1036, 132);
 			this->richTextBox1->TabIndex = 2;
 			this->richTextBox1->TabStop = false;
 			this->richTextBox1->Text = L"Welcome to DaOrganiser!\n";
@@ -115,8 +115,8 @@ namespace DaOrganiser {
 			this->tableLayoutPanel1->RowCount = 3;
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 76.82481F)));
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 23.17518F)));
-			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 34)));
-			this->tableLayoutPanel1->Size = System::Drawing::Size(1051, 581);
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 30)));
+			this->tableLayoutPanel1->Size = System::Drawing::Size(1036, 608);
 			this->tableLayoutPanel1->TabIndex = 1;
 			// 
 			// comboBox1
@@ -129,10 +129,10 @@ namespace DaOrganiser {
 			this->comboBox1->Font = (gcnew System::Drawing::Font(L"Verdana", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Location = System::Drawing::Point(0, 549);
-			this->comboBox1->Margin = System::Windows::Forms::Padding(0, 3, 0, 3);
+			this->comboBox1->Location = System::Drawing::Point(0, 578);
+			this->comboBox1->Margin = System::Windows::Forms::Padding(0, 1, 0, 0);
 			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(1051, 30);
+			this->comboBox1->Size = System::Drawing::Size(1036, 30);
 			this->comboBox1->Sorted = true;
 			this->comboBox1->TabIndex = 0;
 			this->comboBox1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::comboBox1_KeyDown);
@@ -143,7 +143,7 @@ namespace DaOrganiser {
 			// listView1
 			// 
 			this->listView1->AllowColumnReorder = true;
-			this->listView1->BackColor = System::Drawing::Color::WhiteSmoke;
+			this->listView1->BackColor = System::Drawing::Color::Gainsboro;
 			this->listView1->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(6) {this->id, this->start, 
 				this->end, this->details, this->status, this->kind});
@@ -152,12 +152,12 @@ namespace DaOrganiser {
 				static_cast<System::Byte>(0)));
 			this->listView1->ForeColor = System::Drawing::Color::Black;
 			this->listView1->FullRowSelect = true;
-			this->listView1->Location = System::Drawing::Point(1, 0);
-			this->listView1->Margin = System::Windows::Forms::Padding(1, 0, 1, 1);
+			this->listView1->Location = System::Drawing::Point(0, 0);
+			this->listView1->Margin = System::Windows::Forms::Padding(0);
 			this->listView1->Name = L"listView1";
-			this->listView1->Size = System::Drawing::Size(1049, 419);
+			this->listView1->Size = System::Drawing::Size(1036, 444);
 			this->listView1->TabIndex = 1;
-			this->listView1->TileSize = System::Drawing::Size(228, 36);
+			this->listView1->TileSize = System::Drawing::Size(1000, 300);
 			this->listView1->UseCompatibleStateImageBehavior = false;
 			this->listView1->View = System::Windows::Forms::View::Details;
 			this->listView1->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &MainWindow::listView1_ColumnClick);
@@ -201,13 +201,14 @@ namespace DaOrganiser {
 			this->AutoScaleDimensions = System::Drawing::SizeF(11, 20);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::SystemColors::Control;
-			this->ClientSize = System::Drawing::Size(1051, 581);
+			this->ClientSize = System::Drawing::Size(1036, 608);
 			this->Controls->Add(this->tableLayoutPanel1);
 			this->Font = (gcnew System::Drawing::Font(L"Verdana", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->Margin = System::Windows::Forms::Padding(5, 3, 5, 3);
 			this->MaximizeBox = false;
+			this->MinimizeBox = false;
 			this->Name = L"MainWindow";
 			this->Text = L"DaOrganiser";
 			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MainWindow::MainWindow_FormClosing);
