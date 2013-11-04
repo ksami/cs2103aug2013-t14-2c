@@ -146,7 +146,9 @@ string Task::getStatusAsString()
 	{
 	case 'n': statusAsString = "Not done"; break;
 	case 'd': statusAsString = "Done"; break;
-	default: assert(false); break;  //invalid status
+	case 'a': statusAsString = "Approaching deadline"; break;
+	case 'm': statusAsString = "Missed deadline"; break;
+	default: assert(statusAsString.empty()); break;  //invalid status
 	}
 	return statusAsString;
 }
@@ -158,7 +160,7 @@ string Task::getKindAsString()
 	case 'd': kindAsString = "Deadline Task"; break;
 	case 'f': kindAsString = "Floating Task"; break;
 	case 't': kindAsString = "Timed Task"; break;
-	default: assert(false); break;  //invalid kind
+	default: assert(kindAsString.empty()); break;  //invalid kind
 	}
 	return kindAsString;
 }
@@ -202,7 +204,9 @@ char Task::checkStatus()
 
 bool Task::changeStatus(char complete)
 {
-        if (complete == done)
+		complete = tolower(complete);
+        
+		if (complete == done)
                 status = done;
         else if(complete == notDone)
                 status = notDone;
@@ -264,6 +268,8 @@ bool Task::assignTimeValue(time_s value, char timeOption)
 
 bool Task::assignKind(char value)
 {
+		value = tolower(value);
+
         if((value == timed)||(value == deadline)||(value == floating))
         {
                 kind = value;
