@@ -9,73 +9,80 @@
 #include "Log.h"
 
 #define AVAILABLE_CMDS "-add", "-delete", "-update", "-search", "-all", "-undo", "-redo", "-quit", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
-#define AVAILABLE_CMDS_NUM 15
 #define CMD_DELIMITER_CHAR '-'
 #define CMD_DELIMITER_STR "-"
 #define NULL_STRING ""
-#define TEXT_INDEX_START 0
+
+#define PATH_ICON_SUCCESS "resource/pika.ico"
+#define PATH_ICON_FAIL "resource/pikared.ico"
+#define PATH_SOUND_STARTUP "resource/pikaatk.wav"
+#define PATH_SOUND_CLOSING "resource/pikaslp.wav"
 
 #pragma region Public Methods
-//<summary>
-//Public Methods
-//</summary>
+// Public Methods
 
+// Converts a String^ into a std::string
 std::string DaOrganiser::MainWindow::sysStringToStdString(String^ stringToConvert)
 {
 	return msclr::interop::marshal_as <std::string> (stringToConvert);
 }
 
+// Converts a std::string into a String^
 String^ DaOrganiser::MainWindow::stdStringToSysString(std::string stringToConvert)
 {
 	return msclr::interop::marshal_as <String^> (stringToConvert);
 }
 
+// Creates a ListViewItem from a Task and adds it to listView1
 void DaOrganiser::MainWindow::addTaskToList(Task taskToAdd)
 {
-	//assumption: taskid is unique
 	ListViewItem^ itemToAdd=gcnew ListViewItem(stdStringToSysString(taskToAdd.getIdAsString()));
 
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStartDateTimeAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getEndDateTimeAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getDetailsAsString()));
-
-	String^ status = stdStringToSysString(taskToAdd.getStatusAsString());
-	itemToAdd->SubItems->Add(status);
-
+	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStatusAsString()));
 	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getKindAsString()));
 
-	itemToAdd->BackColor = changeColor(status);
+	//change color of listviewitem before adding it in
+	changeColor(taskToAdd, itemToAdd);
+
 	listView1->Items->Add(itemToAdd);
 }
 
+// Refreshes listView1 with all the tasks
 void DaOrganiser::MainWindow::updateList(void)
 {
 	static vector<Task> allTasks;
 	Facade* controller = (Facade*)progController;
 	allTasks=controller->getTaskStorage();
 	listView1->Items->Clear();
-	for(int i=0; i<allTasks.size(); i++)
+	for(unsigned int i=0; i<allTasks.size(); i++)
 	{
 		addTaskToList(allTasks[i]);
 	}
 }
 
+// Displays search results in listView1
 void DaOrganiser::MainWindow::displaySearchResult(vector<Task> searchResult)
 {
 	listView1->Items->Clear();
-	for(int i=0; i<searchResult.size(); i++)
+	for(unsigned int i=0; i<searchResult.size(); i++)
 	{
 		addTaskToList(searchResult[i]);
 	}
 }
 
+// Sorts listView1 by column user chooses
 void DaOrganiser::MainWindow::sortListColumn(unsigned int col)
 {
+	//for changing sort order from ascending to descending and vice versa
 	static int sortColumnInv = 1;
 	listView1->ListViewItemSorter = gcnew ListViewItemComparer( col, -1*sortColumnInv);
 	sortColumnInv*=-1;
 }
 
+// Returns input user has keyed in into comboBox1 as std::string
 std::string DaOrganiser::MainWindow::getUserInput(void)
 {
 	std::string userInput = sysStringToStdString(comboBox1->Text);
@@ -83,61 +90,34 @@ std::string DaOrganiser::MainWindow::getUserInput(void)
 	return userInput;
 }
 
+// Clears the input field comboBox1
 void DaOrganiser::MainWindow::clearInputField(void)
 {
 	comboBox1->Text=NULL_STRING;
 }
 
+// Displays text output to the user in richTextBox1
 void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
 {
 	//check if richTextBox1 overflow
-	//if so, delete first 1000 characters
+	//if so, delete first 90000 characters
 	if(richTextBox1->Text->Length > 100000)
 	{
-		richTextBox1->Text = richTextBox1->Text->Remove(0, 1000);
+		richTextBox1->Text = richTextBox1->Text->Remove(0, 90000);
 	}
 
-	if(userFeedback.find("success")!=string::npos||userFeedback.find("complete")!=string::npos||userFeedback.find("Display")!=string::npos)
-	{
-		try
-		{
-			System::Drawing::Icon^ succIcon = gcnew System::Drawing::Icon("resource/pika.ico");
-			this->Icon = succIcon;
-		}
-		catch(System::IO::DirectoryNotFoundException^)
-		{
-			logging("/resource folder not found", LogLevel::Error);
-		}
-		catch(System::IO::FileNotFoundException^)
-		{
-			logging("pika.ico not found", LogLevel::Error);
-		}
-		richTextBox1->BackColor = System::Drawing::Color::PaleGreen;
-	}
-	else if(userFeedback.find("fail")!=string::npos||userFeedback.find("Error")!=string::npos||userFeedback.find("Invalid")!=string::npos||userFeedback.find("No")!=string::npos)
-	{
-		try
-		{
-			System::Drawing::Icon^ failIcon = gcnew System::Drawing::Icon("resource/pikared.ico");
-			this->Icon = failIcon;
-		}
-		catch(System::IO::DirectoryNotFoundException^)
-		{
-			logging("/resource folder not found", LogLevel::Error);
-		}
-		catch(System::IO::FileNotFoundException^)
-		{
-			logging("pikared.ico not found", LogLevel::Error);
-		}
-		richTextBox1->BackColor = System::Drawing::Color::Tomato;
-	}
+	//add visual effect based on success or failure of operation
+	successOrFailure(userFeedback);
 
 	richTextBox1->Text+=stdStringToSysString(userFeedback);
+
+	//scroll to last line in richTextBox1
 	richTextBox1->Select(richTextBox1->Text->Length - 1, 0);
 	richTextBox1->ScrollToCaret();
 	richTextBox1->Text+="\n";
 }
 
+// Closes this window
 void DaOrganiser::MainWindow::exitProgram(void)
 {
 	logging("Exit program sequence initiated", LogLevel::Debug);
@@ -151,20 +131,87 @@ void DaOrganiser::MainWindow::exitProgram(void)
 #pragma region Private Methods
 // Private Methods
 
-// Returns the background color of the listviewitem based on its status
-System::Drawing::Color DaOrganiser::MainWindow::changeColor(String^ status)
+// Changes color of background and/or text of the ListViewItem
+void DaOrganiser::MainWindow::changeColor(Task taskToAdd, ListViewItem^& itemToAdd)
 {
-	if(status == "Not done")
+	System::Drawing::Color backgrndColor;
+	System::Drawing::Color fontColor;
+	std::string taskStatus = taskToAdd.getStatusAsString();
+	std::string taskKind = taskToAdd.getKindAsString();
+	itemToAdd->UseItemStyleForSubItems = false;
+
+	//change background color based on status of task
+	if(taskStatus.find("Not done")!=std::string::npos)
 	{
-		return System::Drawing::Color::WhiteSmoke;
+		 backgrndColor = System::Drawing::Color::WhiteSmoke;
 	}
-	else if(status == "Done")
+	else if(taskStatus.find("Done")!=std::string::npos)
 	{
-		return System::Drawing::Color::LightGray;
+		itemToAdd->UseItemStyleForSubItems = true;
+		backgrndColor = System::Drawing::Color::LightGray;
+		itemToAdd->ForeColor = System::Drawing::Color::Gray;
 	}
 	else
 	{
-		return System::Drawing::Color::Azure;
+		backgrndColor = System::Drawing::Color::Azure;
+	}
+
+	//change font color of task's kind
+	if(taskKind.find("Floating")!=std::string::npos)
+	{
+		fontColor = System::Drawing::Color::Maroon;
+	}
+	else if(taskKind.find("Timed")!=std::string::npos)
+	{
+		fontColor = System::Drawing::Color::DarkBlue;
+	}
+	else if(taskKind.find("Deadline")!=std::string::npos)
+	{
+		fontColor = System::Drawing::Color::DeepPink;
+	}
+
+	itemToAdd->SubItems[5]->ForeColor = fontColor;
+	itemToAdd->BackColor = backgrndColor;
+}
+
+// Changes background color of comboBox1 and icon based on operation success or failure
+void DaOrganiser::MainWindow::successOrFailure(std::string userFeedback)
+{
+	//if message contains hints of success
+	if(userFeedback.find("uccess")!=string::npos||userFeedback.find("complete")!=string::npos||userFeedback.find("Display")!=string::npos)
+	{
+		try
+		{
+			System::Drawing::Icon^ succIcon = gcnew System::Drawing::Icon(PATH_ICON_SUCCESS);
+			this->Icon = succIcon;
+		}
+		catch(System::IO::DirectoryNotFoundException^)
+		{
+			logging("/resource folder not found", LogLevel::Error);
+		}
+		catch(System::IO::FileNotFoundException^)
+		{
+			logging(PATH_ICON_SUCCESS " not found", LogLevel::Error);
+		}
+		richTextBox1->BackColor = System::Drawing::Color::PaleGreen;
+	}
+	//if message contains hints of failure
+	else if(userFeedback.find("fail")!=string::npos||userFeedback.find("Error")!=string::npos||userFeedback.find("Invalid")!=string::npos||userFeedback.find("No")!=string::npos)
+	{
+		try
+		{
+			System::Drawing::Icon^ failIcon = gcnew System::Drawing::Icon(PATH_ICON_FAIL);
+			this->Icon = failIcon;
+		}
+		catch(System::IO::DirectoryNotFoundException^)
+		{
+			logging("/resource folder not found", LogLevel::Error);
+		}
+		catch(System::IO::FileNotFoundException^)
+		{
+			logging(PATH_ICON_FAIL " not found", LogLevel::Error);
+		}
+		richTextBox1->BackColor = System::Drawing::Color::Tomato;
 	}
 }
 
@@ -173,7 +220,7 @@ void DaOrganiser::MainWindow::suggestResults(void)
 {
 	array <String^>^ availableCmds = {AVAILABLE_CMDS};
 
-	for(int i=0; i<AVAILABLE_CMDS_NUM; i++)
+	for(int i=0; i<availableCmds->Length; i++)
 	{
 		comboBox1->Items->Remove(availableCmds[i]);
 
@@ -191,6 +238,7 @@ void DaOrganiser::MainWindow::openSuggestionBox(void)
 
 void DaOrganiser::MainWindow::closeSuggestionBox(void)
 {
+	//if empty, add dummy element to bypass error
 	if(comboBox1->Items->Count == 0)
 	{
 		comboBox1->Items->Add("");
@@ -203,16 +251,17 @@ void DaOrganiser::MainWindow::closeSuggestionBox(void)
 	}
 }
 
+// Appends the selected suggestion to the text in the input field comboBox1
 void DaOrganiser::MainWindow::commitSelectedSuggestion(void)
 {
 	comboBox1->Text = userPrevInput;
 	comboBox1->Text += comboBox1->SelectedItem;
 }
 
-//focuses combobox1, sets caret to end
+// Focuses comboBox1, sets caret to end
 void DaOrganiser::MainWindow::setCaretToEnd(void)
 {
-	comboBox1->Select(comboBox1->Text->Length, TEXT_INDEX_START);
+	comboBox1->Select(comboBox1->Text->Length, 0);
 }
 
 #pragma endregion
@@ -222,16 +271,17 @@ void DaOrganiser::MainWindow::setCaretToEnd(void)
 //    Event Handlers   //
 /////////////////////////
 
-// Initialise listview with contents of storage.txt
+// Startup sound
 System::Void DaOrganiser::MainWindow::MainWindow_Load(System::Object^  sender, System::EventArgs^  e)
 {
 	updateList();
 	try
 	{
-		/*System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
-		System::IO::Stream^ s = a->GetManifestResourceStream("pikaatk.wav");
-		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);*/
-		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer("resource/pikaatk.wav");
+		//for embed resource
+		//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
+		//System::IO::Stream^ s = a->GetManifestResourceStream(PATH_SOUND_STARTUP);
+		//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);
+		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_STARTUP);
 		sound->Play();
 	}
 	catch(System::IO::DirectoryNotFoundException^)
@@ -240,19 +290,23 @@ System::Void DaOrganiser::MainWindow::MainWindow_Load(System::Object^  sender, S
 	}
 	catch(System::IO::FileNotFoundException^)
 	{
-		logging("Startup sound file pikaatk.wav not found", LogLevel::Error);
+		logging(PATH_SOUND_STARTUP " not found", LogLevel::Error);
 	}
 }
 
+// Closing sound
 System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e)
 {
 	try
 	{
-		/*System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
-		System::IO::Stream^ s = a->GetManifestResourceStream("pikaslp.wav");
-		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);*/
-		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer("resource/pikaslp.wav");
+		//for embed resource
+		//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
+		//System::IO::Stream^ s = a->GetManifestResourceStream(PATH__SOUND_CLOSING);
+		//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);
+		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_CLOSING);
 		sound->Play();
+
+		//delay ending of the program to allow the sound to finish playing
 		Sleep(2000);
 	}
 	catch(System::IO::DirectoryNotFoundException^)
@@ -261,18 +315,24 @@ System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  se
 	}
 	catch(System::IO::FileNotFoundException^)
 	{
-		logging("Ending sound file pikaslp.wav not found", LogLevel::Error);
+		logging(PATH_SOUND_CLOSING " not found", LogLevel::Error);
 	}
 }
 
-// Following events implement Autocomplete for commands
+// Following comboBox1 key events implement Autocomplete for commands among others
 // Order of events called: PreviewKeyDown > KeyDown > KeyPress > KeyUp
+
+// Disable tab from changing focus to listView1
+// Autocomplete commit: Tab
 System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e)
 {
 	logging("comboBox1_PreviewKeyDown called", LogLevel::Event);
+
+	//if suggestion box is open and it is not empty
 	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true) && (comboBox1->Items->Count > 0))
 	{
 		listView1->TabStop = false;
+
 		if(comboBox1->SelectedIndex > 0)
 		{
 			closeSuggestionBox();
@@ -289,28 +349,40 @@ System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  
 	}
 }
 
+// Autocomplete commit: Right arrow, Enter
+// Autocomplete suggest: Backspace
+// Autocomplete close suggestion box: Backspace, Space, Escape
+// Scroll through input history: Up arrow, Down arrow
+// Exit program: Escape
 System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
 {
 	logging("comboBox1_KeyDown called", LogLevel::Event);
+
 	static vector<std::string> inputHistory;
 	static int inputHistoryIndex = 0;
-	int i = comboBox1->SelectionStart;
+
+	int caretPos = comboBox1->SelectionStart;
 	String^ currentChar = NULL_STRING;
 
-	if ( i > 0 )
+	//get the character in the input field comboBox1 just before this event was called
+	if (caretPos > 0)
 	{
-		currentChar = comboBox1->Text->Substring(i-1,1);
+		currentChar = comboBox1->Text->Substring(caretPos-1,1);
 	}
 
+	// Backspace Key
 	if(e->KeyCode == System::Windows::Forms::Keys::Back)
 	{
 		if (comboBox1->Text->Length > 0 && comboBox1->DroppedDown == true)
 		{	
+			//if character deleted by backspace was '-', close suggestion box
 			if (currentChar == CMD_DELIMITER_STR)
 			{
 				closeSuggestionBox();
 				userInputWord = NULL_STRING;
 			}
+
+			//resuggest results without character delete by backspace
 			else if(userInputWord->Length > 0)
 			{
 				userInputWord = userInputWord->Substring(0, userInputWord->Length -1);
@@ -318,6 +390,8 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 			}
 		}
 	}
+
+	// Space Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::Space)
 	{
 		if(comboBox1->DroppedDown == true)
@@ -326,11 +400,14 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 			setCaretToEnd();
 		}
 	}
+
+	// Up arrow Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::Up)
 	{
 		e->Handled = true;
 		if (comboBox1->DroppedDown == true)
 		{
+			//scroll through suggestions
 			if(comboBox1->SelectedIndex > 0)
 			{
 				comboBox1->SelectedIndex--;
@@ -340,6 +417,7 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 		}
 		else
 		{
+			//scroll through history of user input
 			if(inputHistoryIndex == 0 && inputHistory.empty() == false)
 			{
 				comboBox1->Text=stdStringToSysString(inputHistory[inputHistoryIndex]);
@@ -352,11 +430,14 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 			}
 		}
 	}
+
+	// Down arrow Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::Down)
 	{
 		e->Handled = true;
 		if (comboBox1->DroppedDown == true)
 		{
+			//scroll through suggestions
 			if(comboBox1->SelectedIndex < comboBox1->Items->Count -1)
 			{
 				comboBox1->SelectedIndex++;
@@ -366,6 +447,7 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 		}
 		else
 		{
+			//scroll through history of user input
 			if(inputHistoryIndex == 0 && inputHistory.empty() == false)
 			{
 				comboBox1->Text=stdStringToSysString(inputHistory[++inputHistoryIndex]);
@@ -378,6 +460,8 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 			}
 		}
 	}
+
+	// Right arrow Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::Right)
 	{
 		if (comboBox1->DroppedDown == true)
@@ -385,6 +469,8 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 			closeSuggestionBox();
 		}
 	}
+
+	// Escape Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::Escape)
 	{
 		e->Handled = true;
@@ -399,40 +485,47 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 			exitProgram();
 		}
 	}
+
+	// Enter Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::Enter)
 	{
 		e->Handled = true;
+
+		//if true, exit program
 		static bool toExit = false;
+
 		string userInput = sysStringToStdString(comboBox1->Text);
 
-		//check for input history overflow
+		//check for input history overflow, delete oldest 200 inputs
 		if(inputHistory.size() > 300)
 		{
 			for(unsigned int i=0; i<100; i++)
 			{
-				inputHistory[i] = inputHistory[i+100];
+				inputHistory[i] = inputHistory[i+200];
 			}
 			inputHistory.resize(100);
 		}
+
 		inputHistory.push_back(userInput);
 		inputHistoryIndex = inputHistory.size();
 
 		appendToOutput(userInput);
 		logging("Input entered: " + userInput, LogLevel::Info);
 
+		//run the rest of the programme
 		Facade* controller = (Facade*)progController;
 		controller->executeProgramme(toExit);
-		//facade will take care of user feedback here
 
 		clearInputField();
 
+		//scroll to last line in richTextBox1
 		richTextBox1->Select(richTextBox1->Text->Length - 1, 0);
 		richTextBox1->ScrollToCaret();
 
-		//check if richTextBox1 overflow
+		//check for richTextBox1 overflow
 		if(richTextBox1->Text->Length > 100000)
 		{
-			richTextBox1->Text = richTextBox1->Text->Remove(0, 1000);
+			richTextBox1->Text = richTextBox1->Text->Remove(0, 90000);
 		}
 
 		if(comboBox1->DroppedDown == true)
@@ -447,6 +540,7 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender,
 	}
 }
 
+// Autocomplete suggest: CMD_DELIMITER_CHAR or alphaNumeric char
 System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e)
 {
 	logging("comboBox1_KeyPress called", LogLevel::Event);
@@ -474,6 +568,7 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender
 	}
 }
 
+// Enable tab to change focus to listView1
 System::Void DaOrganiser::MainWindow::comboBox1_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
 {
 	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == false))
@@ -482,46 +577,57 @@ System::Void DaOrganiser::MainWindow::comboBox1_KeyUp(System::Object^  sender, S
 	}
 }
 
-//column click sorting for entire inventory
+// Sort listView1 based on column user clicked on
 System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e)
 {
 	sortListColumn(e->Column);
 }
 
 // Keyboard navigation for listView1
+// Sort listView1 based on column user chooses: 1, 2, 3, 4, 5, 6
+// Exit program: Escape
 System::Void DaOrganiser::MainWindow::listView1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
 {
+	// Escape Key
 	if(e->KeyCode == System::Windows::Forms::Keys::Escape)
 	{
 		exitProgram();
 	}
+	// 1 Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::D1)
 	{
+		//taskID
 		sortListColumn(0);
 	}
+	// 2 Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::D2)
 	{
+		//Details
 		sortListColumn(3);
 	}
+	// 3 Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::D3)
 	{
+		//Start datetime
 		sortListColumn(1);
 	}
+	// 4 Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::D4)
 	{
+		//End datetime
 		sortListColumn(2);
 	}
+	// 5 Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::D5)
 	{
+		//Status
 		sortListColumn(4);
 	}
+	// 6 Key
 	else if(e->KeyCode == System::Windows::Forms::Keys::D6)
 	{
+		//Kind
 		sortListColumn(5);
-	}
-	else if(e->KeyCode == System::Windows::Forms::Keys::D7)
-	{
-		sortListColumn(6);
 	}
 }
 

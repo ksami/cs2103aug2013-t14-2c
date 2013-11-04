@@ -4,6 +4,8 @@ Done by Kenneth
 
 */
 
+// Implements sorting by columns for ListViewItems
+
 #include "stdafx.h"
 #include "ListViewItemComparer.h"
 
@@ -13,6 +15,7 @@ Done by Kenneth
 #define COL_END 2
 #define COL_STATUS 4
 #define COL_KIND 5
+#define DATETIME_DELIMITERS " ", "/", ":"
 
 
 ListViewItemComparer::ListViewItemComparer(void)
@@ -27,10 +30,10 @@ ListViewItemComparer::ListViewItemComparer( int column, int ascending )
 	asc = ascending;
 }
 
-//return 1 if x is above y, -1 if x is lower than y
+// Return 1 if x is above y, -1 if x is lower than y
 int ListViewItemComparer::Compare(Object^ x, Object^ y)
 {
-	int retVal=0;
+	int returnVal=0;
 
 	String^ item1 = (dynamic_cast<ListViewItem^>(x))->SubItems[col]->Text;
 	String^ item2 = (dynamic_cast<ListViewItem^>(y))->SubItems[col]->Text;
@@ -40,7 +43,7 @@ int ListViewItemComparer::Compare(Object^ x, Object^ y)
 	{
 	case COL_TASKID:
 		{
-			retVal = asc * (System::Convert::ToInt32(item1) - System::Convert::ToInt32(item2));
+			returnVal = asc * (System::Convert::ToInt32(item1) - System::Convert::ToInt32(item2));
 			break;
 		}
 	case COL_STATUS:
@@ -51,7 +54,7 @@ int ListViewItemComparer::Compare(Object^ x, Object^ y)
 		}
 	case COL_DETAILS:
 		{
-			retVal = asc * String::Compare(item1, item2);
+			returnVal = asc * String::Compare(item1, item2);
 			break;
 		}
 	case COL_START:
@@ -59,22 +62,23 @@ int ListViewItemComparer::Compare(Object^ x, Object^ y)
 		}
 	case COL_END:
 		{
-			array <String^>^ delimiter = {" ", "/", ":"};
+			array <String^>^ delimiter = {DATETIME_DELIMITERS};
 
 			//datetime[0] = dd
-			//datetime[1] = mm
+			//datetime[1] = MM
 			//datetime[2] = yy
 			//datetime[3] = hh
 			//datetime[4] = mm
 			array <String^>^ dateTime1 = item1->Split(delimiter, System::StringSplitOptions::RemoveEmptyEntries);
 			array <String^>^ dateTime2 = item2->Split(delimiter, System::StringSplitOptions::RemoveEmptyEntries);
 
+			//concatenate into yyMMddhhmm for ease of comparison
 			String^ date1 = dateTime1[2]+dateTime1[1]+dateTime1[0]+dateTime1[3]+dateTime1[4];
 			String^ date2 = dateTime2[2]+dateTime2[1]+dateTime2[0]+dateTime2[3]+dateTime2[4];
 
-			retVal = asc * String::Compare(date1, date2);
+			returnVal = asc * String::Compare(date1, date2);
 			break;
 		}
 	}
-	return retVal;
+	return returnVal;
 }
