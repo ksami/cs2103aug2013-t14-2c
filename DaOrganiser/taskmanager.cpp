@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "TaskManager.h"
-
+#include "Log.h"
 TaskManager::TaskManager()
 {
 	ID=0;
@@ -43,69 +43,42 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
     Task newTask; 
     date d; 
     time_s t; 
-    int i, j, dateFlag1, dateFlag2, timeFlag1, timeFlag2; 
+    int i, j;
+	bool dateFlag1, dateFlag2, timeFlag1, timeFlag2; 
     string singleWord, text; 
+	logging("create entered", LogLevel::Debug);
   
     dateFlag1 = dateFlag2 = timeFlag1 = timeFlag2 = 0;
 
-    for(i=0;i<splitString.size();i++) 
-    { 
-        if(splitString[i]=="-startdate") 
-        { 
-            // Converts the string to int and saves it as a date of format ddmmyy 
-            int value = atoi(splitString[i+1].c_str()); 
-            d.year = value%100; 
-            value/=100; 
-            d.month = value%100; 
-            value/=100; 
-            d.day = value%100;
-			value/=100;
-  
-            if(!newTask.assignDateValue(d, 's')||value) 
-                return false; 
-            dateFlag1 = 1;
-        } 
-        else if(splitString[i]=="-enddate") 
-        { 
-            // Converts the string to int and saves it as a date of format ddmmyy 
-            int value = atoi(splitString[i+1].c_str()); 
-            d.year = value%100; 
-            value/=100; 
-            d.month = value%100; 
-            value/=100; 
-            d.day = value%100; 
-			value/=100;
-  
-            if(!newTask.assignDateValue(d, 'e')||value) 
-                return false;
-             dateFlag2 = 1; 
-        } 
-        else if(splitString[i]=="-starttime") 
-        { 
-            // Converts the string to int and saves it as a time of format hhmm 
-            int value = atoi(splitString[i+1].c_str()); 
-            t.min = value%100; 
-            value/=100; 
-            t.hr = value%100; 
-			value/=100;
-  
-            if(!newTask.assignTimeValue(t, 's')||value) 
-                return false; 
-            timeFlag1 = 1;
-        } 
-        else if(splitString[i]=="-endtime") 
-        { 
-            // Converts the string to int and saves it as a time of format hhmm 
-            int value = atoi(splitString[i+1].c_str()); 
-            t.min = value%100; 
-            value/=100; 
-            t.hr = value%100;
-			value/=100;
-  
-            if(!newTask.assignTimeValue(t, 'e')||value) 
-                return false; 
-            timeFlag2 = 1;
-        } 
+	for(i=0;i<splitString.size();i++) 
+	{ 
+		if(splitString[i]=="-startdate") { 
+			int dateValue=stringToInt(splitString[i+1]);
+			dateFlag1 = assignDate(newTask,dateValue,'s');
+			//to refactor and remove
+			if (dateFlag1==false)
+				return false;
+		} 
+		else if(splitString[i]=="-enddate") { 
+			int dateValue=stringToInt(splitString[i+1]);
+			dateFlag2 = assignDate(newTask,dateValue,'e');	
+			if (dateFlag2==false)
+				return false;
+		}
+		else if(splitString[i]=="-starttime") 
+		{ 
+			int timeValue=stringToInt(splitString[i+1]);
+			timeFlag1 = assignTime (newTask,timeValue,'s');
+			if (timeFlag1==false)
+				return false;
+		} 
+		else if(splitString[i]=="-endtime") 
+		{ 
+			int timeValue=stringToInt(splitString[i+1]);
+			timeFlag2 = assignTime (newTask,timeValue,'e');
+			if (timeFlag2==false)
+				return false;
+		} 
         else if(splitString[i]=="-details") 
         { 
             string text = ""; 
@@ -592,5 +565,59 @@ bool TaskManager::checkRecordUndoCommand(){
 bool TaskManager::checkRecordRedoCommand(){
 	if (recordRedoCommand.empty())
 		throw "No more commands to redo";
+	return true;
+}
+
+int TaskManager::stringToInt(string toConvert) {
+	int value = atoi(toConvert.c_str());
+	 return value;
+}
+
+bool TaskManager::assignDate(Task &newTask,int dateValue,char dateOption) {
+	date newDate;
+	if (!getDayMonthYear(dateValue,newDate)) {
+		return false;
+	}
+
+	if(!newTask.assignDateValue(newDate, dateOption)) { 
+		return false; 
+	}
+	return true;
+}
+
+bool TaskManager::getDayMonthYear(int dateValue, date &newDate) {
+	newDate.year = dateValue%100; 
+	dateValue/=100; 
+	newDate.month = dateValue%100; 
+	dateValue/=100; 
+	newDate.day = dateValue%100;
+	dateValue/=100;
+
+	if (dateValue>0) {
+		return false;
+	}
+	return true;
+}
+
+bool TaskManager::assignTime(Task &newTask,int timeValue,char timeOption) {
+	time_s newTime;
+	if (!getHourMin(timeValue,newTime)) {
+		return false;
+	}
+
+	if(!newTask.assignTimeValue(newTime, timeOption)) { 
+		return false; 
+	}
+	return true;
+}
+
+bool TaskManager::getHourMin(int timeValue, time_s &newTime) {
+	newTime.min = timeValue%100; 
+	timeValue/=100; 
+	newTime.hr = timeValue%100; 
+	timeValue/=100;
+
+	if (timeValue)
+		return false;
 	return true;
 }

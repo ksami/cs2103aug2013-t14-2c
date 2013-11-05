@@ -70,4 +70,6 @@ public:
 	void assignIDNumber(int);
 	void displayDetail();
 	int getTaskID();
+
+	bool checkLeapYear(int);
 };
