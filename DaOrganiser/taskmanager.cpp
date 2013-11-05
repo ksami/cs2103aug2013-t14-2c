@@ -14,7 +14,7 @@ char TaskManager::initStatus(Task newTask)
 {
 	time_t now = time(0);
 	tm *ltm = localtime(&now);
-
+	//dun understand
 	date temp, edate;
 	temp.day = ltm->tm_mday;
 	temp.month = 1 + ltm->tm_mon;
