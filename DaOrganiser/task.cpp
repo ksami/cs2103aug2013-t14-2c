@@ -242,9 +242,10 @@ bool Task::assignDateValue(date value, char dateOption)
         default: return false;
         }
 
-        if((!(value.year%400 ==0 || (value.year%100 != 0 && value.year%4 == 0)))&&(value.day>28))
-                return false;
-
+		if(!checkLeapYear(value.year)&&value.month==2&&value.day==29) {
+			return false;
+		}
+			
         if(dateOption==start)
                 startDate = value;
         else
@@ -365,4 +366,12 @@ time_s Task::returnTime(char check)
                 return endTime;
         else
                 return t;
+}
+
+bool Task::checkLeapYear(int year) {
+	int check=year%4;
+	if (check) {
+		return false;
+	}
+	return true;
 }

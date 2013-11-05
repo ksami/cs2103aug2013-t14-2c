@@ -40,5 +40,16 @@ public:
 	void testingRecordCommand();
 	bool searchKeyBlank(vector<Task> &,vector<Task> &, string);
 	int findIDPos(int,vector<Task>);
+
+	int stringToInt(string);
+	bool checkDateValue(int);
+	bool assignDate(Task &,int,char);
+	bool getDayMonthYear(int,date &);
+	bool checkTimeValue(int);
+	bool assignTime(Task &,int,char);
+	bool getHourMin(int,time_s &);
+	string extractDetails(int,vector<string>);
+	void assignSystemTime(Task &,char);
+	void assignSystemDate(Task &,char);
 };
 
