@@ -17,6 +17,8 @@
 #define PATH_ICON_FAIL "resource/pikared.ico"
 #define PATH_SOUND_STARTUP "resource/pikaatk.wav"
 #define PATH_SOUND_CLOSING "resource/pikaslp.wav"
+#define PATH_SOUND_SUCCESS "resource/Hojus.wav"
+#define PATH_SOUND_FAIL "resource/Proxima.wav"
 
 #pragma region Public Methods
 // Public Methods
@@ -204,10 +206,26 @@ void DaOrganiser::MainWindow::successOrFailure(std::string userFeedback)
 		{
 			logging(PATH_ICON_SUCCESS " not found", LogLevel::Error);
 		}
+		try
+		{
+			//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
+			//System::IO::Stream^ s = a->GetManifestResourceStream(PATH_SOUND_SUCCESS);
+			//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);
+			System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_SUCCESS);
+			sound->Play();
+		}
+		catch(System::IO::DirectoryNotFoundException^)
+		{
+			logging("/resource folder not found", LogLevel::Error);
+		}
+		catch(System::IO::FileNotFoundException^)
+		{
+			logging(PATH_SOUND_SUCCESS " not found", LogLevel::Error);
+		}
 		richTextBox1->BackColor = System::Drawing::Color::PaleGreen;
 	}
 	//if message contains hints of failure
-	else if(userFeedback.find("fail")!=string::npos||userFeedback.find("Error")!=string::npos||userFeedback.find("Invalid")!=string::npos||userFeedback.find("No")!=string::npos)
+	else if(userFeedback.find("fail")!=string::npos||userFeedback.find("Error")!=string::npos||userFeedback.find("Invalid")!=string::npos||userFeedback.find("No")!=string::npos||userFeedback.find("lank")!=string::npos)
 	{
 		try
 		{
@@ -221,6 +239,22 @@ void DaOrganiser::MainWindow::successOrFailure(std::string userFeedback)
 		catch(System::IO::FileNotFoundException^)
 		{
 			logging(PATH_ICON_FAIL " not found", LogLevel::Error);
+		}
+		try
+		{
+			//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
+			//System::IO::Stream^ s = a->GetManifestResourceStream(PATH_SOUND_FAIL);
+			//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);
+			System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_FAIL);
+			sound->Play();
+		}
+		catch(System::IO::DirectoryNotFoundException^)
+		{
+			logging("/resource folder not found", LogLevel::Error);
+		}
+		catch(System::IO::FileNotFoundException^)
+		{
+			logging(PATH_SOUND_FAIL " not found", LogLevel::Error);
 		}
 		richTextBox1->BackColor = System::Drawing::Color::Tomato;
 	}
@@ -292,8 +326,8 @@ System::Void DaOrganiser::MainWindow::MainWindow_Load(System::Object^  sender, S
 		//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
 		//System::IO::Stream^ s = a->GetManifestResourceStream(PATH_SOUND_STARTUP);
 		//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);
-		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_STARTUP);
-		sound->Play();
+		//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_STARTUP);
+		//sound->Play();
 	}
 	catch(System::IO::DirectoryNotFoundException^)
 	{
@@ -314,11 +348,11 @@ System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  se
 		//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
 		//System::IO::Stream^ s = a->GetManifestResourceStream(PATH__SOUND_CLOSING);
 		//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);
-		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_CLOSING);
-		sound->Play();
+		//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_CLOSING);
+		//sound->Play();
 
 		//delay ending of the program to allow the sound to finish playing
-		Sleep(2000);
+		//Sleep(2000);
 	}
 	catch(System::IO::DirectoryNotFoundException^)
 	{
@@ -595,6 +629,7 @@ System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sen
 }
 
 // Keyboard navigation for listView1
+// Switch between details and tile view: Q
 // Sort listView1 based on column user chooses: 1, 2, 3, 4, 5, 6
 // Exit program: Escape
 System::Void DaOrganiser::MainWindow::listView1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
