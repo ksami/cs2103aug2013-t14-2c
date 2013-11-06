@@ -15,8 +15,8 @@
 
 #define PATH_ICON_SUCCESS "resource/pika.ico"
 #define PATH_ICON_FAIL "resource/pikared.ico"
-#define PATH_SOUND_STARTUP "resource/pikaatk.wav"
-#define PATH_SOUND_CLOSING "resource/pikaslp.wav"
+#define PATH_SOUND_STARTUP "resource/Castor.wav"
+#define PATH_SOUND_CLOSING "resource/Zirconium.wav"
 #define PATH_SOUND_SUCCESS "resource/Hojus.wav"
 #define PATH_SOUND_FAIL "resource/Proxima.wav"
 
@@ -316,18 +316,18 @@ void DaOrganiser::MainWindow::setCaretToEnd(void)
 //    Event Handlers   //
 /////////////////////////
 
-// Startup sound
+// Startup sound and initialise listView1
 System::Void DaOrganiser::MainWindow::MainWindow_Load(System::Object^  sender, System::EventArgs^  e)
 {
 	updateList();
-	/*try
+	try
 	{
 		//for embed resource
 		//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
 		//System::IO::Stream^ s = a->GetManifestResourceStream(PATH_SOUND_STARTUP);
 		//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);
-		//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_STARTUP);
-		//sound->Play();
+		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_STARTUP);
+		sound->Play();
 	}
 	catch(System::IO::DirectoryNotFoundException^)
 	{
@@ -336,23 +336,23 @@ System::Void DaOrganiser::MainWindow::MainWindow_Load(System::Object^  sender, S
 	catch(System::IO::FileNotFoundException^)
 	{
 		logging(PATH_SOUND_STARTUP " not found", LogLevel::Error);
-	}*/
+	}
 }
 
 // Closing sound
 System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e)
 {
-	/*try
+	try
 	{
 		//for embed resource
 		//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
-		//System::IO::Stream^ s = a->GetManifestResourceStream(PATH__SOUND_CLOSING);
+		//System::IO::Stream^ s = a->GetManifestResourceStream(PATH_SOUND_CLOSING);
 		//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);
-		//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_CLOSING);
-		//sound->Play();
+		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_CLOSING);
+		sound->Play();
 
 		//delay ending of the program to allow the sound to finish playing
-		//Sleep(2000);
+		Sleep(400);
 	}
 	catch(System::IO::DirectoryNotFoundException^)
 	{
@@ -361,7 +361,7 @@ System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  se
 	catch(System::IO::FileNotFoundException^)
 	{
 		logging(PATH_SOUND_CLOSING " not found", LogLevel::Error);
-	}*/
+	}
 }
 
 // Following comboBox1 key events implement Autocomplete for commands among others
