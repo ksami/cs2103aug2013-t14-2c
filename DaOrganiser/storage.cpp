@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "Storage.h"
 #include "Log.h"
-//#include <assert.h>
+
+Storage::Storage() {
+	_storageName = "unnamed";
+}
 
 Storage::Storage(char* storageName) {
 	_storageName = storageName;
