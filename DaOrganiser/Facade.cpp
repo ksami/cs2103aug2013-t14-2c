@@ -11,6 +11,7 @@ Facade::Facade(void* inter) {
 	saveFile = new Storage(SAVE_FILENAME);
 	saveFile->readAllFromFile(taskStorage);
 	p.reupdateIDNumber(taskStorage);
+	p.reupdateStatus(taskStorage);
 	guiInterface = inter;
 }
 

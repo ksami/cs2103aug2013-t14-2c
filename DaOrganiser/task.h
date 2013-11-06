@@ -58,7 +58,7 @@ public:
 
 	int checkDate(date, date);
 	int checkTime(time_s, time_s);
-	char checkStatus();
+	char returnStatus();
 	char returnKind();
 	date returnDate(char);
     time_s returnTime(char);
