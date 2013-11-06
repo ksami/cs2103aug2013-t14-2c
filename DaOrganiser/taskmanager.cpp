@@ -140,7 +140,7 @@ void TaskManager::readTask(vector<Task> &TaskStorage)
 		for(unsigned int i=0;i<TaskStorage.size();i++)
 		{
 			cout<<"--------------Task"<<i+1<<"--------------"<<endl;;
-			TaskStorage[i].displayDetail();
+			//TaskStorage[i].displayDetail();
 			cout<<endl;
 		}
 	}
