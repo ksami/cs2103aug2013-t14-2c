@@ -83,7 +83,8 @@ namespace DaOrganiser {
 			// 
 			// richTextBox1
 			// 
-			this->richTextBox1->BackColor = System::Drawing::Color::FromArgb(0x8c,0xcf,0xf4);
+			this->richTextBox1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(140)), static_cast<System::Int32>(static_cast<System::Byte>(207)), 
+				static_cast<System::Int32>(static_cast<System::Byte>(244)));
 			this->richTextBox1->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->richTextBox1->DetectUrls = false;
 			this->richTextBox1->Dock = System::Windows::Forms::DockStyle::Fill;
@@ -97,7 +98,7 @@ namespace DaOrganiser {
 			this->richTextBox1->Size = System::Drawing::Size(1036, 133);
 			this->richTextBox1->TabIndex = 2;
 			this->richTextBox1->TabStop = false;
-			this->richTextBox1->Text = L"Welcome to DaOrganiser!\n";
+			this->richTextBox1->Text = L"Welcome to DaOrganiser!\nType \'-\' to see all available commands\n";
 			// 
 			// tableLayoutPanel1
 			// 
@@ -143,7 +144,8 @@ namespace DaOrganiser {
 			// listView1
 			// 
 			this->listView1->AllowColumnReorder = true;
-			this->listView1->BackColor = System::Drawing::Color::FromArgb(0xd7,0xd7,0xd7);
+			this->listView1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(215)), static_cast<System::Int32>(static_cast<System::Byte>(215)), 
+				static_cast<System::Int32>(static_cast<System::Byte>(215)));
 			this->listView1->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(6) {this->id, this->start, 
 				this->end, this->details, this->status, this->kind});
