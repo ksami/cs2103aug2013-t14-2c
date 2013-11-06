@@ -30,7 +30,7 @@ ListViewItemComparer::ListViewItemComparer( int column, int ascending )
 	asc = ascending;
 }
 
-// Return 1 if x is above y, -1 if x is lower than y
+// Return positive if x is above y, negative if x is lower than y
 int ListViewItemComparer::Compare(Object^ x, Object^ y)
 {
 	int returnVal=0;
@@ -48,6 +48,23 @@ int ListViewItemComparer::Compare(Object^ x, Object^ y)
 		}
 	case COL_STATUS:
 		{
+			array<String^>^ statusPriority = {"Done", "Not", "Approach", "Miss"};
+			int item1Prio = 0;
+			int item2Prio = 0;
+
+			for(unsigned int i=0; i<4; i++)
+			{
+				if(item1->Contains(statusPriority[i]))
+				{
+					item1Prio = i;
+				}
+				if(item2->Contains(statusPriority[i]))
+				{
+					item2Prio = i;
+				}
+			}
+			returnVal = asc * (item1Prio - item2Prio);
+			break;
 		}
 	case COL_KIND:
 		{
