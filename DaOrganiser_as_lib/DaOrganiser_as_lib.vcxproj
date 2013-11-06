@@ -81,6 +81,7 @@
   <ItemGroup>
     <ClCompile Include="..\DaOrganiser\Log.cpp" />
     <ClCompile Include="..\DaOrganiser\Parser.cpp" />
+    <ClCompile Include="..\DaOrganiser\storage.cpp" />
     <ClCompile Include="..\DaOrganiser\stub.cpp" />
     <ClCompile Include="..\DaOrganiser\Task.cpp" />
     <ClCompile Include="..\DaOrganiser\TaskManager.cpp" />
@@ -88,6 +89,7 @@
   <ItemGroup>
     <ClInclude Include="..\DaOrganiser\Log.h" />
     <ClInclude Include="..\DaOrganiser\Parser.h" />
+    <ClInclude Include="..\DaOrganiser\storage.h" />
     <ClInclude Include="..\DaOrganiser\Task.h" />
     <ClInclude Include="..\DaOrganiser\TaskManager.h" />
   </ItemGroup>

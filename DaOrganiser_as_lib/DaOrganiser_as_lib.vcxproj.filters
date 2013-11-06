@@ -33,6 +33,9 @@
     <ClCompile Include="..\DaOrganiser\TaskManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\DaOrganiser\storage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\DaOrganiser\Log.h">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\DaOrganiser\TaskManager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DaOrganiser\storage.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
