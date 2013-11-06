@@ -83,18 +83,18 @@ namespace DaOrganiser {
 			// 
 			// richTextBox1
 			// 
-			this->richTextBox1->BackColor = System::Drawing::Color::Azure;
+			this->richTextBox1->BackColor = System::Drawing::Color::FromArgb(0x8c,0xcf,0xf4);
 			this->richTextBox1->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->richTextBox1->DetectUrls = false;
 			this->richTextBox1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->richTextBox1->Font = (gcnew System::Drawing::Font(L"Verdana", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->richTextBox1->Location = System::Drawing::Point(0, 445);
-			this->richTextBox1->Margin = System::Windows::Forms::Padding(0, 1, 0, 0);
+			this->richTextBox1->Location = System::Drawing::Point(0, 444);
+			this->richTextBox1->Margin = System::Windows::Forms::Padding(0);
 			this->richTextBox1->Name = L"richTextBox1";
 			this->richTextBox1->ReadOnly = true;
 			this->richTextBox1->ScrollBars = System::Windows::Forms::RichTextBoxScrollBars::Vertical;
-			this->richTextBox1->Size = System::Drawing::Size(1036, 132);
+			this->richTextBox1->Size = System::Drawing::Size(1036, 133);
 			this->richTextBox1->TabIndex = 2;
 			this->richTextBox1->TabStop = false;
 			this->richTextBox1->Text = L"Welcome to DaOrganiser!\n";
@@ -143,21 +143,21 @@ namespace DaOrganiser {
 			// listView1
 			// 
 			this->listView1->AllowColumnReorder = true;
-			this->listView1->BackColor = System::Drawing::Color::Gainsboro;
+			this->listView1->BackColor = System::Drawing::Color::FromArgb(0xd7,0xd7,0xd7);
 			this->listView1->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(6) {this->id, this->start, 
 				this->end, this->details, this->status, this->kind});
 			this->listView1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->listView1->Font = (gcnew System::Drawing::Font(L"Verdana", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->listView1->ForeColor = System::Drawing::Color::Black;
+			this->listView1->ForeColor = System::Drawing::Color::DarkSlateGray;
 			this->listView1->FullRowSelect = true;
 			this->listView1->Location = System::Drawing::Point(0, 0);
 			this->listView1->Margin = System::Windows::Forms::Padding(0);
 			this->listView1->Name = L"listView1";
 			this->listView1->Size = System::Drawing::Size(1036, 444);
 			this->listView1->TabIndex = 1;
-			this->listView1->TileSize = System::Drawing::Size(1000, 300);
+			this->listView1->TileSize = System::Drawing::Size(200, 200);
 			this->listView1->UseCompatibleStateImageBehavior = false;
 			this->listView1->View = System::Windows::Forms::View::Details;
 			this->listView1->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &MainWindow::listView1_ColumnClick);

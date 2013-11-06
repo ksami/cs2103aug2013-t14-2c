@@ -141,9 +141,9 @@ void DaOrganiser::MainWindow::changeColor(Task taskToAdd, ListViewItem^& itemToA
 	itemToAdd->UseItemStyleForSubItems = false;
 
 	//alternate colors of columns
-	itemToAdd->SubItems[0]->BackColor = Color::LightGray;
-	itemToAdd->SubItems[1]->BackColor = Color::LightGray;
-	itemToAdd->SubItems[4]->BackColor = Color::LightGray;
+	itemToAdd->SubItems[0]->BackColor = Color::FromArgb(0xdf,0xdf,0xdf);
+	itemToAdd->SubItems[1]->BackColor = Color::FromArgb(0xdf,0xdf,0xdf);
+	itemToAdd->SubItems[4]->BackColor = Color::FromArgb(0xdf,0xdf,0xdf);
 
 	//change background color based on status of task
 	if(taskStatus.find("Not done")!=std::string::npos)
@@ -156,8 +156,8 @@ void DaOrganiser::MainWindow::changeColor(Task taskToAdd, ListViewItem^& itemToA
 	else if(taskStatus.find("Done")!=std::string::npos)
 	{
 		itemToAdd->UseItemStyleForSubItems = true;
-		itemToAdd->BackColor = Color::WhiteSmoke;
-		itemToAdd->ForeColor = Color::Gainsboro;
+		itemToAdd->BackColor = Color::FromArgb(0xdf,0xdf,0xdf);
+		itemToAdd->ForeColor = Color::FromArgb(0x86,0x99,0xac);
 	}
 	else if(taskStatus.find("Approaching")!=std::string::npos)
 	{
@@ -167,9 +167,9 @@ void DaOrganiser::MainWindow::changeColor(Task taskToAdd, ListViewItem^& itemToA
 	}
 	else if(taskStatus.find("Missed")!=std::string::npos)
 	{
-		itemToAdd->BackColor = Color::OrangeRed;
+		itemToAdd->BackColor = Color::FromArgb(0xff,0x6e,0x6e);
 		itemToAdd->SubItems[4]->ForeColor = Color::Maroon;
-		itemToAdd->SubItems[4]->BackColor = Color::OrangeRed;
+		itemToAdd->SubItems[4]->BackColor = Color::FromArgb(0xff,0x6e,0x6e);
 	}
 
 	//change font color of task's kind
@@ -320,7 +320,7 @@ void DaOrganiser::MainWindow::setCaretToEnd(void)
 System::Void DaOrganiser::MainWindow::MainWindow_Load(System::Object^  sender, System::EventArgs^  e)
 {
 	updateList();
-	try
+	/*try
 	{
 		//for embed resource
 		//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
@@ -336,13 +336,13 @@ System::Void DaOrganiser::MainWindow::MainWindow_Load(System::Object^  sender, S
 	catch(System::IO::FileNotFoundException^)
 	{
 		logging(PATH_SOUND_STARTUP " not found", LogLevel::Error);
-	}
+	}*/
 }
 
 // Closing sound
 System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e)
 {
-	try
+	/*try
 	{
 		//for embed resource
 		//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
@@ -361,7 +361,7 @@ System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  se
 	catch(System::IO::FileNotFoundException^)
 	{
 		logging(PATH_SOUND_CLOSING " not found", LogLevel::Error);
-	}
+	}*/
 }
 
 // Following comboBox1 key events implement Autocomplete for commands among others
@@ -645,13 +645,18 @@ System::Void DaOrganiser::MainWindow::listView1_KeyDown(System::Object^  sender,
 		static bool alternate = true;
 		if(alternate)
 		{
-			listView1->TileSize = Drawing::Size((this->Width - 100)/5, 200);
+			//tile view
+			listView1->BackColor = Color::CornflowerBlue;
+			listView1->TileSize = Drawing::Size((this->Width - 100)/4, 200);
 			listView1->View = System::Windows::Forms::View::Tile;
 		}
 		else
 		{
+			//details view
+			listView1->BackColor = Color::FromArgb(0xd7,0xd7,0xd7);
 			listView1->View = System::Windows::Forms::View::Details;
 		}
+		
 		alternate=!alternate;
 	}
 	// 1 Key
