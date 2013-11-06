@@ -1,5 +1,4 @@
- #pragma once
-
+#pragma once
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -15,6 +14,7 @@ class Storage{
 		char* _storageName;
 
 	public:
+		Storage();
 		Storage(char*);
 		~Storage();
 
