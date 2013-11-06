@@ -197,7 +197,7 @@ int Task::checkTime(time_s first, time_s second)
         return equalTo;
 }
 
-char Task::checkStatus()
+char Task::returnStatus()
 {
         return status;
 }

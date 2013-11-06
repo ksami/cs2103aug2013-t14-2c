@@ -35,6 +35,8 @@ public:
 	bool checkID(int,vector<Task>,int&);
 	void updateIDNumber();
 	void reupdateIDNumber(vector<Task>&);
+	void reupdateStatus(vector<Task>&);
+	double hoursBtwnTimes(std::tm, std::tm);
 	void insertTaskExecuted(int, string);
 	void storeTask(Task);
 	void testingRecordCommand();

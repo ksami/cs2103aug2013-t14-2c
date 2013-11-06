@@ -22,7 +22,7 @@ char TaskManager::initStatus(Task newTask)
 
 	time_s tempTime, etime;
 	tempTime.hr = ltm->tm_hour;
-	tempTime.min = 1 + ltm->tm_min;
+	tempTime.min = ltm->tm_min;
 
 	if(newTask.returnKind() == 'd' || newTask.returnKind() == 't')
 	{
@@ -39,13 +39,13 @@ char TaskManager::initStatus(Task newTask)
 
 bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage) 
 { 
-    Task newTask; 
-    int i;
+	Task newTask; 
+	int i;
 	bool dateFlagStart, dateFlagEnd, timeFlagStart, timeFlagEnd; 
-    string singleWord; 
+	string singleWord; 
 	logging("create entered", LogLevel::Debug);
-  
-    dateFlagStart = dateFlagEnd = timeFlagStart = timeFlagEnd = false;
+
+	dateFlagStart = dateFlagEnd = timeFlagStart = timeFlagEnd = false;
 
 	for(i=0;i<splitString.size();i++) 
 	{ 
@@ -75,8 +75,8 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
 			if (timeFlagEnd==false)
 				return false;
 		} 
-        else if(splitString[i]=="-details") 
-        { 
+		else if(splitString[i]=="-details") 
+		{ 
 			string details=extractDetails(i,splitString);
 			newTask.assignDetails(details); 
 		} 
@@ -118,18 +118,18 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
 	else {
 		newTask.assignKind('f');
 	}
- 
-    // Status assignment occurs here
-    char statusAssign = initStatus(newTask);
-    newTask.changeStatus(statusAssign);
+
+	// Status assignment occurs here
+	char statusAssign = initStatus(newTask);
+	newTask.changeStatus(statusAssign);
 
 	updateIDNumber();
 	newTask.assignIDNumber(ID);
 	insertTaskExecuted(ID,"create");
-  
-    TaskStorage.push_back(newTask);
+
+	TaskStorage.push_back(newTask);
 	recordRedoCommand.clear();
-    return true; 
+	return true; 
 } 
 
 void TaskManager::readTask(vector<Task> &TaskStorage)
@@ -168,7 +168,7 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 	//please change and refactor the code below 
 	if (i>=splitString.size())
 		return false;
-		// Converts the string to number
+	// Converts the string to number
 	int number = atoi(splitString[i].c_str());
 	int pos;
 	//if(number<=0||number>ID)
@@ -377,17 +377,17 @@ void TaskManager::redoTask(vector<Task> &taskStorage) {
 }
 
 bool TaskManager::searchKeyBlank(vector<Task> &taskStorage,vector<Task> &searchResults, string key) {
-		size_t found;
-		int size=taskStorage.size();
-		for (int i=0;i<size;i++) {
-			found=taskStorage.at(i).getDetailsAsString().find(key);
-			if (found!=std::string::npos)
-				searchResults.push_back(taskStorage.at(i));
-		}
-		if (!searchResults.empty())
-			return true;
-		else 
-			throw "No search results found";
+	size_t found;
+	int size=taskStorage.size();
+	for (int i=0;i<size;i++) {
+		found=taskStorage.at(i).getDetailsAsString().find(key);
+		if (found!=std::string::npos)
+			searchResults.push_back(taskStorage.at(i));
+	}
+	if (!searchResults.empty())
+		return true;
+	else 
+		throw "No search results found";
 }
 
 void TaskManager::updateIDNumber() {
@@ -426,7 +426,7 @@ void TaskManager::testingRecordCommand() {
 int TaskManager::findIDPos(int number,vector<Task> TaskStorage) {
 	int toReturn;
 	if (checkID(number,TaskStorage,toReturn))
-			return toReturn;
+		return toReturn;
 	else throw "Invalid task ID entered";	
 	//if (checkID(number,TaskStorage,toReturn))
 	/*	for (unsigned int i=0;i<TaskStorage.size();i++) {
@@ -462,7 +462,7 @@ bool TaskManager::checkRecordRedoCommand(){
 
 int TaskManager::stringToInt(string toConvert) {
 	int value = atoi(toConvert.c_str());
-	 return value;
+	return value;
 }
 
 bool TaskManager::assignDate(Task &newTask,int dateValue,char dateOption) {
@@ -560,23 +560,67 @@ string TaskManager::extractDetails(int i, vector<string> splitString) {
 
 void TaskManager::assignSystemTime(Task &newTask, char timeOption) {
 	time_t now = time(0);
-    tm *ltm = localtime(&now);
+	tm *ltm = localtime(&now);
 
 	time_s temp;
-    temp.hr = ltm->tm_hour;
-    temp.min = 1 + ltm->tm_min;
+	temp.hr = ltm->tm_hour;
+	temp.min = ltm->tm_min;
 
 	newTask.assignTimeValue(temp,timeOption);
 }
 
 void TaskManager::assignSystemDate(Task &newTask, char dateOption) {
 	time_t now = time(0);
-    tm *ltm = localtime(&now);
+	tm *ltm = localtime(&now);
 
 	date temp;
-    temp.day = ltm->tm_mday;
-    temp.month = 1 + ltm->tm_mon;
-    temp.year = (1900 + ltm->tm_year)%100;
+	temp.day = ltm->tm_mday;
+	temp.month = 1 + ltm->tm_mon;
+	temp.year = (1900 + ltm->tm_year)%100;
 
 	newTask.assignDateValue(temp,dateOption);
+}
+
+// Updates status to approaching/missed deadline
+void TaskManager::reupdateStatus(vector<Task>& taskStorage)
+{
+	time_t now = time(0);
+	tm *timeNow = localtime(&now);
+
+	for(unsigned int i=0; i<taskStorage.size(); i++)
+	{
+		if((taskStorage[i].returnStatus() != 'd') && (taskStorage[i].returnKind() != 'f'))
+		{
+			date endDate = taskStorage[i].returnDate('e');
+			time_s endTime = taskStorage[i].returnTime('e');
+			tm dateLine = {0};
+			dateLine.tm_year = endDate.year + 100;
+			dateLine.tm_mon = endDate.month - 1;
+			dateLine.tm_mday = endDate.day;
+			dateLine.tm_hour = endTime.hr;
+			dateLine.tm_min = endTime.min;
+
+			double diffHours = hoursBtwnTimes(*timeNow, dateLine);
+
+			if(diffHours <= 0.0)
+			{
+				taskStorage[i].changeStatus('m');
+			}
+			else if(diffHours <= 48.0)
+			{
+				taskStorage[i].changeStatus('a');
+			}
+		}
+	}
+}
+
+// Returns number of hours between compare date and a dateline
+// ie. dateline - compare date
+// if negative, missed dateline
+double TaskManager::hoursBtwnTimes(std::tm compare, std::tm dateLine)
+{
+	std::time_t timeCompare = std::mktime(&compare);
+	std::time_t timeDateLine = std::mktime(&dateLine);
+
+	return std::difftime(timeDateLine, timeCompare) / (60 * 60);
 }
