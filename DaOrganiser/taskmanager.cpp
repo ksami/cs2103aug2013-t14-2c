@@ -14,7 +14,6 @@ char TaskManager::initStatus(Task newTask)
 {
 	time_t now = time(0);
 	tm *ltm = localtime(&now);
-	//dun understand
 	date temp, edate;
 	temp.day = ltm->tm_mday;
 	temp.month = 1 + ltm->tm_mon;
@@ -43,7 +42,6 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
 	int i;
 	bool dateFlagStart, dateFlagEnd, timeFlagStart, timeFlagEnd; 
 	string singleWord; 
-	logging("create entered", LogLevel::Debug);
 
 	dateFlagStart = dateFlagEnd = timeFlagStart = timeFlagEnd = false;
 
@@ -63,6 +61,9 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
 		}
 		else if(splitString[i]=="-starttime") 
 		{ 
+			if (!checkTime(splitString[i+1])) {
+				return false;
+			}
 			int timeValue=stringToInt(splitString[i+1]);
 			timeFlagStart = assignTime (newTask,timeValue,'s');
 			if (timeFlagStart==false)
@@ -70,6 +71,9 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
 		} 
 		else if(splitString[i]=="-endtime") 
 		{ 
+			if (!checkTime(splitString[i+1])) {
+				return false;
+			}
 			int timeValue=stringToInt(splitString[i+1]);
 			timeFlagEnd = assignTime (newTask,timeValue,'e');
 			if (timeFlagEnd==false)
@@ -96,24 +100,17 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
 		assignSystemTime(newTask,'s');
 	}
 
-	// Checking if time and date have logical values
-	if((dateFlagStart)&&(dateFlagEnd)) {
-		date date1 = newTask.returnDate('s'), date2 = newTask.returnDate('e');
-		if(newTask.checkDate(date1, date2) == 1)
-			return false;
-	}
-
-	if((timeFlagStart)&&(timeFlagEnd)) {
-		time_s time1 = newTask.returnTime('s'), time2 = newTask.returnTime('e');
-		if(newTask.checkTime(time1, time2) == 1)
-			return false;
-	}
-
 	if (dateFlagStart==1 && dateFlagEnd==1 && timeFlagStart==1 &&timeFlagEnd==1) {
 		newTask.assignKind('t');
+		if (!checkDateTimeLogic(newTask,'t')) {
+			return false;
+		}
 	}
 	else if (dateFlagEnd==1 && timeFlagEnd==1) {
 		newTask.assignKind('d');
+		if (!checkDateTimeLogic(newTask,'d')) {
+			return false;
+		}
 	}
 	else {
 		newTask.assignKind('f');
@@ -243,24 +240,17 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 				assignSystemTime(newTask,'s');
 			}
 
-			// Checking if time and date have logical values
-			if((dateFlagStart)&&(dateFlagEnd)) {
-				date date1 = newTask.returnDate('s'), date2 = newTask.returnDate('e');
-				if(newTask.checkDate(date1, date2) == 1)
-					return false;
-			}
-
-			if((timeFlagStart)&&(timeFlagEnd)) {
-				time_s time1 = newTask.returnTime('s'), time2 = newTask.returnTime('e');
-				if(newTask.checkTime(time1, time2) == 1)
-					return false;
-			}
-
 			if (dateFlagStart==1 && dateFlagEnd==1 && timeFlagStart==1 &&timeFlagEnd==1) {
 				newTask.assignKind('t');
+				if (!checkDateTimeLogic(newTask,'t')) {
+					return false;
+				}
 			}
 			else if (dateFlagEnd==1 && timeFlagEnd==1) {
 				newTask.assignKind('d');
+				if (!checkDateTimeLogic(newTask,'d')) {
+					return false;
+				}
 			}
 			else {
 				newTask.assignKind('f');
@@ -503,9 +493,6 @@ bool TaskManager::checkDateValue(int timeValue) {
 
 bool TaskManager::assignTime(Task &newTask,int timeValue,char timeOption) {
 	time_s newTime;
-	if (!checkTimeValue(timeValue)) {
-		return false;
-	}
 
 	if (!getHourMin(timeValue,newTime)) {
 		return false;
@@ -527,11 +514,17 @@ bool TaskManager::getHourMin(int timeValue, time_s &newTime) {
 		return false;
 	return true;
 }
-
-bool TaskManager::checkTimeValue(int timeValue) {
-	if (timeValue/100 > 1)
-		return true;
-	return false;
+bool TaskManager::checkTime(string toCheckTime) {
+	int size=toCheckTime.size();
+	if (size!=4)
+		return false;
+	else {
+		for (int i=0;i<4;i++) {
+			if (toCheckTime[i]<'0'||toCheckTime[i]>'9')
+				return false;
+		}
+	}
+	return true;
 }
 
 string TaskManager::extractDetails(int i, vector<string> splitString) {
@@ -610,6 +603,10 @@ void TaskManager::reupdateStatus(vector<Task>& taskStorage)
 			{
 				taskStorage[i].changeStatus('a');
 			}
+			else 
+			{
+				taskStorage[i].changeStatus('n');
+			}
 		}
 	}
 }
@@ -623,4 +620,23 @@ double TaskManager::hoursBtwnTimes(std::tm compare, std::tm dateLine)
 	std::time_t timeDateLine = std::mktime(&dateLine);
 
 	return std::difftime(timeDateLine, timeCompare) / (60 * 60);
+}
+
+bool TaskManager::checkDateTimeLogic(Task &newTask,char kind) {
+	date dateStart = newTask.returnDate('s');
+	date dateEnd = newTask.returnDate('e');
+	time_s timeStart = newTask.returnTime('s');
+	time_s timeEnd = newTask.returnTime('e');
+
+	if (kind=='t'||kind=='d') {
+		if(newTask.checkDate(dateStart, dateEnd)==0) {
+			if(newTask.checkTime(timeStart, timeEnd)==1) {
+				return false;
+			}
+		}
+		else if (newTask.checkDate(dateStart, dateEnd)==1) {
+			return false;
+		}
+	}
+	return true;
 }

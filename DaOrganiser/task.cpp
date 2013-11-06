@@ -167,34 +167,34 @@ string Task::getKindAsString()
 
 int Task::checkDate(date first, date second)
 {
-        if(first.year>second.year)
-                return moreThan;
-        if(first.year<second.year)
-                return lessThan;
-        if(first.month>second.month)
-                return moreThan;
-        if(first.month<second.month)
-                return lessThan;
-        if(first.day>second.day)
-                return moreThan;
-        if(first.day<second.day)
-                return lessThan;
+	if(first.year>second.year)
+		return moreThan;
+	if(first.year<second.year)
+		return lessThan;
+	if(first.month>second.month)
+		return moreThan;
+	if(first.month<second.month)
+		return lessThan;
+	if(first.day>second.day)
+		return moreThan;
+	if(first.day<second.day)
+		return lessThan;
 
-        return equalTo; 
+	return equalTo; 
 }
 
 int Task::checkTime(time_s first, time_s second)
 {
         if(first.hr>second.hr)
-                return moreThan;
+			return moreThan;
         if(first.hr<second.hr)
-                return lessThan;
+			return lessThan;
         if(first.min>second.min)
-                return moreThan;
+			return moreThan;
         if(first.min<second.min)
-                return lessThan;
+			return lessThan;
 
-        return equalTo;
+		return equalTo;
 }
 
 char Task::returnStatus()
