@@ -6,7 +6,6 @@
 class Interface
 {
 public:
-	Facade* progController;
 	DaOrganiser::MainWindow^* userInterface;
 public:
 	Interface(void);

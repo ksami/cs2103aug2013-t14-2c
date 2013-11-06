@@ -33,6 +33,7 @@ namespace DaOrganiser {
 		/// </summary>
 		~MainWindow()
 		{
+			delete progController;
 			if (components)
 			{
 				delete components;
