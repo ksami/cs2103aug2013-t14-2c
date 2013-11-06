@@ -47,11 +47,12 @@ public:
 	bool checkDateValue(int);
 	bool assignDate(Task &,int,char);
 	bool getDayMonthYear(int,date &);
-	bool checkTimeValue(int);
 	bool assignTime(Task &,int,char);
 	bool getHourMin(int,time_s &);
 	string extractDetails(int,vector<string>);
 	void assignSystemTime(Task &,char);
 	void assignSystemDate(Task &,char);
+	bool checkDateTimeLogic(Task &,char);
+	bool checkTime(string);
 };
 
