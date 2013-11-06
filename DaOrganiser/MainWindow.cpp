@@ -157,19 +157,19 @@ void DaOrganiser::MainWindow::changeColor(Task taskToAdd, ListViewItem^& itemToA
 	{
 		itemToAdd->UseItemStyleForSubItems = true;
 		itemToAdd->BackColor = Color::FromArgb(0xdf,0xdf,0xdf);
-		itemToAdd->ForeColor = Color::FromArgb(0x86,0x99,0xac);
+		itemToAdd->ForeColor = Color::FromArgb(0x83,0x95,0xa8);
 	}
 	else if(taskStatus.find("Approaching")!=std::string::npos)
 	{
-		itemToAdd->BackColor = Color::LightYellow;
+		itemToAdd->BackColor = Color::FromArgb(0xf8,0xf8,0x98);
 		itemToAdd->SubItems[4]->ForeColor = Color::DarkMagenta;
-		itemToAdd->SubItems[4]->BackColor = Color::LightYellow;
+		itemToAdd->SubItems[4]->BackColor = Color::FromArgb(0xf8,0xf8,0x98);
 	}
 	else if(taskStatus.find("Missed")!=std::string::npos)
 	{
-		itemToAdd->BackColor = Color::FromArgb(0xff,0x6e,0x6e);
+		itemToAdd->BackColor = Color::FromArgb(0xff,0x7c,0x7c);
 		itemToAdd->SubItems[4]->ForeColor = Color::Maroon;
-		itemToAdd->SubItems[4]->BackColor = Color::FromArgb(0xff,0x6e,0x6e);
+		itemToAdd->SubItems[4]->BackColor = Color::FromArgb(0xff,0x7c,0x7c);
 	}
 
 	//change font color of task's kind
