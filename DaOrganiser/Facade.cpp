@@ -95,6 +95,7 @@ bool Facade::executeCommand() {
 					else 
 						guiLogicInterface->toDisplay("Error found while adding task");
 					checkFlag=true;
+					p.reupdateStatus(taskStorage);
 					guiLogicInterface->updateGuiList();
 				}
 				else if(commandInput[i]=="-update")
@@ -112,6 +113,7 @@ bool Facade::executeCommand() {
 					}
 
 					checkFlag=true;
+					p.reupdateStatus(taskStorage);
 					guiLogicInterface->updateGuiList();
 				}
 				else if(commandInput[i]=="-delete")
@@ -131,6 +133,7 @@ bool Facade::executeCommand() {
 						guiLogicInterface->toDisplay(except);
 					}
 					checkFlag=true;
+					p.reupdateStatus(taskStorage);
 					guiLogicInterface->updateGuiList();
 				}
 				else if (commandInput[i]=="-read")
@@ -149,6 +152,7 @@ bool Facade::executeCommand() {
 						guiLogicInterface->toDisplay(except);
 					}
 					checkFlag=true;
+					p.reupdateStatus(taskStorage);
 					guiLogicInterface->updateGuiList();
 				}
 				else if (commandInput[i]=="-redo")
@@ -162,6 +166,7 @@ bool Facade::executeCommand() {
 						guiLogicInterface->toDisplay(except);
 					}
 					checkFlag=true;
+					p.reupdateStatus(taskStorage);
 					guiLogicInterface->updateGuiList();
 				}
 				else if (commandInput[i]=="-search")
@@ -177,12 +182,13 @@ bool Facade::executeCommand() {
 						guiLogicInterface->toDisplay(except);
 					}
 					checkFlag=true;
-					//displayVector();
+					p.reupdateStatus(taskStorage);
 					guiLogicInterface->displayGuiSearchResults(keySearch);
 				}
 				else if (commandInput[i]=="-all")
 				{
 					checkFlag=true;
+					p.reupdateStatus(taskStorage);
 					guiLogicInterface->toDisplay("Displaying all entries");
 					guiLogicInterface->updateGuiList();
 				}
@@ -198,7 +204,7 @@ bool Facade::executeCommand() {
 		guiLogicInterface->toDisplay("Invalid command entered");
 	}
 	else
-	{
+	{	
 		saveFile->writeAllToFile(taskStorage);
 	}
 	return false;
