@@ -115,5 +115,11 @@
     <Media Include="Proxima.wav">
       <Filter>Resource Files</Filter>
     </Media>
+    <Media Include="resource\Castor.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="resource\Zirconium.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>
