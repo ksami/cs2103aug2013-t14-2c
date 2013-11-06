@@ -39,13 +39,12 @@ char TaskManager::initStatus(Task newTask)
 bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage) 
 { 
 	Task newTask; 
-	int i;
 	bool dateFlagStart, dateFlagEnd, timeFlagStart, timeFlagEnd; 
 	string singleWord; 
 
 	dateFlagStart = dateFlagEnd = timeFlagStart = timeFlagEnd = false;
 
-	for(i=0;i<splitString.size();i++) 
+	for(unsigned int i=0;i<splitString.size();i++) 
 	{ 
 		if(splitString[i]=="-startdate") { 
 			int dateValue=stringToInt(splitString[i+1]);
@@ -145,31 +144,20 @@ void TaskManager::readTask(vector<Task> &TaskStorage)
 
 bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorage)
 {       
-	date d;
-	time_s t;
-	int i, j;
+	int taskID;
 	bool dateFlagStart, dateFlagEnd, timeFlagStart, timeFlagEnd, statusFlag;
 	string singleWord, text;
 
 	dateFlagStart = dateFlagEnd = timeFlagStart = timeFlagEnd = statusFlag = 0;
 
-	// Searchs for the Task number to be updated 
-	//------------------------------------------
-	i=0;
-	while(splitString[i]!="-update")
-	{
-		i++;
-	}
-	i++;
+	taskID=searchIDToBeUpdated(splitString);
 	//------------------------------------------
 	//please change and refactor the code below 
-	if (i>=splitString.size())
+	if (taskID>=splitString.size())
 		return false;
 	// Converts the string to number
-	int number = atoi(splitString[i].c_str());
+	int number = stringToInt(splitString[taskID].c_str()); 
 	int pos;
-	//if(number<=0||number>ID)
-	//	return false;
 	try {
 		pos=findIDPos(number,TaskStorage);
 		insertTaskExecuted(number,"update");
@@ -200,6 +188,9 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 			}
 			else if(splitString[i]=="-starttime")
 			{ 
+				if (!checkTime(splitString[i+1])) {
+					return false;
+				}
 				int timeValue=stringToInt(splitString[i+1]);
 				timeFlagStart = assignTime (TaskStorage[pos],timeValue,'s');
 				if (timeFlagStart==false) {
@@ -209,6 +200,9 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 			} 
 			else if(splitString[i]=="-endtime")
 			{ 
+				if (!checkTime(splitString[i+1])) {
+					return false;
+				}
 				int timeValue=stringToInt(splitString[i+1]);
 				timeFlagEnd = assignTime (TaskStorage[pos],timeValue,'e');
 				if (timeFlagEnd==false) {
@@ -639,4 +633,14 @@ bool TaskManager::checkDateTimeLogic(Task &newTask,char kind) {
 		}
 	}
 	return true;
+}
+
+int TaskManager::searchIDToBeUpdated(vector<string> splitString) {
+	int ID=0;
+	while(splitString[ID]!="-update")
+	{
+		ID++;
+	}
+	ID++;
+	return ID;
 }

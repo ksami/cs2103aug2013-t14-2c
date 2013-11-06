@@ -43,6 +43,7 @@ public:
 	bool searchKeyBlank(vector<Task> &,vector<Task> &, string);
 	int findIDPos(int,vector<Task>);
 
+	int searchIDToBeUpdated(vector<string>);
 	int stringToInt(string);
 	bool checkDateValue(int);
 	bool assignDate(Task &,int,char);
