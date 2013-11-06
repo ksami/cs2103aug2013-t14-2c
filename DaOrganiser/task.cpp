@@ -3,21 +3,14 @@
 
 Task::Task()
 {
-    //time_t now = time(0);
-    //tm *ltm = localtime(&now);
- 
-    status = notDone;
-    kind = 'f';
-    //startDate.day = ltm->tm_mday;
-    //startDate.month = 1 + ltm->tm_mon;
-    //startDate.year = (1900 + ltm->tm_year)%100;
+	status = TASK_STATUS_NOTDONE;
+	kind = TASK_KIND_FLOATING;
+	details = "";
+
 	startDate.day = startDate.month = startDate.year = 0;
-    endDate.day = endDate.month = endDate.year = 0;
-    //startTime.hr = ltm->tm_hour;
-    //startTime.min = 1 + ltm->tm_min;
+	endDate.day = endDate.month = endDate.year = 0;
 	startTime.hr = startTime.min = 0;
-    endTime.hr = endTime.min = 0;
-    details = "";
+	endTime.hr = endTime.min = 0;
 }
 
 string Task::getIdAsString()
@@ -25,7 +18,7 @@ string Task::getIdAsString()
 	return std::to_string(taskID);
 }
 
-//returns startdate as dd/mm/yy
+// Returns startdate as dd/mm/yy
 string Task::getStartDateAsString()
 {
 	string startDateAsString;
@@ -43,17 +36,17 @@ string Task::getStartDateAsString()
 	}
 	startDateAsString += std::to_string(startDate.month);
 	startDateAsString += "/";
-	
+
 	if(startDate.year<=9)
 	{
 		startDateAsString += '0';
 	}
 	startDateAsString += std::to_string(startDate.year);
-	
+
 	return startDateAsString;
 }
 
-// returns starttime as hh:mm
+// Returns starttime as hh:mm
 string Task::getStartTimeAsString()
 {
 	string startTimeAsString;
@@ -74,7 +67,7 @@ string Task::getStartTimeAsString()
 	return startTimeAsString;
 }
 
-// returns enddate as dd/mm/yy
+// Returns enddate as dd/mm/yy
 string Task::getEndDateAsString()
 {
 	string endDateAsString;
@@ -92,7 +85,7 @@ string Task::getEndDateAsString()
 	}
 	endDateAsString += std::to_string(endDate.month);
 	endDateAsString += "/";
-	
+
 	if(endDate.year<=9)
 	{
 		endDateAsString += '0';
@@ -102,7 +95,7 @@ string Task::getEndDateAsString()
 	return endDateAsString;
 }
 
-// returns endtime as hh:mm
+// Returns endtime as hh:mm
 string Task::getEndTimeAsString()
 {
 	string endTimeAsString;
@@ -123,13 +116,13 @@ string Task::getEndTimeAsString()
 	return endTimeAsString;
 }
 
-// returns startdatetime as dd/mm/yy hh:mm
+// Returns startdatetime as dd/mm/yy hh:mm
 string Task::getStartDateTimeAsString()
 {	
 	return getStartDateAsString() + " " + getStartTimeAsString();
 }
 
-// returns enddatetime as dd/mm/yy hh:mm
+// Returns enddatetime as dd/mm/yy hh:mm
 string Task::getEndDateTimeAsString()
 {
 	return getEndDateAsString() + " " + getEndTimeAsString();
@@ -139,239 +132,212 @@ string Task::getDetailsAsString()
 {
 	return details;
 }
+
 string Task::getStatusAsString()
 {
 	string statusAsString;
 	switch(status)
 	{
-	case 'n': statusAsString = "Not done"; break;
-	case 'd': statusAsString = "Done"; break;
-	case 'a': statusAsString = "Approaching deadline"; break;
-	case 'm': statusAsString = "Missed deadline"; break;
-	default: assert(statusAsString.empty()); break;  //invalid status
+	case TASK_STATUS_NOTDONE: statusAsString = "Not done"; break;
+	case TASK_STATUS_DONE: statusAsString = "Done"; break;
+	case TASK_STATUS_APPROACHING: statusAsString = "Approaching deadline"; break;
+	case TASK_STATUS_MISSED: statusAsString = "Missed deadline"; break;
 	}
 	return statusAsString;
 }
+
 string Task::getKindAsString()
 {
 	string kindAsString;
 	switch(kind)
 	{
-	case 'd': kindAsString = "Deadline Task"; break;
-	case 'f': kindAsString = "Floating Task"; break;
-	case 't': kindAsString = "Timed Task"; break;
-	default: assert(kindAsString.empty()); break;  //invalid kind
+	case TASK_KIND_DEADLINE: kindAsString = "Deadline Task"; break;
+	case TASK_KIND_FLOATING: kindAsString = "Floating Task"; break;
+	case TASK_KIND_TIMED: kindAsString = "Timed Task"; break;
 	}
 	return kindAsString;
 }
 
+// Returns 1 if first is more than second, -1 if less, 0 if equal
 int Task::checkDate(date first, date second)
 {
 	if(first.year>second.year)
-		return moreThan;
+		return COMPARE_MORETHAN;
 	if(first.year<second.year)
-		return lessThan;
+		return COMPARE_LESSTHAN;
 	if(first.month>second.month)
-		return moreThan;
+		return COMPARE_MORETHAN;
 	if(first.month<second.month)
-		return lessThan;
+		return COMPARE_LESSTHAN;
 	if(first.day>second.day)
-		return moreThan;
+		return COMPARE_MORETHAN;
 	if(first.day<second.day)
-		return lessThan;
+		return COMPARE_LESSTHAN;
 
-	return equalTo; 
+	return COMPARE_EQUALTO; 
 }
 
+// Returns 1 if first is more than second, -1 if less, 0 if equal
 int Task::checkTime(time_s first, time_s second)
 {
-        if(first.hr>second.hr)
-			return moreThan;
-        if(first.hr<second.hr)
-			return lessThan;
-        if(first.min>second.min)
-			return moreThan;
-        if(first.min<second.min)
-			return lessThan;
+	if(first.hr>second.hr)
+		return COMPARE_MORETHAN;
+	if(first.hr<second.hr)
+		return COMPARE_LESSTHAN;
+	if(first.min>second.min)
+		return COMPARE_MORETHAN;
+	if(first.min<second.min)
+		return COMPARE_LESSTHAN;
 
-		return equalTo;
+	return COMPARE_EQUALTO;
 }
 
 char Task::returnStatus()
 {
-        return status;
+	return status;
 }
 
-bool Task::changeStatus(char complete)
+// Returns false if newStatus is invalid
+bool Task::changeStatus(char newStatus)
 {
-		complete = tolower(complete);
-        
-		if (complete == done)
-                status = done;
-        else if(complete == notDone)
-                status = notDone;
-		else if(complete == approachingDeadline)
-				status = approachingDeadline;
-		else if(complete == missedDeadline)
-				status = missedDeadline;
-        else
-                return false;
+	newStatus = tolower(newStatus);
 
-        return true;
+	if (newStatus == TASK_STATUS_DONE)
+		status = TASK_STATUS_DONE;
+	else if(newStatus == TASK_STATUS_NOTDONE)
+		status = TASK_STATUS_NOTDONE;
+	else if(newStatus == TASK_STATUS_APPROACHING)
+		status = TASK_STATUS_APPROACHING;
+	else if(newStatus == TASK_STATUS_MISSED)
+		status = TASK_STATUS_MISSED;
+	else
+		return false;
+
+	return true;
 }
 
-bool Task::assignDateValue(date value, char dateOption)
+// Returns false if newDate is invalid
+bool Task::assignDateValue(date newDate, char dateOption)
 {
-        if(value.day<one||value.month<one||value.year<one)
-                return false;
+	bool negativeDate = newDate.day<1||newDate.month<1||newDate.year<1;
+	if(negativeDate)
+		return false;
 
-        switch(value.month)
-        {
-        case 1: if(value.day<=31) break; 
-        case 2: if(value.day<=29) break;
-        case 3: if(value.day<=31) break;
-        case 4: if(value.day<= 30) break;
-        case 5: if(value.day<=31) break;
-        case 6: if(value.day<=30) break;
-        case 7: if(value.day<=31) break;
-        case 8: if(value.day<=31) break;
-        case 9: if(value.day<=30) break;
-        case 10: if(value.day<=31) break;
-        case 11: if(value.day<=30) break;
-        case 12: if(value.day<=31) break;
-        default: return false;
-        }
+	switch(newDate.month)
+	{
+	case 1: if(newDate.day<=31) break; 
+	case 2: if(newDate.day<=29) break;
+	case 3: if(newDate.day<=31) break;
+	case 4: if(newDate.day<=30) break;
+	case 5: if(newDate.day<=31) break;
+	case 6: if(newDate.day<=30) break;
+	case 7: if(newDate.day<=31) break;
+	case 8: if(newDate.day<=31) break;
+	case 9: if(newDate.day<=30) break;
+	case 10: if(newDate.day<=31) break;
+	case 11: if(newDate.day<=30) break;
+	case 12: if(newDate.day<=31) break;
+	default: return false;
+	}
 
-		if(!checkLeapYear(value.year)&&value.month==2&&value.day==29) {
-			return false;
-		}
-			
-        if(dateOption==start)
-                startDate = value;
-        else
-                endDate = value;
+	if(!checkLeapYear(newDate.year)&&newDate.month==2&&newDate.day==29) {
+		return false;
+	}
 
-        return true;
+	if(dateOption==TASK_DATETIME_START)
+		startDate = newDate;
+	else
+		endDate = newDate;
+
+	return true;
 }
 
-bool Task::assignTimeValue(time_s value, char timeOption)
+// Returns false if newTime is invalid
+bool Task::assignTimeValue(time_s newTime, char timeOption)
 {
-        if(value.hr>23||value.hr<0||value.min>59||value.min<0)
-                return false;
+	if(newTime.hr>23||newTime.hr<0||newTime.min>59||newTime.min<0)
+		return false;
 
-        if(timeOption== start)
-                startTime = value;
-        else
-                endTime = value;
+	if(timeOption== TASK_DATETIME_START)
+		startTime = newTime;
+	else
+		endTime = newTime;
 
-        return true;
+	return true;
 }
 
-bool Task::assignKind(char value)
+// Returns false if newKind is invalid
+bool Task::assignKind(char newKind)
 {
-		value = tolower(value);
+	newKind = tolower(newKind);
+	bool validKind = (newKind == TASK_KIND_TIMED)||(newKind == TASK_KIND_DEADLINE)||(newKind == TASK_KIND_FLOATING);
 
-        if((value == timed)||(value == deadline)||(value == floating))
-        {
-                kind = value;
-                return true;
-        }
-        else
-                return false;
+	if(validKind)
+	{
+		kind = newKind;
+		return true;
+	}
+	else
+		return false;
 }
 
 void Task::assignDetails(string description)
 {
-        details = description;
+	details = description;
 }
 
-//for CLI
-void Task::displayDetail()
+void Task::assignIDNumber(int number)
 {
-    cout<<taskID<<endl;
- 
-    cout<<"Start date: "<<
-        setfill('0')<<setw(2)<<to_string(startDate.day)<<" / "<<
-        setfill('0')<<setw(2)<<to_string(startDate.month)<<" / "<<
-        setfill('0')<<setw(2)<<to_string(startDate.year)<<endl;
- 
-    cout<<"End date: "<<
-        setfill('0')<<setw(2)<<to_string(endDate.day)<<" / "<<
-        setfill('0')<<setw(2)<<to_string(endDate.month)<<" / "<<
-        setfill('0')<<setw(2)<<to_string(endDate.year)<<endl;
- 
-    cout<<"Start time: "<<        
-        setfill('0')<<setw(2)<<to_string(startTime.hr)<<" : "<<
-        setfill('0')<<setw(2)<<to_string(startTime.min)<<endl;
- 
-    cout<<"End time: "<<
-        setfill('0')<<setw(2)<<to_string(endTime.hr)<<" : "<<
-        setfill('0')<<setw(2)<<to_string(endTime.min)<<endl;
- 
-    cout<<"Details: "<<details<<endl;
- 
-    if(status == 'd') 
-        cout<<"Status: Task completed"<<endl; 
-	else if(status == 'a')
-        cout<<"Status: Task approaching deadline"<<endl;
-    else if(status == 'm')
-        cout<<"Status: Task missed deadline"<<endl;
-    else
-        cout<<"Status: Task yet to be complete"<<endl; 
-  
-    if(kind == 'f') 
-        cout<<"Kind: Floating Task"; 
-    else if (kind == 'd') 
-        cout<<"Kind: Task with deadline";
-    else
-        cout<<"Kind: Timed Task";
-    cout<<endl<<"--------------------------------------------";
-
+	taskID=number;
 }
 
-void Task::assignIDNumber(int number) {
-    taskID=number;
-}
- 
 char Task::returnKind()
 {
-        return kind;
-}
- 
-int Task::getTaskID() {
-    return taskID;
+	return kind;
 }
 
-date Task::returnDate(char check)
+int Task::getTaskID()
 {
-        date d;
-        d.day = d.month = d.year = 0;
- 
-        if(check == 's')
-                return startDate;
-        else if(check == 'e')
-                return endDate;
-        else
-                return d;
-}
- 
-time_s Task::returnTime(char check)
-{
-        time_s t;
-        t.hr = t.min = 0;
- 
-        if(check == 's')
-                return startTime;
-        else if(check == 'e')
-                return endTime;
-        else
-                return t;
+	return taskID;
 }
 
-bool Task::checkLeapYear(int year) {
-	int check=year%4;
-	if (check) {
+// Returns start or end date depending on dateOption, 0 date if invalid
+date Task::returnDate(char dateOption)
+{
+	date d;
+	d.day = d.month = d.year = 0;
+
+	if(dateOption == TASK_DATETIME_START)
+		return startDate;
+	else if(dateOption == TASK_DATETIME_END)
+		return endDate;
+	else
+		return d;
+}
+
+// Returns start or end time depending on timeOption, 0 time if invalid
+time_s Task::returnTime(char timeOption)
+{
+	time_s t;
+	t.hr = t.min = 0;
+
+	if(timeOption == TASK_DATETIME_START)
+		return startTime;
+	else if(timeOption == TASK_DATETIME_END)
+		return endTime;
+	else
+		return t;
+}
+
+// Returns true if year is a leap year, false otherwise
+bool Task::checkLeapYear(int year)
+{
+	if (year%4 != 0)
+	{
 		return false;
 	}
-	return true;
+	else
+	{
+		return true;
+	}
 }

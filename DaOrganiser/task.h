@@ -4,24 +4,22 @@
 #include <string>
 #include <iomanip>
 #include <ctime>
-#include <assert.h>
+
 using namespace std;
 
-const char notDone = 'n';
-const char done = 'd';
-const char approachingDeadline = 'a';
-const char missedDeadline = 'm';
-const char start = 's';
-const char end = 'e';
-const char timed = 't';
-const char deadline = 'd';
-const char floating = 'f';
+#define TASK_STATUS_NOTDONE 'n'
+#define TASK_STATUS_DONE 'd'
+#define TASK_STATUS_APPROACHING 'a'
+#define TASK_STATUS_MISSED 'm'
+#define TASK_DATETIME_START 's'
+#define TASK_DATETIME_END 'e'
+#define TASK_KIND_TIMED 't'
+#define TASK_KIND_DEADLINE 'd'
+#define TASK_KIND_FLOATING 'f'
 
-const int moreThan = 1;
-const int lessThan = -1;
-const int equalTo = 0;
-const int one = 1;
-const int zero = 0;
+#define COMPARE_MORETHAN 1
+#define COMPARE_LESSTHAN -1
+#define COMPARE_EQUALTO 0
 
 struct date
 {
@@ -45,31 +43,33 @@ private:
 public:
 	Task();
 
-	string getIdAsString();
-	string getStartDateTimeAsString();
-	string getEndDateTimeAsString();
-	string getStartDateAsString();
-	string getEndDateAsString();
-	string getStartTimeAsString();
-	string getEndTimeAsString();
 	string getDetailsAsString();
-	string getStatusAsString();
+	string getEndDateAsString();
+	string getEndDateTimeAsString();
+	string getEndTimeAsString();
+	string getIdAsString();
 	string getKindAsString();
+	string getStartDateAsString();
+	string getStartDateTimeAsString();
+	string getStartTimeAsString();
+	string getStatusAsString();
 
-	int checkDate(date, date);
-	int checkTime(time_s, time_s);
+	int getTaskID();
 	char returnStatus();
 	char returnKind();
 	date returnDate(char);
-    time_s returnTime(char);
-	bool changeStatus(char);
+	time_s returnTime(char);
+
+	int checkDate(date, date);
+	int checkTime(time_s, time_s);
+
+
 	bool assignDateValue(date, char);
-	bool assignTimeValue(time_s, char);
-	bool assignKind(char);
 	void assignDetails(string);
 	void assignIDNumber(int);
-	void displayDetail();
-	int getTaskID();
+	bool assignKind(char);
+	bool assignTimeValue(time_s, char);
+	bool changeStatus(char);
 
 	bool checkLeapYear(int);
 };
