@@ -63,7 +63,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\gtest-1.7.0\msvc\DaOrganiser\Debug;%(AdditionalLibraryDirectories);D:\Google Drive\nus\CS2103\GroupProjNewBackUp\gtest-1.7.0\include\gtest;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\gtest-1.7.0\msvc\DaOrganiser\Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gtestd.lib;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser\Debug</AdditionalDependencies>
+      <AdditionalDependencies>gtestd.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
