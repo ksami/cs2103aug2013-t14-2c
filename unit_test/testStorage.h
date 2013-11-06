@@ -1,18 +1,15 @@
-/*
 #pragma once
 #include <gtest\gtest.h>
-#include "Log.cpp"
+#include "storage.h"
  
-class testLog : public ::testing::Test {
+class testStorage : public ::testing::Test {
 protected:
   // You can remove any or all of the following functions if its body
   // is empty.
- 
-  testLog() {
+  testStorage() {
     // You can do set-up work for each test here.
   }
- 
-  virtual ~testLog() {
+  virtual ~testStorage() {
     // You can do clean-up work that doesn't throw exceptions here.
   }
  
@@ -28,7 +25,7 @@ protected:
     // Code here will be called immediately after each test (right
     // before the destructor).
   }
- 
   // Objects declared here can be used by all tests in the test case for Foo.
+  
+	Storage storageUnderTest;
 };
-*/
