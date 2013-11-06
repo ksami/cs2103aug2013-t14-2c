@@ -37,6 +37,6 @@ TEST_F(testStorage, SafeToOpenInPutStreamAfterOpenThenClose){
 }
 
 TEST_F(testStorage, retrieveRealDetails){
-	EXPECT_EQ("BLANKED", storageUnderTest.retrieveRealDetails(""));
+	EXPECT_EQ("", storageUnderTest.retrieveRealDetails("BLANKED"));
 	EXPECT_EQ("TESTING", storageUnderTest.retrieveRealDetails("TESTING"));
 }
