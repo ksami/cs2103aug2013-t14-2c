@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "TaskManager.h"
 #include "Log.h"
+
+//difference in hours before a task is considered approaching its deadline
+#define APPROACHING_DIFFERENCE 48.0
+
 TaskManager::TaskManager()
 {
 	ID=0;
@@ -606,7 +610,7 @@ void TaskManager::reupdateStatus(vector<Task>& taskStorage)
 			{
 				taskStorage[i].changeStatus('m');
 			}
-			else if(diffHours <= 48.0)
+			else if(diffHours <= APPROACHING_DIFFERENCE)
 			{
 				taskStorage[i].changeStatus('a');
 			}
