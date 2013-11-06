@@ -41,7 +41,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\DaOrganiser;C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\gtest-1.7.0\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\DaOrganiser;C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\gtest-1.7.0\include;$(IncludePath);D:\Google Drive\nus\CS2103\GroupProjNewBackUp\gtest-1.7.0\include;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser;</IncludePath>
+    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser_as_lib;</LibraryPath>
+    <ReferencePath>$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -54,12 +56,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_VARIADIC_MAX=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\gtest-1.7.0\msvc\DaOrganiser\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gtestd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\gtest-1.7.0\msvc\DaOrganiser\Debug;%(AdditionalLibraryDirectories);D:\Google Drive\nus\CS2103\GroupProjNewBackUp\gtest-1.7.0\include\gtest;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\gtest-1.7.0\msvc\DaOrganiser\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gtestd.lib;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser\Debug</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -86,12 +90,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="testStorage.cpp" />
     <ClCompile Include="testLog.cpp" />
     <ClCompile Include="TestParser.cpp" />
     <ClCompile Include="TestStub.cpp" />
     <ClCompile Include="testTaskMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="testStorage.h" />
     <ClInclude Include="testLog.h" />
     <ClInclude Include="TestParser.h" />
     <ClInclude Include="TestStub.h" />
