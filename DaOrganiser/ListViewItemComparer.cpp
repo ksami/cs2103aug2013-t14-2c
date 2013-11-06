@@ -16,6 +16,7 @@ Done by Kenneth
 #define COL_STATUS 4
 #define COL_KIND 5
 #define DATETIME_DELIMITERS " ", "/", ":"
+#define STATUS_PRIORITY "Done", "Not", "Approach", "Miss"
 
 
 ListViewItemComparer::ListViewItemComparer(void)
@@ -48,11 +49,11 @@ int ListViewItemComparer::Compare(Object^ x, Object^ y)
 		}
 	case COL_STATUS:
 		{
-			array<String^>^ statusPriority = {"Done", "Not", "Approach", "Miss"};
+			array<String^>^ statusPriority = {STATUS_PRIORITY};
 			int item1Prio = 0;
 			int item2Prio = 0;
 
-			for(unsigned int i=0; i<4; i++)
+			for(unsigned int i=0; i<statusPriority->Length; i++)
 			{
 				if(item1->Contains(statusPriority[i]))
 				{
