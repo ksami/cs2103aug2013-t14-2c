@@ -1,6 +1,6 @@
 #pragma once
 #include <gtest\gtest.h>
-#include "taskmanager.h"
+#include "TaskManager.h"
  
 class testTaskMgr : public ::testing::Test {
 protected:
