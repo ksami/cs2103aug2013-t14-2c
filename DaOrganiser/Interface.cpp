@@ -1,3 +1,5 @@
+//@Kenneth A0097075W
+
 #include "stdafx.h"
 #include "Interface.h"
 #include "Log.h"

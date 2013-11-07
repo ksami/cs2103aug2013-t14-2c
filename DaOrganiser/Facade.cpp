@@ -4,6 +4,7 @@
 
 #define SAVE_FILENAME "storage.txt"
 
+//@Nicholas A0101885E
 Facade::Facade() {
 }
 
@@ -69,6 +70,7 @@ void Facade::parserCommand() {
 	commandInput=commandline.parseString(_userCommand);
 }
 
+//@Priya A0092075E
 bool Facade::executeCommand() {
 	Interface* guiLogicInterface = (Interface*) guiInterface;
 	bool checkFlag = false;
@@ -210,6 +212,7 @@ bool Facade::executeCommand() {
 	return false;
 }
 
+//@Nicholas A0101885E
 bool Facade::checkDeleteInput() {
 	if (commandInput.size()>1) {
 		deleteInput=commandInput.at(1);

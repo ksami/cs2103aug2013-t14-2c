@@ -15,7 +15,6 @@ int main(array<System::String ^> ^args)
 	Application::SetCompatibleTextRenderingDefault(false); 
 	logging("creating interface", LogLevel::Debug);
 	Interface guiLogicInterface;
-	// Create the main window and run it
-	//Application::Run(gcnew MainWindow());
+
 	return 0;
 }

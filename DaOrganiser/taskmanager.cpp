@@ -5,15 +5,18 @@
 //difference in hours before a task is considered approaching its deadline
 #define APPROACHING_DIFFERENCE 48.0
 
+//@Priya A0092075E
 TaskManager::TaskManager()
 {
 	ID=0;
 }
 
+//@Priya A0092075E
 TaskManager::~TaskManager()
 {
 }
 
+//@Priya A0092075E
 char TaskManager::initStatus(Task newTask)
 {
 	time_t now = time(0);
@@ -40,6 +43,7 @@ char TaskManager::initStatus(Task newTask)
 	return 'n';
 }
 
+//@Priya A0092075E
 bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage) 
 { 
 	Task newTask; 
@@ -132,6 +136,7 @@ bool TaskManager::createTask(vector<string>splitString,vector<Task> &TaskStorage
 	return true; 
 } 
 
+//@Priya A0092075E
 void TaskManager::readTask(vector<Task> &TaskStorage)
 {
 	if(TaskStorage.empty()) 
@@ -146,6 +151,7 @@ void TaskManager::readTask(vector<Task> &TaskStorage)
 	}
 }
 
+//@Priya A0092075E
 bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorage)
 {       
 	int taskID;
@@ -268,6 +274,7 @@ bool TaskManager::updateTask(vector<string> splitString,vector<Task> &TaskStorag
 }
 
 
+//@Priya A0092075E
 bool TaskManager::deleteTask(vector<string> splitString, vector<Task> &TaskStorage)
 {
 	int deleteTaskID = stringToInt(splitString[1].c_str()); 
@@ -281,6 +288,7 @@ bool TaskManager::deleteTask(vector<string> splitString, vector<Task> &TaskStora
 	return true;
 }
 
+//@Nicholas A0101885E
 void TaskManager::searchkey(vector<Task> &taskStorage,vector<Task> &searchResults, string key) {
 	try {
 		if (searchKeyBlank(taskStorage,searchResults,key)) {
@@ -448,6 +456,7 @@ bool TaskManager::checkRecordRedoCommand(){
 	return true;
 }
 
+//@Priya A0092075E
 int TaskManager::stringToInt(string toConvert) {
 	int value = atoi(toConvert.c_str());
 	return value;
@@ -572,6 +581,7 @@ void TaskManager::assignSystemDate(Task &newTask, char dateOption) {
 	newTask.assignDateValue(temp,dateOption);
 }
 
+//@Kenneth A0097075W
 // Updates status to approaching/missed deadline
 void TaskManager::reupdateStatus(vector<Task>& taskStorage)
 {
@@ -620,6 +630,7 @@ double TaskManager::hoursBtwnTimes(std::tm compare, std::tm dateLine)
 	return std::difftime(timeDateLine, timeCompare) / (60 * 60);
 }
 
+//@Nicholas A0101885E
 bool TaskManager::checkDateTimeLogic(Task &newTask,char kind) {
 	date dateStart = newTask.returnDate('s');
 	date dateEnd = newTask.returnDate('e');
@@ -639,6 +650,7 @@ bool TaskManager::checkDateTimeLogic(Task &newTask,char kind) {
 	return true;
 }
 
+//@Priya A0092075E
 int TaskManager::searchIDToBeUpdated(vector<string> splitString) {
 	int ID=0;
 	while(splitString[ID]!="-update")
