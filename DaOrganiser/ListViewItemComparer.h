@@ -1,8 +1,4 @@
-/*
-
-Done by Kenneth
-
-*/
+//@Kenneth A0097075W
 
 // Implements sorting by columns for ListViewItems
 
