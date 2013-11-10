@@ -1,4 +1,4 @@
-//@Kenneth A0097075W
+//@author A0097075W
 
 #include "stdafx.h"
 #include <msclr\marshal_cppstd.h>
