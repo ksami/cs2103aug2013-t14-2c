@@ -1,4 +1,4 @@
-//@Micheal A0117232U
+//@author A0117232U
 
 #include "stdafx.h"
 #include "Storage.h"
