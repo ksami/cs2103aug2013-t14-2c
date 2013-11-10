@@ -1,0 +1,1490 @@
+//@author: a0097075w
+
+
+
+	/**
+	 * origin: DaOrganiser\Interface.cpp
+	 */
+
+
+#include "stdafx.h"
+#include "Interface.h"
+#include "Log.h"
+
+
+Interface::Interface(void)
+{
+	DaOrganiser::MainWindow^ ui = gcnew DaOrganiser::MainWindow;
+	userInterface = &ui;
+	(*userInterface)->progController = new Facade(this);
+	logging("application run", LogLevel::Debug);
+	Application::Run(ui);
+}
+
+
+Interface::~Interface(void)
+{
+}
+
+void Interface::toDisplay(string sentence)
+{
+	//cout<<sentence;	
+	(*userInterface)->appendToOutput(sentence);
+}
+
+string Interface::toGetInput()
+{
+	//string input;
+	//getline(std::cin, input);
+	//return input;
+	return (*userInterface)->getUserInput();
+}
+
+void Interface::displayGuiSearchResults(vector<Task>& searchResults)
+{
+	(*userInterface)->displaySearchResult(searchResults);
+}
+
+void Interface::updateGuiList()
+{
+	(*userInterface)->updateList();
+}
+	// End of segment: DaOrganiser\Interface.cpp
+
+
+
+
+
+	/**
+	 * origin: DaOrganiser\Interface.h
+	 */
+
+
+#pragma once
+
+#include "MainWindow.h"
+#include "Facade.h"
+
+class Interface
+{
+public:
+	DaOrganiser::MainWindow^* userInterface;
+public:
+	Interface(void);
+	~Interface(void);
+	void toDisplay(string sentence);
+	string toGetInput(void);
+	void displayGuiSearchResults(vector<Task>& searchResults);
+	void updateGuiList(void);
+};
+
+
+	// End of segment: DaOrganiser\Interface.h
+
+
+
+
+
+	/**
+	 * origin: DaOrganiser\ListViewItemComparer.cpp
+	 */
+
+
+// Implements sorting by columns for ListViewItems
+
+#include "stdafx.h"
+#include "ListViewItemComparer.h"
+
+#define COL_TASKID 0
+#define COL_DETAILS 3
+#define COL_START 1
+#define COL_END 2
+#define COL_STATUS 4
+#define COL_KIND 5
+#define DATETIME_DELIMITERS " ", "/", ":"
+#define STATUS_PRIORITY "Done", "Not", "Approach", "Miss"
+
+
+ListViewItemComparer::ListViewItemComparer(void)
+{
+	col = 0;
+	asc = 1;
+}
+
+ListViewItemComparer::ListViewItemComparer( int column, int ascending )
+{
+	col = column;
+	asc = ascending;
+}
+
+// Return positive if x is above y, negative if x is lower than y
+int ListViewItemComparer::Compare(Object^ x, Object^ y)
+{
+	int returnVal=0;
+
+	String^ item1 = (dynamic_cast<ListViewItem^>(x))->SubItems[col]->Text;
+	String^ item2 = (dynamic_cast<ListViewItem^>(y))->SubItems[col]->Text;
+
+	//use different ways of comparing depending on type of data in that column
+	switch(col)
+	{
+	case COL_TASKID:
+		{
+			returnVal = asc * (System::Convert::ToInt32(item1) - System::Convert::ToInt32(item2));
+			break;
+		}
+	case COL_STATUS:
+		{
+			array<String^>^ statusPriority = {STATUS_PRIORITY};
+			int item1Prio = 0;
+			int item2Prio = 0;
+
+			for(unsigned int i=0; i<statusPriority->Length; i++)
+			{
+				if(item1->Contains(statusPriority[i]))
+				{
+					item1Prio = i;
+				}
+				if(item2->Contains(statusPriority[i]))
+				{
+					item2Prio = i;
+				}
+			}
+			returnVal = asc * (item1Prio - item2Prio);
+			break;
+		}
+	case COL_KIND:
+		{
+		}
+	case COL_DETAILS:
+		{
+			returnVal = asc * String::Compare(item1, item2);
+			break;
+		}
+	case COL_START:
+		{
+		}
+	case COL_END:
+		{
+			array <String^>^ delimiter = {DATETIME_DELIMITERS};
+
+			//datetime[0] = dd
+			//datetime[1] = MM
+			//datetime[2] = yy
+			//datetime[3] = hh
+			//datetime[4] = mm
+			array <String^>^ dateTime1 = item1->Split(delimiter, System::StringSplitOptions::RemoveEmptyEntries);
+			array <String^>^ dateTime2 = item2->Split(delimiter, System::StringSplitOptions::RemoveEmptyEntries);
+
+			//concatenate into yyMMddhhmm for ease of comparison
+			String^ date1 = dateTime1[2]+dateTime1[1]+dateTime1[0]+dateTime1[3]+dateTime1[4];
+			String^ date2 = dateTime2[2]+dateTime2[1]+dateTime2[0]+dateTime2[3]+dateTime2[4];
+
+			returnVal = asc * String::Compare(date1, date2);
+			break;
+		}
+	}
+	return returnVal;
+}
+	// End of segment: DaOrganiser\ListViewItemComparer.cpp
+
+
+
+
+
+	/**
+	 * origin: DaOrganiser\ListViewItemComparer.h
+	 */
+
+
+// Implements sorting by columns for ListViewItems
+
+#pragma once
+
+using namespace System;
+using namespace System::Collections;
+using namespace System::Windows::Forms;
+
+public ref class ListViewItemComparer: public IComparer
+{
+protected:
+	// Column number to sort by
+	int col;
+
+	// Sort by ascending or descending order
+	int asc;
+
+public:
+	ListViewItemComparer();
+	ListViewItemComparer(int, int);
+	
+	virtual int Compare(Object^ x, Object^ y);
+};
+
+	// End of segment: DaOrganiser\ListViewItemComparer.h
+
+
+
+
+
+	/**
+	 * origin: DaOrganiser\Log.cpp
+	 */
+
+
+// Log.cpp
+
+//
+// Written by Kenneth Ang
+//
+
+//include if using precompiled headers
+#include "stdafx.h"
+
+#include "Log.h"
+
+#ifndef NLOG
+
+#define MAX_BUFFER_SIZE 100
+
+std::string Log::getCurrentTime(void)
+{
+	time_t secondsNow = time(NULL);
+	struct tm* timeNow = localtime(&secondsNow);
+	char formattedTime[MAX_BUFFER_SIZE];
+	size_t numChars = strftime(formattedTime, MAX_BUFFER_SIZE, "%X", timeNow);
+
+	assert(numChars > 0);
+	return (std::string)formattedTime;
+}
+
+void Log::initialiseLog(std::string& logFileName, std::ofstream& logFile)
+{
+	time_t secondsNow = time(NULL);
+	struct tm* timeNow = localtime(&secondsNow);
+	char formattedTime[MAX_BUFFER_SIZE];
+	size_t numChars = strftime(formattedTime, MAX_BUFFER_SIZE, "%Y%m%d %H%M%S", timeNow);
+
+	assert(numChars > 0);
+
+	logFileName += "Log ";
+	logFileName += PROGRAM_NAME;
+	logFileName += " ";
+	logFileName += formattedTime;
+	logFileName += ".txt";
+
+	logFile.open(logFileName, std::ios::out);
+
+	assert(logFile.is_open());
+
+	//logging started
+	logFile<<"Logging has started for levels: ";
+#ifndef NLOG_DEBUG
+	logFile<<" DEBUG";
+#endif
+#ifndef NLOG_EVENT
+	logFile<<" EVENT";
+#endif
+#ifndef NLOG_INFO
+	logFile<<" INFO";
+#endif
+#ifndef NLOG_WARNING
+	logFile<<" WARNING";
+#endif
+#ifndef NLOG_ERROR
+	logFile<<" ERROR";
+#endif
+	logFile<<std::endl;
+}
+
+void logging(std::string message, LogLevel level)
+{
+	static std::string logFileName;
+	static std::ofstream logFile;
+	static bool initialised = false;
+
+	if(!initialised)
+	{
+		Log::initialiseLog(logFileName, logFile);
+		initialised = true;
+	}
+	
+	// Logs messages as YYYY-MM-DD HH:MM:SS <LogLevel>: <message>
+	switch(level)
+	{
+#ifndef NLOG_DEBUG
+		case LogLevel::Debug:
+		{
+			logFile<<getCurrentTime()<<" ";
+			logFile<<"Debug: "<<message<<std::endl;
+			break;
+		}
+#endif
+#ifndef NLOG_EVENT
+		case LogLevel::Event:
+		{
+			logFile<<getCurrentTime()<<" ";
+			logFile<<"Event: "<<message<<std::endl;
+			break;
+		}
+#endif
+#ifndef NLOG_INFO
+		case LogLevel::Info:
+		{
+			logFile<<getCurrentTime()<<" ";
+			logFile<<"Info: "<<message<<std::endl;
+			break;
+		}
+#endif
+#ifndef NLOG_WARNING
+		case LogLevel::Warning:
+		{
+			logFile<<getCurrentTime()<<" ";
+			logFile<<"Warning: "<<message<<std::endl;
+			break;
+		}
+#endif
+#ifndef NLOG_ERROR
+		case LogLevel::Error:
+		{
+			logFile<<getCurrentTime()<<" ";
+			logFile<<"Error: "<<message<<std::endl;
+			break;
+		}
+#endif
+	}
+}
+
+#endif
+	// End of segment: DaOrganiser\Log.cpp
+
+
+
+
+
+	/**
+	 * origin: DaOrganiser\Log.h
+	 */
+
+
+// Log.h
+
+//
+// Written by Kenneth Ang
+//
+
+//////////////////////////////////////////////////////
+// Purpose: Implements logging with severity levels //
+//////////////////////////////////////////////////////
+
+//
+// To use, add into your source file:	#include "Log.h"
+// change line 46 below:				#define PROGRAM_NAME "yourProgramName"
+// call this function to log:			logging(std::string message, LogLevel level);
+//
+// example:
+// #include "Log.h"
+// #define PROGRAM_NAME "MyOrganiser"
+// logging("This is a log message", LogLevel::Info);
+//
+
+//
+// Creates a file called Log PROGRAM_NAME YYYYMMDD HHMMSS.txt
+// Write logs using the macro function logging(string message, LogLevel level)
+// Logging Severity Levels: DEBUG, EVENT, INFO, WARNING, ERROR
+// Use #define NLOG before #include "Log.h" to switch off logging
+//
+
+#pragma once
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <ctime>
+
+//to switch off assertions
+//#define NDEBUG
+#include <assert.h>
+
+#undef logging
+
+#ifdef NLOG
+#define logging(string, LogLevel) ((void)0)
+#else
+#define logging(string, LogLevel) Log::logging(string, LogLevel)
+
+enum LogLevel {Debug, Event, Info, Warning, Error};
+
+#define PROGRAM_NAME "DaOrganiser"
+
+// Use to selectively switch off logging messages
+//#define NLOG_DEBUG
+#define NLOG_EVENT
+//#define NLOG_INFO
+//#define NLOG_WARNING
+//#define NLOG_ERROR
+
+class Log
+{
+public:
+	static void logging(std::string, LogLevel);
+	static void initialiseLog(std::string&, std::ofstream&);
+	static std::string getCurrentTime(void);
+};
+
+#endif
+	// End of segment: DaOrganiser\Log.h
+
+
+
+
+
+	/**
+	 * origin: DaOrganiser\MainWindow.cpp
+	 */
+
+
+#include "stdafx.h"
+#include <msclr\marshal_cppstd.h>
+#include "MainWindow.h"
+#include <cctype>
+#include "Facade.h"
+
+//to switch off logging
+//#define NLOG
+#include "Log.h"
+
+#define AVAILABLE_CMDS "-add", "-delete", "-update", "-search", "-all", "-undo", "-redo", "-quit", "-startdate", "-enddate", "-starttime", "-endtime", "-kind", "-status", "-details"
+#define CMD_DELIMITER_CHAR '-'
+#define CMD_DELIMITER_STR "-"
+#define NULL_STRING ""
+
+#define PATH_ICON_SUCCESS "resource/pika.ico"
+#define PATH_ICON_FAIL "resource/pikared.ico"
+#define PATH_SOUND_STARTUP "resource/Castor.wav"
+#define PATH_SOUND_CLOSING "resource/Zirconium.wav"
+#define PATH_SOUND_SUCCESS "resource/Hojus.wav"
+#define PATH_SOUND_FAIL "resource/Proxima.wav"
+
+#pragma region Public Methods
+// Public Methods
+
+// Converts a String^ into a std::string
+std::string DaOrganiser::MainWindow::sysStringToStdString(String^ stringToConvert)
+{
+	return msclr::interop::marshal_as <std::string> (stringToConvert);
+}
+
+// Converts a std::string into a String^
+String^ DaOrganiser::MainWindow::stdStringToSysString(std::string stringToConvert)
+{
+	return msclr::interop::marshal_as <String^> (stringToConvert);
+}
+
+// Creates a ListViewItem from a Task and adds it to listView1
+void DaOrganiser::MainWindow::addTaskToList(Task taskToAdd)
+{
+	ListViewItem^ itemToAdd=gcnew ListViewItem(stdStringToSysString(taskToAdd.getIdAsString()));
+
+	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStartDateTimeAsString()));
+	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getEndDateTimeAsString()));
+	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getDetailsAsString()));
+	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getStatusAsString()));
+	itemToAdd->SubItems->Add(stdStringToSysString(taskToAdd.getKindAsString()));
+
+	//change color of listviewitem before adding it in
+	changeColor(taskToAdd, itemToAdd);
+
+	listView1->Items->Add(itemToAdd);
+}
+
+// Refreshes listView1 with all the tasks
+void DaOrganiser::MainWindow::updateList(void)
+{
+	static vector<Task> allTasks;
+	Facade* controller = (Facade*)progController;
+	allTasks=controller->getTaskStorage();
+	listView1->Items->Clear();
+	for(unsigned int i=0; i<allTasks.size(); i++)
+	{
+		addTaskToList(allTasks[i]);
+	}
+}
+
+// Displays search results in listView1
+void DaOrganiser::MainWindow::displaySearchResult(vector<Task> searchResult)
+{
+	listView1->Items->Clear();
+	for(unsigned int i=0; i<searchResult.size(); i++)
+	{
+		addTaskToList(searchResult[i]);
+	}
+}
+
+// Sorts listView1 by column user chooses
+void DaOrganiser::MainWindow::sortListColumn(unsigned int col)
+{
+	//for changing sort order from ascending to descending and vice versa
+	static int sortColumnInv = 1;
+	listView1->ListViewItemSorter = gcnew ListViewItemComparer( col, -1*sortColumnInv);
+	sortColumnInv*=-1;
+}
+
+// Returns input user has keyed in into comboBox1 as std::string
+std::string DaOrganiser::MainWindow::getUserInput(void)
+{
+	std::string userInput = sysStringToStdString(comboBox1->Text);
+	logging("Input captured: " + userInput, LogLevel::Info);
+	return userInput;
+}
+
+// Clears the input field comboBox1
+void DaOrganiser::MainWindow::clearInputField(void)
+{
+	comboBox1->Text=NULL_STRING;
+}
+
+// Displays text output to the user in richTextBox1
+void DaOrganiser::MainWindow::appendToOutput(std::string userFeedback)
+{
+	//check if richTextBox1 overflow
+	//if so, delete first 90000 characters
+	if(richTextBox1->Text->Length > 100000)
+	{
+		richTextBox1->Text = richTextBox1->Text->Remove(0, 90000);
+	}
+
+	//add visual effect based on success or failure of operation
+	successOrFailure(userFeedback);
+
+	richTextBox1->Text+=stdStringToSysString(userFeedback);
+
+	//scroll to last line in richTextBox1
+	richTextBox1->Select(richTextBox1->Text->Length - 1, 0);
+	richTextBox1->ScrollToCaret();
+	richTextBox1->Text+="\n";
+}
+
+// Closes this window
+void DaOrganiser::MainWindow::exitProgram(void)
+{
+	logging("Exit program sequence initiated", LogLevel::Debug);
+	//write goodbye messages (or not)
+	//save to file first
+	this->Close();
+}
+
+#pragma endregion
+
+#pragma region Private Methods
+// Private Methods
+
+// Changes color of background and/or text of the ListViewItem
+void DaOrganiser::MainWindow::changeColor(Task taskToAdd, ListViewItem^& itemToAdd)
+{
+	std::string taskStatus = taskToAdd.getStatusAsString();
+	std::string taskKind = taskToAdd.getKindAsString();
+	itemToAdd->UseItemStyleForSubItems = false;
+
+	//alternate colors of columns
+	itemToAdd->SubItems[0]->BackColor = Color::FromArgb(0xdf,0xdf,0xdf);
+	itemToAdd->SubItems[1]->BackColor = Color::FromArgb(0xdf,0xdf,0xdf);
+	itemToAdd->SubItems[4]->BackColor = Color::FromArgb(0xdf,0xdf,0xdf);
+
+	//change background color based on status of task
+	if(taskStatus.find("Not done")!=std::string::npos)
+	{
+		itemToAdd->SubItems[0]->ForeColor = Color::DarkSlateGray;
+		itemToAdd->SubItems[1]->ForeColor = Color::DarkSlateGray;
+		itemToAdd->SubItems[2]->ForeColor = Color::DarkSlateGray;
+		itemToAdd->SubItems[4]->ForeColor = Color::DarkSlateGray;
+	}
+	else if(taskStatus.find("Done")!=std::string::npos)
+	{
+		itemToAdd->UseItemStyleForSubItems = true;
+		itemToAdd->BackColor = Color::FromArgb(0xdf,0xdf,0xdf);
+		itemToAdd->ForeColor = Color::FromArgb(0x83,0x95,0xa8);
+	}
+	else if(taskStatus.find("Approaching")!=std::string::npos)
+	{
+		itemToAdd->BackColor = Color::FromArgb(0xf8,0xf8,0x98);
+		itemToAdd->SubItems[4]->ForeColor = Color::DarkMagenta;
+		itemToAdd->SubItems[4]->BackColor = Color::FromArgb(0xf8,0xf8,0x98);
+	}
+	else if(taskStatus.find("Missed")!=std::string::npos)
+	{
+		itemToAdd->BackColor = Color::FromArgb(0xff,0x7c,0x7c);
+		itemToAdd->SubItems[4]->ForeColor = Color::Maroon;
+		itemToAdd->SubItems[4]->BackColor = Color::FromArgb(0xff,0x7c,0x7c);
+	}
+
+	//change font color of task's kind
+	if(taskKind.find("Floating")!=std::string::npos)
+	{
+		itemToAdd->SubItems[5]->ForeColor = Color::DarkGreen;
+	}
+	else if(taskKind.find("Timed")!=std::string::npos)
+	{
+		itemToAdd->SubItems[5]->ForeColor = Color::DarkBlue;
+	}
+	else if(taskKind.find("Deadline")!=std::string::npos)
+	{
+		itemToAdd->SubItems[5]->ForeColor = Color::DarkRed;
+	}
+}
+
+// Changes background color of comboBox1 and icon based on operation success or failure
+void DaOrganiser::MainWindow::successOrFailure(std::string userFeedback)
+{
+	//if message contains hints of success
+	if(userFeedback.find("uccess")!=string::npos||userFeedback.find("complete")!=string::npos||userFeedback.find("Display")!=string::npos)
+	{
+		try
+		{
+			System::Drawing::Icon^ succIcon = gcnew System::Drawing::Icon(PATH_ICON_SUCCESS);
+			this->Icon = succIcon;
+		}
+		catch(System::IO::DirectoryNotFoundException^)
+		{
+			logging("/resource folder not found", LogLevel::Error);
+		}
+		catch(System::IO::FileNotFoundException^)
+		{
+			logging(PATH_ICON_SUCCESS " not found", LogLevel::Error);
+		}
+		try
+		{
+			//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
+			//System::IO::Stream^ s = a->GetManifestResourceStream(PATH_SOUND_SUCCESS);
+			//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);
+			System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_SUCCESS);
+			sound->Play();
+		}
+		catch(System::IO::DirectoryNotFoundException^)
+		{
+			logging("/resource folder not found", LogLevel::Error);
+		}
+		catch(System::IO::FileNotFoundException^)
+		{
+			logging(PATH_SOUND_SUCCESS " not found", LogLevel::Error);
+		}
+		richTextBox1->BackColor = System::Drawing::Color::PaleGreen;
+	}
+	//if message contains hints of failure
+	else if(userFeedback.find("fail")!=string::npos||userFeedback.find("Error")!=string::npos||userFeedback.find("Invalid")!=string::npos||userFeedback.find("No")!=string::npos||userFeedback.find("lank")!=string::npos)
+	{
+		try
+		{
+			System::Drawing::Icon^ failIcon = gcnew System::Drawing::Icon(PATH_ICON_FAIL);
+			this->Icon = failIcon;
+		}
+		catch(System::IO::DirectoryNotFoundException^)
+		{
+			logging("/resource folder not found", LogLevel::Error);
+		}
+		catch(System::IO::FileNotFoundException^)
+		{
+			logging(PATH_ICON_FAIL " not found", LogLevel::Error);
+		}
+		try
+		{
+			//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
+			//System::IO::Stream^ s = a->GetManifestResourceStream(PATH_SOUND_FAIL);
+			//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);
+			System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_FAIL);
+			sound->Play();
+		}
+		catch(System::IO::DirectoryNotFoundException^)
+		{
+			logging("/resource folder not found", LogLevel::Error);
+		}
+		catch(System::IO::FileNotFoundException^)
+		{
+			logging(PATH_SOUND_FAIL " not found", LogLevel::Error);
+		}
+		richTextBox1->BackColor = System::Drawing::Color::Tomato;
+	}
+}
+
+// Adds matching items to the suggestion box
+void DaOrganiser::MainWindow::suggestResults(void)
+{
+	array <String^>^ availableCmds = {AVAILABLE_CMDS};
+
+	for(int i=0; i<availableCmds->Length; i++)
+	{
+		comboBox1->Items->Remove(availableCmds[i]);
+
+		if(availableCmds[i]->StartsWith(userInputWord))
+		{
+			comboBox1->Items->Add(availableCmds[i]);
+		}
+	}
+}
+
+void DaOrganiser::MainWindow::openSuggestionBox(void)
+{
+	comboBox1->DroppedDown = true;
+}
+
+void DaOrganiser::MainWindow::closeSuggestionBox(void)
+{
+	//if empty, add dummy element to bypass error
+	if(comboBox1->Items->Count == 0)
+	{
+		comboBox1->Items->Add("");
+		comboBox1->DroppedDown = false;
+		comboBox1->Items->Remove("");
+	}
+	else
+	{
+		comboBox1->DroppedDown = false;
+	}
+}
+
+// Appends the selected suggestion to the text in the input field comboBox1
+void DaOrganiser::MainWindow::commitSelectedSuggestion(void)
+{
+	comboBox1->Text = userPrevInput;
+	comboBox1->Text += comboBox1->SelectedItem;
+}
+
+// Focuses comboBox1, sets caret to end
+void DaOrganiser::MainWindow::setCaretToEnd(void)
+{
+	comboBox1->Select(comboBox1->Text->Length, 0);
+}
+
+#pragma endregion
+
+#pragma region Event Handlers
+/////////////////////////
+//    Event Handlers   //
+/////////////////////////
+
+// Startup sound and initialise listView1
+System::Void DaOrganiser::MainWindow::MainWindow_Load(System::Object^  sender, System::EventArgs^  e)
+{
+	updateList();
+	try
+	{
+		//for embed resource
+		//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
+		//System::IO::Stream^ s = a->GetManifestResourceStream(PATH_SOUND_STARTUP);
+		//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);
+		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_STARTUP);
+		sound->Play();
+	}
+	catch(System::IO::DirectoryNotFoundException^)
+	{
+		logging("/resource folder not found", LogLevel::Error);
+	}
+	catch(System::IO::FileNotFoundException^)
+	{
+		logging(PATH_SOUND_STARTUP " not found", LogLevel::Error);
+	}
+}
+
+// Closing sound
+System::Void DaOrganiser::MainWindow::MainWindow_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e)
+{
+	try
+	{
+		//for embed resource
+		//System::Reflection::Assembly^ a = System::Reflection::Assembly::GetExecutingAssembly();
+		//System::IO::Stream^ s = a->GetManifestResourceStream(PATH_SOUND_CLOSING);
+		//System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(s);
+		System::Media::SoundPlayer^ sound = gcnew System::Media::SoundPlayer(PATH_SOUND_CLOSING);
+		sound->Play();
+
+		//delay ending of the program to allow the sound to finish playing
+		Sleep(400);
+	}
+	catch(System::IO::DirectoryNotFoundException^)
+	{
+		logging("/resource folder not found", LogLevel::Error);
+	}
+	catch(System::IO::FileNotFoundException^)
+	{
+		logging(PATH_SOUND_CLOSING " not found", LogLevel::Error);
+	}
+}
+
+// Following comboBox1 key events implement Autocomplete for commands among others
+// Order of events called: PreviewKeyDown > KeyDown > KeyPress > KeyUp
+
+// Disable tab from changing focus to listView1
+// Autocomplete commit: Tab
+System::Void DaOrganiser::MainWindow::comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e)
+{
+	logging("comboBox1_PreviewKeyDown called", LogLevel::Event);
+
+	//if suggestion box is open and it is not empty
+	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == true) && (comboBox1->Items->Count > 0))
+	{
+		listView1->TabStop = false;
+
+		if(comboBox1->SelectedIndex > 0)
+		{
+			closeSuggestionBox();
+			commitSelectedSuggestion();
+			setCaretToEnd();
+		}
+		else
+		{
+			comboBox1->SelectedIndex = 0;
+			closeSuggestionBox();
+			commitSelectedSuggestion();
+			setCaretToEnd();
+		}
+	}
+}
+
+// Autocomplete commit: Right arrow, Enter
+// Autocomplete suggest: Backspace
+// Autocomplete close suggestion box: Backspace, Space, Escape
+// Scroll through input history: Up arrow, Down arrow
+// Exit program: Escape
+System::Void DaOrganiser::MainWindow::comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
+{
+	logging("comboBox1_KeyDown called", LogLevel::Event);
+
+	static vector<std::string> inputHistory;
+	static int inputHistoryIndex = 0;
+
+	int caretPos = comboBox1->SelectionStart;
+	String^ currentChar = NULL_STRING;
+
+	//get the character in the input field comboBox1 just before this event was called
+	if (caretPos > 0)
+	{
+		currentChar = comboBox1->Text->Substring(caretPos-1,1);
+	}
+
+	// Backspace Key
+	if(e->KeyCode == System::Windows::Forms::Keys::Back)
+	{
+		if (comboBox1->Text->Length > 0 && comboBox1->DroppedDown == true)
+		{	
+			//if character deleted by backspace was '-', close suggestion box
+			if (currentChar == CMD_DELIMITER_STR)
+			{
+				closeSuggestionBox();
+				userInputWord = NULL_STRING;
+			}
+
+			//resuggest results without character delete by backspace
+			else if(userInputWord->Length > 0)
+			{
+				userInputWord = userInputWord->Substring(0, userInputWord->Length -1);
+				suggestResults();	
+			}
+		}
+	}
+
+	// Space Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::Space)
+	{
+		if(comboBox1->DroppedDown == true)
+		{
+			closeSuggestionBox();
+			setCaretToEnd();
+		}
+	}
+
+	// Up arrow Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::Up)
+	{
+		e->Handled = true;
+		if (comboBox1->DroppedDown == true)
+		{
+			//scroll through suggestions
+			if(comboBox1->SelectedIndex > 0)
+			{
+				comboBox1->SelectedIndex--;
+			}
+			commitSelectedSuggestion();
+			setCaretToEnd();
+		}
+		else
+		{
+			//scroll through history of user input
+			if(inputHistoryIndex == 0 && inputHistory.empty() == false)
+			{
+				comboBox1->Text=stdStringToSysString(inputHistory[inputHistoryIndex]);
+				setCaretToEnd();
+			}
+			else if(inputHistoryIndex-1 >= 0)
+			{
+				comboBox1->Text=stdStringToSysString(inputHistory[--inputHistoryIndex]);
+				setCaretToEnd();
+			}
+		}
+	}
+
+	// Down arrow Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::Down)
+	{
+		e->Handled = true;
+		if (comboBox1->DroppedDown == true)
+		{
+			//scroll through suggestions
+			if(comboBox1->SelectedIndex < comboBox1->Items->Count -1)
+			{
+				comboBox1->SelectedIndex++;
+			}
+			commitSelectedSuggestion();
+			setCaretToEnd();
+		}
+		else
+		{
+			//scroll through history of user input
+			if(inputHistoryIndex == 0 && inputHistory.empty() == false)
+			{
+				comboBox1->Text=stdStringToSysString(inputHistory[++inputHistoryIndex]);
+				setCaretToEnd();
+			}
+			else if(inputHistoryIndex < inputHistory.size())
+			{
+				comboBox1->Text=stdStringToSysString(inputHistory[inputHistoryIndex++]);
+				setCaretToEnd();
+			}
+		}
+	}
+
+	// Right arrow Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::Right)
+	{
+		if (comboBox1->DroppedDown == true)
+		{
+			closeSuggestionBox();
+		}
+	}
+
+	// Escape Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::Escape)
+	{
+		e->Handled = true;
+		if(comboBox1->DroppedDown == true)
+		{
+			closeSuggestionBox();
+			commitSelectedSuggestion();
+			setCaretToEnd();
+		}
+		else
+		{
+			exitProgram();
+		}
+	}
+
+	// Enter Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::Enter)
+	{
+		e->Handled = true;
+
+		//if true, exit program
+		static bool toExit = false;
+
+		string userInput = sysStringToStdString(comboBox1->Text);
+
+		//check for input history overflow, delete oldest 200 inputs
+		if(inputHistory.size() > 300)
+		{
+			for(unsigned int i=0; i<100; i++)
+			{
+				inputHistory[i] = inputHistory[i+200];
+			}
+			inputHistory.resize(100);
+		}
+
+		inputHistory.push_back(userInput);
+		inputHistoryIndex = inputHistory.size();
+
+		appendToOutput(userInput);
+		logging("Input entered: " + userInput, LogLevel::Info);
+
+		//run the rest of the programme
+		Facade* controller = (Facade*)progController;
+		controller->executeProgramme(toExit);
+
+		clearInputField();
+
+		//scroll to last line in richTextBox1
+		richTextBox1->Select(richTextBox1->Text->Length - 1, 0);
+		richTextBox1->ScrollToCaret();
+
+		//check for richTextBox1 overflow
+		if(richTextBox1->Text->Length > 100000)
+		{
+			richTextBox1->Text = richTextBox1->Text->Remove(0, 90000);
+		}
+
+		if(comboBox1->DroppedDown == true)
+		{
+			closeSuggestionBox();
+		}
+
+		if(toExit)
+		{
+			exitProgram();
+		}
+	}
+}
+
+// Autocomplete suggest: CMD_DELIMITER_CHAR or alphaNumeric char
+System::Void DaOrganiser::MainWindow::comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e)
+{
+	logging("comboBox1_KeyPress called", LogLevel::Event);
+	const bool nonAlphaNumeric = (e->KeyChar < 48 || ( e->KeyChar >= 58 && e->KeyChar <= 64) || ( e->KeyChar >= 91 && e->KeyChar <= 96) || e->KeyChar > 122);
+
+	if(e->KeyChar == CMD_DELIMITER_CHAR)
+	{
+		userPrevInput = comboBox1->Text;
+
+		openSuggestionBox();
+		
+		std::string charToConvert = NULL_STRING;
+		charToConvert += tolower((char) e->KeyChar);
+		userInputWord = stdStringToSysString(charToConvert);
+
+		suggestResults();
+	}
+	else if(!nonAlphaNumeric)
+	{
+		std::string charToConvert = NULL_STRING;
+		charToConvert += tolower((char) e->KeyChar);
+		userInputWord += stdStringToSysString(charToConvert);
+		
+		suggestResults();
+	}
+}
+
+// Enable tab to change focus to listView1
+System::Void DaOrganiser::MainWindow::comboBox1_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
+{
+	if((e->KeyCode == System::Windows::Forms::Keys::Tab) && (comboBox1->DroppedDown == false))
+	{
+		listView1->TabStop = true;
+	}
+}
+
+// Sort listView1 based on column user clicked on
+System::Void DaOrganiser::MainWindow::listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e)
+{
+	sortListColumn(e->Column);
+}
+
+// Keyboard navigation for listView1
+// Switch between details and tile view: Q
+// Sort listView1 based on column user chooses: 1, 2, 3, 4, 5, 6
+// Exit program: Escape
+System::Void DaOrganiser::MainWindow::listView1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e)
+{
+	// Escape Key
+	if(e->KeyCode == System::Windows::Forms::Keys::Escape)
+	{
+		exitProgram();
+	}
+	// Q Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::Q)
+	{
+		static bool alternate = true;
+		if(alternate)
+		{
+			//tile view
+			listView1->BackColor = Color::CornflowerBlue;
+			listView1->TileSize = Drawing::Size((this->Width - 100)/4, 200);
+			listView1->View = System::Windows::Forms::View::Tile;
+		}
+		else
+		{
+			//details view
+			listView1->BackColor = Color::FromArgb(0xd7,0xd7,0xd7);
+			listView1->View = System::Windows::Forms::View::Details;
+		}
+		
+		alternate=!alternate;
+	}
+	// 1 Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::D1)
+	{
+		//taskID
+		sortListColumn(0);
+	}
+	// 2 Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::D2)
+	{
+		//Details
+		sortListColumn(3);
+	}
+	// 3 Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::D3)
+	{
+		//Start datetime
+		sortListColumn(1);
+	}
+	// 4 Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::D4)
+	{
+		//End datetime
+		sortListColumn(2);
+	}
+	// 5 Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::D5)
+	{
+		//Status
+		sortListColumn(4);
+	}
+	// 6 Key
+	else if(e->KeyCode == System::Windows::Forms::Keys::D6)
+	{
+		//Kind
+		sortListColumn(5);
+	}
+}
+
+#pragma endregion
+	// End of segment: DaOrganiser\MainWindow.cpp
+
+
+
+
+
+	/**
+	 * origin: DaOrganiser\MainWindow.h
+	 */
+
+
+#pragma once
+
+#include "stdafx.h"
+#include <vector>
+#include "ListViewItemComparer.h"
+#include "Task.h"
+
+namespace DaOrganiser {
+
+	using namespace System;
+	using namespace System::ComponentModel;
+	using namespace System::Collections;
+	using namespace System::Windows::Forms;
+	using namespace System::Data;
+	using namespace System::Drawing;
+
+	/// <summary>
+	/// Summary for MainWindow
+	/// </summary>
+	public ref class MainWindow : public System::Windows::Forms::Form
+	{
+	public:
+		MainWindow(void)
+		{
+			InitializeComponent();
+			//
+			//TODO: Add the constructor code here
+			//
+		}
+	protected:
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		~MainWindow()
+		{
+			delete progController;
+			if (components)
+			{
+				delete components;
+			}
+		}
+	private: System::Windows::Forms::RichTextBox^  richTextBox1;
+	
+	private: System::Windows::Forms::TableLayoutPanel^  tableLayoutPanel1;
+
+	private: System::Windows::Forms::ListView^  listView1;
+	private: System::Windows::Forms::ColumnHeader^  id;
+	private: System::Windows::Forms::ColumnHeader^  details;
+	private: System::Windows::Forms::ColumnHeader^  status;
+	private: System::Windows::Forms::ColumnHeader^  start;
+	private: System::Windows::Forms::ColumnHeader^  end;
+	private: System::Windows::Forms::ColumnHeader^  kind;
+
+	private: System::Windows::Forms::ComboBox^  comboBox1;
+
+	private: System::ComponentModel::IContainer^  components;
+
+	private:
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+
+
+#pragma region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		void InitializeComponent(void)
+		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainWindow::typeid));
+			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
+			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->listView1 = (gcnew System::Windows::Forms::ListView());
+			this->id = (gcnew System::Windows::Forms::ColumnHeader(L"(none)"));
+			this->start = (gcnew System::Windows::Forms::ColumnHeader());
+			this->end = (gcnew System::Windows::Forms::ColumnHeader());
+			this->details = (gcnew System::Windows::Forms::ColumnHeader());
+			this->status = (gcnew System::Windows::Forms::ColumnHeader());
+			this->kind = (gcnew System::Windows::Forms::ColumnHeader());
+			this->tableLayoutPanel1->SuspendLayout();
+			this->SuspendLayout();
+			// 
+			// richTextBox1
+			// 
+			this->richTextBox1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(140)), static_cast<System::Int32>(static_cast<System::Byte>(207)), 
+				static_cast<System::Int32>(static_cast<System::Byte>(244)));
+			this->richTextBox1->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->richTextBox1->DetectUrls = false;
+			this->richTextBox1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->richTextBox1->Font = (gcnew System::Drawing::Font(L"Verdana", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->richTextBox1->Location = System::Drawing::Point(0, 444);
+			this->richTextBox1->Margin = System::Windows::Forms::Padding(0);
+			this->richTextBox1->Name = L"richTextBox1";
+			this->richTextBox1->ReadOnly = true;
+			this->richTextBox1->ScrollBars = System::Windows::Forms::RichTextBoxScrollBars::Vertical;
+			this->richTextBox1->Size = System::Drawing::Size(1036, 133);
+			this->richTextBox1->TabIndex = 2;
+			this->richTextBox1->TabStop = false;
+			this->richTextBox1->Text = L"Welcome to DaOrganiser!\nType \'-\' to see all available commands\n";
+			// 
+			// tableLayoutPanel1
+			// 
+			this->tableLayoutPanel1->BackColor = System::Drawing::SystemColors::Control;
+			this->tableLayoutPanel1->ColumnCount = 1;
+			this->tableLayoutPanel1->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, 
+				50)));
+			this->tableLayoutPanel1->Controls->Add(this->comboBox1, 0, 2);
+			this->tableLayoutPanel1->Controls->Add(this->richTextBox1, 0, 1);
+			this->tableLayoutPanel1->Controls->Add(this->listView1, 0, 0);
+			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 0);
+			this->tableLayoutPanel1->Margin = System::Windows::Forms::Padding(0);
+			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
+			this->tableLayoutPanel1->RowCount = 3;
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 76.82481F)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 23.17518F)));
+			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Absolute, 30)));
+			this->tableLayoutPanel1->Size = System::Drawing::Size(1036, 608);
+			this->tableLayoutPanel1->TabIndex = 1;
+			// 
+			// comboBox1
+			// 
+			this->comboBox1->AllowDrop = true;
+			this->comboBox1->BackColor = System::Drawing::SystemColors::Window;
+			this->comboBox1->Cursor = System::Windows::Forms::Cursors::IBeam;
+			this->comboBox1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->comboBox1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->comboBox1->Font = (gcnew System::Drawing::Font(L"Verdana", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->comboBox1->FormattingEnabled = true;
+			this->comboBox1->Location = System::Drawing::Point(0, 578);
+			this->comboBox1->Margin = System::Windows::Forms::Padding(0, 1, 0, 0);
+			this->comboBox1->Name = L"comboBox1";
+			this->comboBox1->Size = System::Drawing::Size(1036, 30);
+			this->comboBox1->Sorted = true;
+			this->comboBox1->TabIndex = 0;
+			this->comboBox1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::comboBox1_KeyDown);
+			this->comboBox1->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MainWindow::comboBox1_KeyPress);
+			this->comboBox1->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::comboBox1_KeyUp);
+			this->comboBox1->PreviewKeyDown += gcnew System::Windows::Forms::PreviewKeyDownEventHandler(this, &MainWindow::comboBox1_PreviewKeyDown);
+			// 
+			// listView1
+			// 
+			this->listView1->AllowColumnReorder = true;
+			this->listView1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(215)), static_cast<System::Int32>(static_cast<System::Byte>(215)), 
+				static_cast<System::Int32>(static_cast<System::Byte>(215)));
+			this->listView1->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->listView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(6) {this->id, this->start, 
+				this->end, this->details, this->status, this->kind});
+			this->listView1->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->listView1->Font = (gcnew System::Drawing::Font(L"Verdana", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->listView1->ForeColor = System::Drawing::Color::DarkSlateGray;
+			this->listView1->FullRowSelect = true;
+			this->listView1->Location = System::Drawing::Point(0, 0);
+			this->listView1->Margin = System::Windows::Forms::Padding(0);
+			this->listView1->Name = L"listView1";
+			this->listView1->Size = System::Drawing::Size(1036, 444);
+			this->listView1->TabIndex = 1;
+			this->listView1->TileSize = System::Drawing::Size(200, 200);
+			this->listView1->UseCompatibleStateImageBehavior = false;
+			this->listView1->View = System::Windows::Forms::View::Details;
+			this->listView1->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &MainWindow::listView1_ColumnClick);
+			this->listView1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MainWindow::listView1_KeyDown);
+			// 
+			// id
+			// 
+			this->id->Text = L"ID (1)";
+			this->id->Width = 73;
+			// 
+			// start
+			// 
+			this->start->DisplayIndex = 2;
+			this->start->Text = L"Start (3)";
+			this->start->Width = 205;
+			// 
+			// end
+			// 
+			this->end->DisplayIndex = 3;
+			this->end->Text = L"End (4)";
+			this->end->Width = 188;
+			// 
+			// details
+			// 
+			this->details->DisplayIndex = 1;
+			this->details->Text = L"Details (2)";
+			this->details->Width = 264;
+			// 
+			// status
+			// 
+			this->status->Text = L"Status (5)";
+			this->status->Width = 147;
+			// 
+			// kind
+			// 
+			this->kind->Text = L"Kind (6)";
+			this->kind->Width = 126;
+			// 
+			// MainWindow
+			// 
+			this->AutoScaleDimensions = System::Drawing::SizeF(11, 20);
+			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->BackColor = System::Drawing::SystemColors::Control;
+			this->ClientSize = System::Drawing::Size(1036, 608);
+			this->Controls->Add(this->tableLayoutPanel1);
+			this->Font = (gcnew System::Drawing::Font(L"Verdana", 10.2F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
+			this->Margin = System::Windows::Forms::Padding(5, 3, 5, 3);
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
+			this->Name = L"MainWindow";
+			this->Text = L"DaOrganiser";
+			this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &MainWindow::MainWindow_FormClosing);
+			this->Load += gcnew System::EventHandler(this, &MainWindow::MainWindow_Load);
+			this->tableLayoutPanel1->ResumeLayout(false);
+			this->ResumeLayout(false);
+
+		}
+#pragma endregion
+
+		// Public Member
+	public: void* progController;
+		
+		// Private Members
+	private: String^ userInputWord;
+	private: String^ userPrevInput;
+
+		// Public Methods
+	public: std::string getUserInput(void);
+
+	public: std::string sysStringToStdString(String ^ stringToConvert);
+	public: String^ stdStringToSysString(std::string stringToConvert);
+
+	public: void addTaskToList(Task taskToAdd);
+	public: void appendToOutput(std::string feedbackToUser);
+	public: void clearInputField(void);
+	public: void displaySearchResult(std::vector<Task> searchResult);
+	public: void exitProgram(void);
+	public: void sortListColumn(unsigned int col);
+	public: void updateList(void);
+
+		// Private Methods
+	private: void changeColor(Task taskToAdd, ListViewItem^& itemToAdd);
+	private: void closeSuggestionBox(void);
+	private: void commitSelectedSuggestion(void);
+	private: void openSuggestionBox(void);
+	private: void setCaretToEnd(void);
+	private: void successOrFailure(std::string userFeedback);
+	private: void suggestResults(void);
+
+		// Events
+	private: System::Void comboBox1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
+	private: System::Void comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e);
+	private: System::Void comboBox1_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
+	private: System::Void comboBox1_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e);
+
+	private: System::Void listView1_ColumnClick(System::Object^  sender, System::Windows::Forms::ColumnClickEventArgs^  e);
+	private: System::Void listView1_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e);
+
+	private: System::Void MainWindow_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e);
+	private: System::Void MainWindow_Load(System::Object^  sender, System::EventArgs^  e);
+};
+}
+
+
+	// End of segment: DaOrganiser\MainWindow.h
+
+
+
+
+
+	/**
+	 * origin: DaOrganiser\taskmanager.cpp
+	 */
+
+// Updates status to approaching/missed deadline
+void TaskManager::reupdateStatus(vector<Task>& taskStorage)
+{
+	time_t now = time(0);
+	tm *timeNow = localtime(&now);
+
+	for(unsigned int i=0; i<taskStorage.size(); i++)
+	{
+		if((taskStorage[i].returnStatus() != 'd') && (taskStorage[i].returnKind() != 'f'))
+		{
+			date endDate = taskStorage[i].returnDate('e');
+			time_s endTime = taskStorage[i].returnTime('e');
+			tm dateLine = {0};
+			dateLine.tm_year = endDate.year + 100;
+			dateLine.tm_mon = endDate.month - 1;
+			dateLine.tm_mday = endDate.day;
+			dateLine.tm_hour = endTime.hr;
+			dateLine.tm_min = endTime.min;
+
+			double diffHours = hoursBtwnTimes(*timeNow, dateLine);
+
+			if(diffHours <= 0.0)
+			{
+				taskStorage[i].changeStatus('m');
+			}
+			else if(diffHours <= APPROACHING_DIFFERENCE)
+			{
+				taskStorage[i].changeStatus('a');
+			}
+			else 
+			{
+				taskStorage[i].changeStatus('n');
+			}
+		}
+	}
+}
+
+// Returns number of hours between compare date and a dateline
+// ie. dateline - compare date
+// if negative, missed dateline
+double TaskManager::hoursBtwnTimes(std::tm compare, std::tm dateLine)
+{
+	std::time_t timeCompare = std::mktime(&compare);
+	std::time_t timeDateLine = std::mktime(&dateLine);
+
+	return std::difftime(timeDateLine, timeCompare) / (60 * 60);
+}
+
+	// End of segment: DaOrganiser\taskmanager.cpp
+
+
+
+
+

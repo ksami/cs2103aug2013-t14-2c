@@ -1,0 +1,329 @@
+//@author: a0101885e
+
+
+
+	/**
+	 * origin: DaOrganiser\Facade.cpp
+	 */
+
+Facade::Facade() {
+}
+
+Facade::Facade(void* inter) {
+	saveFile = new Storage(SAVE_FILENAME);
+	saveFile->readAllFromFile(taskStorage);
+	p.reupdateIDNumber(taskStorage);
+	p.reupdateStatus(taskStorage);
+	guiInterface = inter;
+}
+
+Facade::~Facade() {
+	delete saveFile;
+}
+
+//GUI's execute programme
+void Facade::executeProgramme(bool& toExit) {
+	if (inputCommand()) {
+		parserCommand();
+		//displayVector();		//testing
+		toExit=executeCommand();
+	}
+}
+
+//CLI's execute programme
+void Facade::executeProgramme() {
+	bool toExit=false;
+	while (!toExit) {
+		if (inputCommand()) {
+			parserCommand();
+			toExit=executeCommand();
+		}
+	}
+}
+
+vector<Task> Facade::getTaskStorage() {
+	return taskStorage;
+}
+
+bool Facade::inputCommand() {
+	Interface* guiLogicInterface = (Interface*) guiInterface;
+	//guiLogicInterface->toDisplay("Enter instruction: ");
+	_userCommand=guiLogicInterface->toGetInput();
+
+	try {
+		checkCommand();
+		return true;
+	} catch (const char* msg) {
+		guiLogicInterface->toDisplay(msg);
+	}
+	return false;
+}
+
+bool Facade::checkCommand() {
+	if (_userCommand.empty()) {
+		throw "Command is blank";
+	}
+	return true;
+}
+
+void Facade::parserCommand() {
+	Parser commandline;
+	commandInput=commandline.parseString(_userCommand);
+}
+
+	// End of segment: DaOrganiser\Facade.cpp
+
+
+
+
+
+	/**
+	 * origin: DaOrganiser\Facade.cpp
+	 */
+
+bool Facade::checkDeleteInput() {
+	if (commandInput.size()>1) {
+		deleteInput=commandInput.at(1);
+		return true;
+	}
+	else throw "Invalid input";
+}
+
+bool Facade::checkSearchKey() {
+	if (commandInput.size()>1) {
+		searchKey=commandInput.at(1);
+		return true;
+	}
+	else throw "Invalid input";
+}
+
+void Facade::displayCommand() {
+	Interface* guiLogicInterface = (Interface*) guiInterface;
+	guiLogicInterface->toDisplay(_userCommand);
+	//guiLogicInterface->toDisplay("\n");
+}
+
+void Facade::displayVector() {
+	Interface* guiLogicInterface = (Interface*) guiInterface;
+	int size=keySearch.size();
+	for (int i=0;i<size;i++) {
+		guiLogicInterface->toDisplay(keySearch.at(i).getDetailsAsString());
+		//guiLogicInterface->toDisplay("\n");
+	}
+}
+
+void Facade::setUserCommand(string input) {
+	_userCommand=input;
+}
+	// End of segment: DaOrganiser\Facade.cpp
+
+
+
+
+
+	/**
+	 * origin: DaOrganiser\taskmanager.cpp
+	 */
+
+void TaskManager::searchkey(vector<Task> &taskStorage,vector<Task> &searchResults, string key) {
+	try {
+		if (searchKeyBlank(taskStorage,searchResults,key)) {
+			throw "Search completed";
+		}
+	}
+	catch(const char* except){
+		throw except;
+	}
+}
+
+void TaskManager::undoTask(vector<Task> &TaskStorage) {
+	try{
+		if (checkRecordUndoCommand()) {
+			int toUndoID=recordUndoCommand.back();
+			int getCommand=toUndoID%10;
+			int determinePos;
+
+			if (getCommand==1) {
+				determinePos=findIDPos(toUndoID-1,TaskStorage);
+				recordRedoTask.push_back(TaskStorage.at(determinePos));
+				TaskStorage.erase(TaskStorage.begin()+determinePos);
+				recordRedoCommand.push_back(toUndoID);
+				recordUndoCommand.pop_back();
+			}
+			else if (getCommand==2) {
+				TaskStorage.push_back(recordUndoTask.back());
+				recordUndoTask.pop_back();
+				recordRedoCommand.push_back(toUndoID);
+				recordUndoCommand.pop_back();
+			}
+			else if (getCommand==3) {
+				determinePos=findIDPos(toUndoID-3,TaskStorage);
+				recordRedoTask.push_back(TaskStorage[determinePos]);
+				TaskStorage[determinePos]=recordUndoTask.back();
+				recordUndoTask.pop_back();
+				recordRedoCommand.push_back(toUndoID);
+				recordUndoCommand.pop_back();
+			}
+			throw "Undo successful";
+		}
+	}
+	catch(const char* except){
+		throw except;
+	}
+}
+
+void TaskManager::redoTask(vector<Task> &taskStorage) {
+	try {
+		if (checkRecordRedoCommand()){
+			int toRedoID=recordRedoCommand.back();
+			int getCommand=toRedoID%10;
+			int determinePos;
+
+			if (getCommand==1) {
+				taskStorage.push_back(recordRedoTask.back());
+				recordRedoTask.pop_back();
+				recordUndoCommand.push_back(toRedoID);
+				recordRedoCommand.pop_back();
+			}
+			else if (getCommand==2) {
+				determinePos=findIDPos(toRedoID-2,taskStorage);
+				recordUndoTask.push_back(taskStorage[determinePos]);
+				recordUndoCommand.push_back(toRedoID);
+				taskStorage.erase(taskStorage.begin()+determinePos);
+				recordRedoCommand.pop_back();
+			}
+			else if (getCommand==3) {
+				determinePos=findIDPos(toRedoID-3,taskStorage);
+				recordUndoTask.push_back(taskStorage[determinePos]);
+				taskStorage[determinePos]=recordRedoTask.back();
+				recordRedoTask.pop_back();
+				recordUndoCommand.push_back(toRedoID);
+				recordRedoCommand.pop_back();
+			}
+			throw "Redo Successful";
+		}
+	}
+	catch(const char* except){
+		throw except;
+	}
+}
+
+bool TaskManager::searchKeyBlank(vector<Task> &taskStorage,vector<Task> &searchResults, string key) {
+	size_t found;
+	int size=taskStorage.size();
+	for (int i=0;i<size;i++) {
+		found=taskStorage.at(i).getDetailsAsString().find(key);
+		if (found!=std::string::npos)
+			searchResults.push_back(taskStorage.at(i));
+	}
+	if (!searchResults.empty())
+		return true;
+	else 
+		throw "No search results found";
+}
+
+void TaskManager::updateIDNumber() {
+	ID+=10;
+}
+
+void TaskManager::reupdateIDNumber(vector<Task> &taskStorage) {
+	int size=taskStorage.size();
+	int number=10;
+	for (int i=0;i<size;i++) {
+		taskStorage.at(i).assignIDNumber(number);
+		number+=10;
+	}
+	ID=number-10;
+}
+
+void TaskManager::insertTaskExecuted(int commandNumber, string command) {
+	if (command=="create")
+		recordUndoCommand.push_back(commandNumber+1);
+	else if (command=="delete")
+		recordUndoCommand.push_back(commandNumber+2);
+	else if (command=="update")
+		recordUndoCommand.push_back(commandNumber+3);
+}
+
+void TaskManager::storeTask(Task toStore) {
+	recordUndoTask.push_back(toStore);
+}
+
+void TaskManager::testingRecordCommand() {
+	for (unsigned int i=0;i<recordUndoCommand.size();i++) {
+		cout<<recordUndoCommand.at(i)<<endl;
+	}
+}
+
+int TaskManager::findIDPos(int number,vector<Task> TaskStorage) {
+	int toReturn;
+	if (checkID(number,TaskStorage,toReturn))
+		return toReturn;
+	else throw "Invalid task ID entered";	
+	//if (checkID(number,TaskStorage,toReturn))
+	/*	for (unsigned int i=0;i<TaskStorage.size();i++) {
+	if (TaskStorage.at(i).getTaskID()==number) 
+	toReturn=i;
+	}*/
+	//return toReturn;
+}
+
+bool TaskManager::checkID(int number,vector<Task>TaskStorage,int &toReturn) {
+	for (unsigned int i=0;i<TaskStorage.size();i++) {
+		if (TaskStorage.at(i).getTaskID()==number) {
+			toReturn=i;
+			return true;
+		}
+	}
+	return false;
+
+}
+
+bool TaskManager::checkRecordUndoCommand(){
+	if (recordUndoCommand.empty())
+		throw "No more commands to undo";
+	return true;
+}
+
+
+bool TaskManager::checkRecordRedoCommand(){
+	if (recordRedoCommand.empty())
+		throw "No more commands to redo";
+	return true;
+}
+
+	// End of segment: DaOrganiser\taskmanager.cpp
+
+
+
+
+
+	/**
+	 * origin: DaOrganiser\taskmanager.cpp
+	 */
+
+bool TaskManager::checkDateTimeLogic(Task &newTask,char kind) {
+	date dateStart = newTask.returnDate('s');
+	date dateEnd = newTask.returnDate('e');
+	time_s timeStart = newTask.returnTime('s');
+	time_s timeEnd = newTask.returnTime('e');
+
+	if (kind=='t'||kind=='d') {
+		if(newTask.checkDate(dateStart, dateEnd)==0) {
+			if(newTask.checkTime(timeStart, timeEnd)==1) {
+				return false;
+			}
+		}
+		else if (newTask.checkDate(dateStart, dateEnd)==1) {
+			return false;
+		}
+	}
+	return true;
+}
+
+	// End of segment: DaOrganiser\taskmanager.cpp
+
+
+
+
+
