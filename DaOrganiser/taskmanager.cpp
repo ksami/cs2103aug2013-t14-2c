@@ -492,8 +492,8 @@ bool TaskManager::getDayMonthYear(int dateValue, date &newDate) {
 	return true;
 }
 
-bool TaskManager::checkDateValue(int timeValue) {
-	if (timeValue/10000 > 1)
+bool TaskManager::checkDateValue(int dateValue) {
+	if (dateValue/10000 > 1)
 		return true;
 	return false;
 }

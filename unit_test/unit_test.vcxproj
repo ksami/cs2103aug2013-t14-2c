@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\DaOrganiser;C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\gtest-1.7.0\include;$(IncludePath);D:\Google Drive\nus\CS2103\GroupProjNewBackUp\gtest-1.7.0\include;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser;</IncludePath>
+    <IncludePath>D:\repo\DaOrganiser;D:\repo\gtest-1.7.0\include;C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\DaOrganiser;C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\gtest-1.7.0\include;$(IncludePath);D:\Google Drive\nus\CS2103\GroupProjNewBackUp\gtest-1.7.0\include;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser</IncludePath>
     <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser_as_lib;</LibraryPath>
     <ReferencePath>$(VCInstallDir)atlmfc\lib;$(VCInstallDir)lib;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser</ReferencePath>
   </PropertyGroup>
@@ -62,7 +62,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\gtest-1.7.0\msvc\DaOrganiser\Debug;%(AdditionalLibraryDirectories);D:\Google Drive\nus\CS2103\GroupProjNewBackUp\gtest-1.7.0\include\gtest;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\gtest-1.7.0\msvc\DaOrganiser\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\repo\gtest-1.7.0\msvc\DaOrganiser\Debug;C:\Users\User\Documents\Visual Studio 2012\Projects\DaOrganiser\gtest-1.7.0\msvc\DaOrganiser\Debug;%(AdditionalLibraryDirectories);D:\Google Drive\nus\CS2103\GroupProjNewBackUp\gtest-1.7.0\include\gtest;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\DaOrganiser;D:\Google Drive\nus\CS2103\GroupProjNewBackUp\gtest-1.7.0\msvc\DaOrganiser\Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>gtestd.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
