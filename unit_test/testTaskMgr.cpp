@@ -1,5 +1,4 @@
 //@Kenneth A0097075W
-
 #include "testTaskMgr.h"
 
 TEST_F(testTaskMgr, create_emptystorage_emptystring_returntrue) {
