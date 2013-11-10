@@ -97,7 +97,7 @@ Func testAddValid()
    $array[1]="12/12/12 12:12"
    $array[2]="12/12/12 12:13"
    $array[3]="valid add task test case" & $count
-   $array[4]="Not done"
+   $array[4]="Missed deadline"
    $array[5]="Timed task"
    testListviewItem($array, "add_Valid")
    $count = $count + 1
@@ -154,7 +154,7 @@ Func testAutoCompleteValid()
    $array[1]="12/12/12 12:12"
    $array[2]="12/12/12 12:13"
    $array[3]="valid autocomplete test case"
-   $array[4]="Not done"
+   $array[4]="Missed deadline"
    $array[5]="Timed task"
    testListviewItem($array, "autocomplete_add_valid")
 EndFunc
