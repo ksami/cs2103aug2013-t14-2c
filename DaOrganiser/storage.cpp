@@ -34,7 +34,9 @@ char* Storage::getStorageName(){
 	return _storageName;
 }
 
-void Storage::writeAllToFile(vector<Task> allTask) {
+void Storage::writeAllToFile(vector<Task> allTask
+							 
+							 ) {
 
 	initialOutputStream();
 	travelAllVector(allTask);
