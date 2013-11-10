@@ -1,4 +1,5 @@
-//@Kenneth A0097075W
+//@author A0097075W
+
 #include "testTaskMgr.h"
 
 TEST_F(testTaskMgr, create_emptystorage_emptystring_returntrue) {
@@ -127,7 +128,7 @@ TEST_F(testTaskMgr, create_emptystorage_noParameter_returnTrue) {
 }
 
 
-//@Nicholas A0101885E
+//@author A0101885E
 TEST_F(testTaskMgr, testSearchKeyBlank) {
 	Task test1, test2, test3;
 	test1.assignDetails("testing 1");
